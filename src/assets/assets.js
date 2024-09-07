@@ -10,6 +10,7 @@ import quality_icon from './quality_icon.png'
 import support_img from './support_img.png'
 import hero_img from './hero_img.jpg'
 import profile_icon from './profile_icon.png'
+import contact_img from './contact_img.png'
 export const assets = {
     logo,
     search_icon,
@@ -20,5 +21,6 @@ export const assets = {
     quality_icon,
     support_img,
     hero_img,
-    profile_icon
+    profile_icon,
+    contact_img
 }
