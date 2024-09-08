@@ -11,6 +11,8 @@ import support_img from './support_img.png'
 import hero_img from './hero_img.jpg'
 import profile_icon from './profile_icon.png'
 import contact_img from './contact_img.png'
+import cross_icon from './cross_icon.png'
+
 export const assets = {
     logo,
     search_icon,
@@ -22,5 +24,6 @@ export const assets = {
     support_img,
     hero_img,
     profile_icon,
-    contact_img
+    contact_img,
+    cross_icon
 }
