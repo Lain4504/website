@@ -6,7 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 
 const Header = () => {
     return (
-        <div className="bg-red-700 py-2 w-screen absolute top-0 left-0 z-50">
+        <div className="bg-blue-700 py-2 w-screen absolute top-0 left-0 z-50">
             <div className="mx-auto max-w-screen-xl"> 
                 <div className="flex flex-wrap items-center justify-between">
                     {/* Social Network */}
