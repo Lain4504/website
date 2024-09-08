@@ -24,3 +24,6 @@ a.active hr{
         color: white;
     }
 }
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+}
