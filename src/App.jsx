@@ -7,6 +7,8 @@ import Footer from "./components/Footer"
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/ReactToastify.css'
 import Navbar from "./components/Navbar"
+import page404 from "./components/page404";
+
 const App = () => {
   return(
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
@@ -16,6 +18,7 @@ const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='*' Component={page404}/>
     </Routes>
     <Footer/>
    </div>

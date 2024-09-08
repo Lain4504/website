@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { assets } from "../assets/assets"
 import Header from "./Header"
 import { Link, NavLink } from "react-router-dom"
-import SearchBar from "./SearchBar"
-
+import { ShopContext } from '../context/ShopContext';
+import SearchBar from "./SearchBar";
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const { setShowSearch} = useContext(ShopContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -26,33 +27,9 @@ const Navbar = () => {
       <Header/>
       <div className='flex items-center justify-between py-5 font-medium sm:mt-32 xs:mt-32 xxs:mt-32 lg:mt-10 mt-16'>
         <Link to='/'><img src={assets.logo} className="w-36" alt=""/></Link>
-        <SearchBar />
-        
-      </div>
-        <hr/>
-      {/* Navigation */}
-      <div className='flex items-center justify-between py-5 font-medium'>
-        <ul className='hidden sm:flex gap-10 text-lg text-gray-700'>
-          <NavLink to='/' className='flex flex-col items-center gap-1'>
-            <p>TRANG CHỦ</p>
-            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
-          </NavLink>
-          <NavLink to='/collection' className='flex flex-col items-center gap-1'>
-            <p>SẢN PHẨM</p>
-            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
-          </NavLink>
-          <NavLink to='/about' className='flex flex-col items-center gap-1'>
-            <p>VỀ FOREVER</p>
-            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
-          </NavLink>
-          <NavLink to='/contact' className='flex flex-col items-center gap-1'>
-            <p>LIÊN HỆ</p>
-            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
-          </NavLink>
-        </ul>
-
         {/*--------------- */}
         <div className='flex items-center gap-6 ml-auto'>
+        <img onClick={() => setShowSearch(true)} src={assets.search_icon} className='w-5 cursor-pointer' alt="" />
         <div className='group relative'>
           <Link to='/login'> <img src={assets.profile_icon} className='w-6 cursor-pointer' alt="" /></Link>
           <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
@@ -86,6 +63,29 @@ const Navbar = () => {
             <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>LIÊN HỆ</NavLink>
           </div>
         </div>
+      </div>
+        <hr/>
+        <SearchBar/>
+      {/* Navigation */}
+      <div className='flex items-center justify-center py-5 font-medium'>
+        <ul className='hidden sm:flex gap-16 text-lg text-gray-700'>
+          <NavLink to='/' className='flex flex-col items-center gap-1'>
+            <p>TRANG CHỦ</p>
+            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
+          </NavLink>
+          <NavLink to='/collection' className='flex flex-col items-center gap-1'>
+            <p>SẢN PHẨM</p>
+            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
+          </NavLink>
+          <NavLink to='/about' className='flex flex-col items-center gap-1'>
+            <p>VỀ FOREVER</p>
+            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
+          </NavLink>
+          <NavLink to='/contact' className='flex flex-col items-center gap-1'>
+            <p>LIÊN HỆ</p>
+            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
+          </NavLink>
+        </ul>
       </div>
     </>
   );
