@@ -18,5 +18,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [ //remove plugin require('@tailwindcss/forms'),
+  ],
 }
