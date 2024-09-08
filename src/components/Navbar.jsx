@@ -81,7 +81,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             </div>
             <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/'>TRANG CHỦ</NavLink>
             <div className='py-2 pl-6 border'>
-              <CollectionList />
+            <CollectionList closeMenu={() => setVisible(false)} />
             </div>           
              <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/about'>VỀ fOREVER</NavLink>
             <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>LIÊN HỆ</NavLink>
