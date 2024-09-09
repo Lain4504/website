@@ -16,14 +16,11 @@ const ListProduct = (props) => {
     
     useEffect(() => {
         fetchData()
-    }, []);
+    }, [props.query]); // Ensure it fetches data when `props.query` changes
 
     return (
         <div id="home-pro-products" className="py-12">
             <div className="mx-auto">
-                {/* <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold">{props.title}</h3>
-                </div> */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
                     {
                         books.map(book => (
@@ -52,7 +49,9 @@ const ListProduct = (props) => {
                         ))
                     }
                     <div className="col-span-full text-right mt-4">
-                        <a href="collections/all" className="text-blue-500 hover:underline">Xem thêm &gt;&gt;</a>
+                        <a href={`collections/${props.collectionId}`} className="text-blue-500 hover:underline">
+                            Xem thêm &gt;&gt;
+                        </a>
                     </div>
                 </div>
             </div>

@@ -28,15 +28,15 @@ const Home = () => {
                     </li>
                 </ul>
 
-                {/* Content base current tab*/}
+                {/* Content based on current tab */}
                 {activeTab === "new" && (
-                    <ListProduct title="SÁCH MỚI" query="sorted-and-paged?sortBy=id&page=1&size=10&sortOrder=desc" /> // remove title
+                    <ListProduct query="sorted-and-paged?sortBy=id&page=1&size=10&sortOrder=desc" collectionId={1} />
                 )}
                 {activeTab === "bestseller" && (
-                    <ListProduct title="SÁCH BÁN CHẠY" query="sorted-and-paged?sortBy=sold&page=0&size=10&sortOrder=desc" /> 
+                    <ListProduct query="sorted-and-paged?sortBy=sold&page=0&size=10&sortOrder=desc" collectionId={2} />
                 )}
                 {activeTab === "hotdeals" && (
-                    <ListProduct title="HOT DEALS" query="sorted-and-paged?sortBy=discount&page=0&size=10&sortOrder=desc" />
+                    <ListProduct query="sorted-and-paged?sortBy=discount&page=0&size=10&sortOrder=desc" collectionId={3} />
                 )}
             </div>
         </>
