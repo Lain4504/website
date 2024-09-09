@@ -12,6 +12,7 @@ import Login from "./pages/Login"
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import Register from "./pages/Register"
+import Collection from "./pages/Collection"
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -25,6 +26,7 @@ const App = () => {
     <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
+        <Route path='/collections/:id' Component={Collection}/>
         <Route path='/contact' element={<Contact />} />
         <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
