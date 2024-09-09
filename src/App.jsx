@@ -11,6 +11,7 @@ import Page404 from "./components/Page404";
 import Login from "./pages/Login"
 import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
+import Register from "./pages/Register"
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -26,6 +27,7 @@ const App = () => {
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
+        <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='*' Component={Page404}/>
     </Routes>
     <Footer/>
