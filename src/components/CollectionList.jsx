@@ -8,19 +8,12 @@ const CollectionList = ({ closeMenu }) => {
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpen(false);
+  const closeDropdown = () => {
+    setIsOpen(false); // Đóng menu khi một mục được chọn
+    if (closeMenu) {
+      closeMenu(); // Đóng luôn menu chính (nếu có)
     }
   };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const [collections, setCollections] = useState([]);
 
@@ -48,8 +41,8 @@ const CollectionList = ({ closeMenu }) => {
       </button>
       {isOpen && (
         <div className="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-lg">
-          <Link to={`/collections/all`} className="py-1" onClick={closeMenu}>
-            <a href="#" className="block px-4 py-2 text-sm text-black hover:bg-gray-100">Toàn bộ danh mục</a>
+          <Link to={`/collections/all`} className="py-1" onClick={closeDropdown}>
+            <a href="#" className="block px-4 py-2 text-sm border-b border-gray-200 text-black hover:bg-gray-100">TOÀN BỘ SẢN PHẨM</a>
           </Link>
           {collections?.map((collection) => {
             if (collection.isDisplay) {
@@ -58,7 +51,7 @@ const CollectionList = ({ closeMenu }) => {
                   to={`/collections/${collection.id}`}
                   key={collection.id}
                   className="py-2 text-sm text-black"
-                  onClick={closeMenu} // Thêm sự kiện đóng menu chính
+                  onClick={closeDropdown} // Gọi hàm đóng menu khi chọn mục
                 >
                   <a href="#" className="block px-4 py-2 hover:bg-gray-100">{collection.name}</a>
                 </Link>

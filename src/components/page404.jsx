@@ -1,5 +1,5 @@
 import React from "react";
-const page404 = () => {
+const Page404 = () => {
     return (
       <>
         <main className="grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
@@ -21,4 +21,4 @@ const page404 = () => {
       </>
     )
   }
-export default page404
+export default Page404
