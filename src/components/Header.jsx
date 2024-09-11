@@ -12,7 +12,7 @@ const Header = () => {
                     {/* Social Network */}
                     <div className="w-full lg:w-2/12 mb-4 lg:mb-0">
                         <div className="flex space-x-4">
-                            <a href="https://www.facebook.com/is.mycampione/" className="text-white hover:text-gray-300">
+                            <a href="https://www.facebook.com/" className="text-white hover:text-gray-300">
                                 <FacebookIcon />
                             </a>
                             <a href="https://www.instagram.com/?hl=en" className="text-white hover:text-gray-300">
