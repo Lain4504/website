@@ -83,6 +83,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             <div className='py-2 pl-6 border'>
             <CollectionList closeMenu={() => setVisible(false)} />
             </div>           
+            <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/post'>TIN TỨC</NavLink>
              <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/about'>VỀ fOREVER</NavLink>
             <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>LIÊN HỆ</NavLink>
           </div>
@@ -92,7 +93,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
       <SearchBar />
       {/* Navigation */}
       <div className='flex items-center justify-center py-5 font-medium'>
-        <ul className='hidden sm:flex gap-16 text-lg text-gray-700'>
+        <ul className='hidden sm:flex gap-16 text-md text-gray-700'>
           <NavLink to='/' className='flex flex-col items-center gap-1'>
             <p>TRANG CHỦ</p>
             <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
@@ -101,6 +102,10 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
           <CollectionList />
             <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
           </h1>
+          <NavLink to='/post' className='flex flex-col items-center gap-1'>
+            <p>TIN TỨC</p>
+            <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
+          </NavLink>
           <NavLink to='/about' className='flex flex-col items-center gap-1'>
             <p>VỀ FOREVER</p>
             <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />

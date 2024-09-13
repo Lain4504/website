@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { getBookByQuery } from "../services/BookService";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 const ListProduct = (props) => {
     const [books, setBooks] = useState([]);
