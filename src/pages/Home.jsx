@@ -30,13 +30,13 @@ const Home = () => {
 
                 {/* Content based on current tab */}
                 {activeTab === "new" && (
-                    <ListProduct query="sorted-and-paged?sortBy=id&page=1&size=10&sortOrder=desc" collectionId={1} />
+                    <ListProduct query="sorted-and-paged?sortBy=id&page=1&size=10&sortOrder=desc" />
                 )}
                 {activeTab === "bestseller" && (
-                    <ListProduct query="sorted-and-paged?sortBy=sold&page=0&size=10&sortOrder=desc" collectionId={2} />
+                    <ListProduct query="sorted-and-paged?sortBy=sold&page=0&size=10&sortOrder=desc" />
                 )}
                 {activeTab === "hotdeals" && (
-                    <ListProduct query="sorted-and-paged?sortBy=discount&page=0&size=10&sortOrder=desc" collectionId={3} />
+                    <ListProduct query="sorted-and-paged?sortBy=discount&page=0&size=10&sortOrder=desc"/>
                 )}
             </div>
         </>

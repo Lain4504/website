@@ -14,7 +14,7 @@ const ListProduct = (props) => {
     
     useEffect(() => {
         fetchData()
-    }, [props.query]); // Ensure it fetches data when `props.query` changes
+    }, [props.query]); 
 
     return (
         <div id="home-pro-products" className="py-12">
@@ -47,7 +47,7 @@ const ListProduct = (props) => {
                         ))
                     }
                     <div className="col-span-full text-right mt-4">
-                        <a href={`collections/${props.collectionId}`} className="text-blue-500 hover:underline">
+                        <a href={`collections/all`} className="text-blue-500 hover:underline">
                             Xem thêm &gt;&gt;
                         </a>
                     </div>

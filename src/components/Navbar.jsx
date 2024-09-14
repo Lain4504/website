@@ -69,11 +69,11 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         text-white aspect-square rounded-full text-[8px]'>
             </p>
           </Link>
-          <img onClick={() => setVisible(true)} src={assets.menu_icon} className=' w-5 cursor-pointer sm:hidden' alt="" />
+          <img onClick={() => setVisible(true)} src={assets.menu_icon} className=' w-5 cursor-pointer md:hidden' alt="" />
         </div>
 
         {/* Sidebar menu for small screens */}
-        <div className={`absolute top-0 right-0 bottom-0 mt-32 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'}`}>
+        <div className={`absolute top-0 right-0 bottom-0 mt-32 overflow-hidden bg-white transition-all ${visible ? 'w-full z-50' : 'w-0'}`}>
           <div className='flex flex-col text-gray-600'>
             <div onClick={() => setVisible(false)} className='flex items-center gap-4 p-3 cursor-pointer'>
               <img src={assets.dropdown_icon} className='h-4 rotate-180' alt="" />
@@ -93,7 +93,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
       <SearchBar />
       {/* Navigation */}
       <div className='flex items-center justify-center py-5 font-medium'>
-        <ul className='hidden sm:flex gap-16 text-md text-gray-700'>
+        <ul className='hidden md:flex gap-16 text-md text-gray-700'>
           <NavLink to='/' className='flex flex-col items-center gap-1'>
             <p>TRANG CHỦ</p>
             <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
