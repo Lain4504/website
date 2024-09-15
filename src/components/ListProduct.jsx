@@ -13,7 +13,7 @@ const ListProduct = (props) => {
     }
     
     useEffect(() => {
-        fetchData()
+        fetchData();
     }, [props.query]); 
 
     return (
@@ -22,7 +22,7 @@ const ListProduct = (props) => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
                     {
                         books.map(book => (
-                            <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group">
+                            <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center">
                                 <div className="relative">
                                     <a href={`/products/${book.id}`}>
                                         <img src={book.images[0].link} alt={book.title} className="w-full h-auto object-cover" />
