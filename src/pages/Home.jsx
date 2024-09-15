@@ -30,7 +30,7 @@ const Home = () => {
 
                 {/* Content based on current tab */}
                 {activeTab === "new" && (
-                    <ListProduct query="sorted-and-paged?sortBy=id&page=1&size=10&sortOrder=desc" />
+                    <ListProduct query="sorted-and-paged?sortBy=id&page=0&size=10&sortOrder=desc" />
                 )}
                 {activeTab === "bestseller" && (
                     <ListProduct query="sorted-and-paged?sortBy=sold&page=0&size=10&sortOrder=desc" />
