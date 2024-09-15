@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 import Register from "./pages/Register"
 import Collection from "./pages/Collection"
 import Post from "./pages/Post"
+import BooksBySearch from "./pages/BookBySearch"
+import SearchPage from "./pages/SearchPage"
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -33,6 +35,8 @@ const App = () => {
         <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='*' Component={Page404}/>
+        <Route path="/search" element={<SearchPage />} />
+
     </Routes>
     <Footer/>
    </div>
