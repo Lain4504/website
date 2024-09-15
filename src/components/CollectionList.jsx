@@ -31,6 +31,29 @@ const CollectionList = ({ closeMenu }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsOpen(false); // Reset dropdown khi kích cỡ màn hình thay đổi
+    };
+  
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
   return (
     <div className="relative" ref={dropdownRef}>
       <button
