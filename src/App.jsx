@@ -13,6 +13,9 @@ import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import Register from "./pages/Register"
 import Collection from "./pages/Collection"
+import Post from "./pages/Post"
+import BooksBySearch from "./pages/BookBySearch"
+import SearchPage from "./pages/SearchPage"
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -28,9 +31,12 @@ const App = () => {
         <Route path='/about' element={<About />} />
         <Route path='/collections/:id' Component={Collection}/>
         <Route path='/contact' element={<Contact />} />
+        <Route path='/post' element={<Post/>}/>
         <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='*' Component={Page404}/>
+        <Route path="/search" element={<SearchPage />} />
+
     </Routes>
     <Footer/>
    </div>

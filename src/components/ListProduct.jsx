@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { getBookByQuery } from "../services/BookService";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 const ListProduct = (props) => {
     const [books, setBooks] = useState([]);
@@ -15,8 +13,8 @@ const ListProduct = (props) => {
     }
     
     useEffect(() => {
-        fetchData()
-    }, [props.query]); // Ensure it fetches data when `props.query` changes
+        fetchData();
+    }, [props.query]); 
 
     return (
         <div id="home-pro-products" className="py-12">
@@ -24,7 +22,7 @@ const ListProduct = (props) => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
                     {
                         books.map(book => (
-                            <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group">
+                            <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center">
                                 <div className="relative">
                                     <a href={`/products/${book.id}`}>
                                         <img src={book.images[0].link} alt={book.title} className="w-full h-auto object-cover" />
@@ -49,7 +47,7 @@ const ListProduct = (props) => {
                         ))
                     }
                     <div className="col-span-full text-right mt-4">
-                        <a href={`collections/${props.collectionId}`} className="text-blue-500 hover:underline">
+                        <a href={`collections/all`} className="text-blue-500 hover:underline">
                             Xem thêm &gt;&gt;
                         </a>
                     </div>

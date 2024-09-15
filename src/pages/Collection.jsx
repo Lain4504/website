@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getCollections, getCollectionById } from '../services/CollectionService'
 import { getCategories } from '../services/CategoryService'
-import Pagination from '../components/Pagination'
+import Pagination from '../utils/Pagination'
 
 const BooksByCollection = () => {
     const navigate = useNavigate()
@@ -20,23 +20,30 @@ const BooksByCollection = () => {
     const totalPage = Math.ceil(book_length.current / limit);
 
     const fetchData = (id) => {
-        getBooksByQuery(id, page, urlParams.get('min'), urlParams.get('max'))
-            .then(res => {
-                setBooks(res.data.content)
-                book_length.current = res.data.totalElements
-            })
-            .catch(error => console.error(error))
-        getCollections()
-            .then(res => setCollections(res.data))
-            .catch(error => console.error(error))
-        getCategories()
-            .then(res => setCategories(res.data))
-            .catch(error => console.error(error))
-        if (id !== 'all')
+        if (id === 'all') {
+            setCurCollection(null); // Đặt lại tiêu đề khi id là 'all'
+        } else {
             getCollectionById(id)
                 .then(res => setCurCollection(res.data))
-                .catch(error => console.error(error))
-    }
+                .catch(error => console.error(error));
+        }
+
+        getBooksByQuery(id, page, urlParams.get('min'), urlParams.get('max'))
+            .then(res => {
+                setBooks(res.data.content);
+                book_length.current = res.data.totalElements;
+            })
+            .catch(error => console.error(error));
+
+        getCollections()
+            .then(res => setCollections(res.data))
+            .catch(error => console.error(error));
+
+        getCategories()
+            .then(res => setCategories(res.data))
+            .catch(error => console.error(error));
+    };
+
 
     const collection_items = collections.map(collection => (
         collection.isDisplay ? (
@@ -80,20 +87,16 @@ const BooksByCollection = () => {
     const handlePrice = (e) => {
         const minValue = Number(e.target.dataset.min)
         const maxValue = Number(e.target.dataset.max)
-        if (minValue && maxValue)
-        {
+        if (minValue && maxValue) {
             navigate(`/collections/${id}?min=${minValue}&max=${maxValue}${page ? `&page=${page}` : ''}`)
         }
-        else if (minValue)
-        {
+        else if (minValue) {
             navigate(`/collections/${id}?min=${minValue}${page ? `&page=${page}` : ''}`)
         }
-        else if (maxValue)
-        {
+        else if (maxValue) {
             navigate(`/collections/${id}?max=${maxValue}${page ? `&page=${page}` : ''}`)
         }
-        else
-        {
+        else {
             navigate(`/collections/${id}${page ? `?page=${page}` : ''}`)
         }
     }
@@ -101,6 +104,10 @@ const BooksByCollection = () => {
         const value = e.target.value
         switch (value) {
             case 'manual':
+                break;
+            case 'newest':
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=id&size=12&sortOrder=desc"')
+                    .then(res => setBooks(res.data.content))
                 break;
             case 'best-selling':
                 getBookByQuery('sorted-and-paged/by-collection?sortBy=sold&size=12')
@@ -136,127 +143,115 @@ const BooksByCollection = () => {
     }, [id])
     return (
         <>
-            <div id='PageContaner'>
-                <section id='collection-wrapper'>
-                    <div className='container mx-auto'>
-                        <div className='flex flex-wrap'>
-                            <div className='w-full lg:w-1/4 px-4'>
-                                <div className='collection-sidebar-wrapper'>
-                                    <div className='accordion'>
-                                        <div className="accordion-item">
-                                            <h2 className="font-semibold text-lg">Danh Mục Sản Phẩm</h2>
-                                            <ul className='mt-2 space-y-1'>
-                                                <li>
-                                                    <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
-                                                </li>
-                                                {collection_items}
-                                            </ul>
-                                        </div>
-                                    </div>
+            <section>
+                <div className='mx-auto'>
+                    <div className='flex flex-wrap flex-col md:flex-row'>
+                        <div className='w-full lg:w-1/4 px-4 hidden lg:block'>
+                            <div>
+                                <h2 className="font-semibold text-lg">Danh Mục Sản Phẩm</h2>
+                                <ul className='mt-2 space-y-1'>
+                                    <li>
+                                        <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
+                                    </li>
+                                    {collection_items}
+                                </ul>
+                            </div>
 
-                                    <div className="accordion mt-8">
-                                        <h2 className="font-semibold text-lg">Khoảng Giá</h2>
-                                        <ul className='mt-2 space-y-2'>
-                                        <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} type='radio' name='price-filter'></input>
-                                                                        <span>Tất cả</span>
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} type='radio' data-max='10000' name='price-filter'></input>
-                                                                        <span>Nhỏ hơn 10,000₫</span>
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} type='radio' data-min='10000' data-max='20000' name='price-filter'></input>
-                                                                        <span> Từ 10,000₫ - 20,000₫</span>
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} type='radio' data-min='20000' data-max='30000' name='price-filter'></input>
-                                                                        <span>Từ 20,000₫ - 30,000₫</span>
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} type='radio' data-min='30000' data-max='40000' name='price-filter'></input>
-                                                                        <span> Từ 30,000₫ - 40,000₫</span>
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} data-min='40000' data-max='50000' type='radio' name='price-filter'></input>
-                                                                        <span>Từ 40,000₫ - 50,000₫</span>
-                                                                    </label>
-                                                                </li>
-                                                                <li>
-                                                                    <label>
-                                                                        <input onClick={handlePrice} type='radio' data-min='50000' name='price-filter'></input>
-                                                                        <span>Lớn hơn 50,000₫</span>
-                                                                    </label>
-                                                                </li>
-                                        </ul>
+                            <div className="mt-8">
+                                <h2 className="font-semibold text-lg">Khoảng Giá</h2>
+                                <ul className='mt-2 space-y-2'>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} type='radio' name='price-filter'></input>
+                                            <span>Tất cả</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} type='radio' data-max='10000' name='price-filter'></input>
+                                            <span>Nhỏ hơn 10,000₫</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} type='radio' data-min='10000' data-max='20000' name='price-filter'></input>
+                                            <span> Từ 10,000₫ - 20,000₫</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} type='radio' data-min='20000' data-max='30000' name='price-filter'></input>
+                                            <span>Từ 20,000₫ - 30,000₫</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} type='radio' data-min='30000' data-max='40000' name='price-filter'></input>
+                                            <span> Từ 30,000₫ - 40,000₫</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} data-min='40000' data-max='50000' type='radio' name='price-filter'></input>
+                                            <span>Từ 40,000₫ - 50,000₫</span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label>
+                                            <input onClick={handlePrice} type='radio' data-min='50000' name='price-filter'></input>
+                                            <span>Lớn hơn 50,000₫</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className='w-full lg:w-3/4 px-4'>
+                            <div className='mb-6'>
+                                <div className='flex justify-between items-center'>
+                                    <h3 className='text-xl font-bold'>{id === 'all' ? "TẤT CẢ SẢN PHẨM" : curCollection ? curCollection.name : ''}</h3>
+                                    <div className="text-right">
+                                        <label htmlFor="SortBy">Sắp xếp</label>
+                                        <select onChange={(e) => handleChange(e)} name="SortBy" id="SortBy" className="ml-2 p-2 border border-gray-300 rounded">
+                                            <option value="manual">Tùy chọn</option>
+                                            <option value="newest">Mới nhất</option>
+                                            <option value="best-selling">Bán chạy nhất</option>
+                                            <option value="title-ascending">Tên A-Z</option>
+                                            <option value="title-descending">Tên Z-A</option>
+                                            <option value="price-ascending">Giá tăng dần</option>
+                                            <option value="price-descending">Giá giảm dần</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div className='w-full lg:w-3/4 px-4'>
-                                <div className='collection-content-wrapper'>
-                                    <div className='collection-head mb-6'>
-                                        <div className='flex justify-between items-center'>
-                                            <div className='collection-title'>
-                                                <h3 className='text-xl font-bold'>{curCollection ? curCollection.name : "TẤT CẢ SẢN PHẨM"}</h3>
-                                            </div>
-                                            <div className='collection-sorting-wrapper'>
-                                                <div className="text-right">
-                                                    <label htmlFor="SortBy">Sắp xếp</label>
-                                                    <select onChange={(e) => handleChange(e)} name="SortBy" id="SortBy" className="ml-2 p-2 border border-gray-300 rounded">
-                                                        <option value="manual">Tùy chọn</option>
-                                                        <option value="best-selling">Bán chạy nhất</option>
-                                                        <option value="title-ascending">Tên A-Z</option>
-                                                        <option value="title-descending">Tên Z-A</option>
-                                                        <option value="price-ascending">Giá tăng dần</option>
-                                                        <option value="price-descending">Giá giảm dần</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div className='collection-body'>
-                                        <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
-                                            {books.map(book => (
-                                                <div key={book.id} className='product-item'>
-                                                    <div className="relative">
-                                                        <Link to={`/products/${book.id}`}>
-                                                            <img src={book.images[0].link} alt={book.title} className="w-full h-auto object-cover" />
-                                                        </Link>
-                                                        <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold px-2 py-1">
-                                                            -{book.discount * 100}%
-                                                        </div>
-                                                    </div>
-                                                    <div className="mt-2 text-center">
-                                                        <Link to={`/products/${book.id}`} className="block font-medium text-gray-900 hover:underline">{book.title}</Link>
-                                                        <div className="text-red-500 mt-1">
-                                                            <span className="current-price">{book.salePrice.toLocaleString()}₫</span>
-                                                            <span className="text-gray-500 line-through ml-2">{book.price.toLocaleString()}₫</span>
-                                                        </div>
-                                                    </div>
+                            <div>
+                                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                                    {books.map(book => (
+                                        <div key={book.id}>
+                                            <div className="relative">
+                                                <Link to={`/products/${book.id}`}>
+                                                    <img src={book.images[0].link} alt={book.title} className="w-full h-auto object-cover" />
+                                                </Link>
+                                                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold px-2 py-1">
+                                                    -{book.discount * 100}%
                                                 </div>
-                                            ))}
+                                            </div>
+                                            <div className="mt-2 text-center">
+                                                <Link to={`/products/${book.id}`} className="block font-medium text-gray-900 hover:underline">{book.title}</Link>
+                                                <div className="text-red-500 mt-1">
+                                                    <span> {book.salePrice.toLocaleString()}₫</span>
+                                                    <span className="text-gray-500 line-through ml-2">{book.price.toLocaleString()}₫</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-
-                        <Pagination page={page} totalPage={totalPage} handlePagination={setCurrentPage} />
                     </div>
-                </section>
-            </div>
+
+                    <Pagination page={page} totalPage={totalPage} setCurrentPage={setCurrentPage} />                    </div>
+            </section>
         </>
     )
 }
