@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { getCollections, getCollectionById } from '../services/CollectionService'
 import { getCategories } from '../services/CategoryService'
 import Pagination from '../utils/Pagination'
+import Breadcrumbs from '../components/Breadcrumb'
+import Breadcrumb from '../components/Breadcrumb'
 
 const BooksByCollection = () => {
     const navigate = useNavigate()
@@ -141,10 +143,15 @@ const BooksByCollection = () => {
     useEffect(() => {
         setPage(1)
     }, [id])
+    const breadcrumbs = [
+        { title: 'Home', href: '/' },
+        { title: curCollection ? curCollection.name : 'All' }
+      ];
     return (
         <>
             <section>
                 <div className='mx-auto'>
+                <Breadcrumb items={breadcrumbs}/>
                     <div className='flex flex-wrap flex-col md:flex-row'>
                         <div className='w-full lg:w-1/4 px-4 hidden lg:block'>
                             <div>
