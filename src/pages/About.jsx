@@ -12,10 +12,9 @@ const About = () => {
       <hr />
       <div className='my-10'>
         <div className='text-gray-600'>
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-          <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
+          <p>Book Store Forever là một trang web chuyên cung cấp sách đa dạng, từ tiểu thuyết, sách kinh doanh, đến sách học thuật. Với tiêu chí "Mở mang tri thức - Vững bước tương lai," Book Store Forever cam kết mang đến cho độc giả những tựa sách hay nhất, phù hợp với mọi lứa tuổi và sở thích. Giao diện trang web thân thiện, dễ sử dụng, giúp người mua dễ dàng tìm kiếm và đặt sách online. Đặc biệt, Book Store Forever thường xuyên có các chương trình khuyến mãi và ưu đãi, mang đến trải nghiệm mua sắm tiện lợi và tiết kiệm..</p>
           <b className='text-gray-800 mt-4 mb-4 block'>Sản phẩm và dịch vụ</b>
-          <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
+          <p>Book Store Forever cung cấp một loạt các sản phẩm phong phú với hàng ngàn đầu sách thuộc nhiều thể loại khác nhau như văn học, khoa học, kỹ năng sống, và sách thiếu nhi. Sản phẩm của chúng tôi được chọn lọc kỹ lưỡng từ các nhà xuất bản uy tín nhằm đảm bảo chất lượng cho độc giả. Ngoài việc cung cấp sách giấy, Book Store Forever còn cung cấp dịch vụ sách điện tử và audiobook, đáp ứng nhu cầu đọc sách linh hoạt. Dịch vụ giao hàng nhanh chóng trên toàn quốc, cùng với chính sách đổi trả thuận tiện, giúp khách hàng hoàn toàn yên tâm khi mua sắm tại đây.</p>
         </div>
       </div>
 
@@ -25,15 +24,15 @@ const About = () => {
       <div className='flex flex-col md:flex-row text-sm mb-20'>
         <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
           <b>Tầm nhìn</b>
-          <p className='text-gray-600'> There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
+          <p className='text-gray-600'> Book Store Forever mong muốn trở thành nhà cung cấp sách hàng đầu tại Việt Nam, nơi mọi người có thể tìm thấy tri thức và cảm hứng qua từng trang sách. Chúng tôi đặt mục tiêu xây dựng một cộng đồng yêu sách rộng lớn, thúc đẩy văn hóa đọc và giúp độc giả tiếp cận tri thức dễ dàng hơn trong thời đại công nghệ số.</p>
         </div>
         <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
           <b>Sứ mệnh</b>
-          <p className='text-gray-600'> There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
+          <p className='text-gray-600'>Sứ mệnh của Book Store Forever là mang đến cho khách hàng những trải nghiệm mua sắm sách tiện lợi, nhanh chóng và chất lượng nhất. Chúng tôi luôn nỗ lực không ngừng để cung cấp những sản phẩm và dịch vụ hoàn hảo, nhằm lan tỏa tình yêu sách đến với mọi người. Qua đó, chúng tôi không chỉ bán sách mà còn xây dựng một nền tảng tri thức để phục vụ nhu cầu học hỏi và phát triển của cộng đồng.</p>
         </div>
         <div className='border px-10 md:px-16 py-8 sm:py-20 flex flex-col gap-5'>
           <b>Giá trị cốt lõi</b>
-          <p className='text-gray-600'> There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable</p>
+          <p className='text-gray-600'> Book Store Forever luôn đặt uy tín và chất lượng lên hàng đầu. Chúng tôi tin tưởng vào sự đổi mới liên tục để mang đến trải nghiệm tốt nhất cho khách hàng. Với tinh thần phục vụ tận tâm, chúng tôi cam kết đem lại những giá trị thiết thực cho cộng đồng và xây dựng mối quan hệ bền vững với khách hàng, đối tác cũng như các nhà xuất bản.</p>
         </div>
       </div>
     </div>
