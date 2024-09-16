@@ -73,7 +73,7 @@ const Footer = () => {
                         <li>Chính sách bảo mật</li>
                         <li>Chính sách thanh toán</li>
                         <li>Chính sách vận chuyển</li>
-                        <li>Chích sách đổi trả</li>
+                        <li>Chính sách đổi trả</li>
                     </ul>
                 </div>
 
