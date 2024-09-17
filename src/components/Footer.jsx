@@ -24,7 +24,8 @@ const Footer = () => {
                             <LocationOnIcon className="text-gray-600" />
                         </div>
                         <p className="ml-3 w-full md:w-2/3 text-gray-600">
-                            Số 110 Nguyễn Ngọc Nại, Khương Mai, Thanh Xuân, Hà Nội
+                        FPT University, Quy Nhon City
+                        
                         </p>
                     </div>
                     {/* Phone */}
@@ -33,7 +34,7 @@ const Footer = () => {
                             <LocalPhoneIcon className="text-gray-600" />
                         </div>
                         <p className="ml-3 w-full md:w-2/3 text-gray-600">
-                            Hotline: 03 2838 3979
+                            Hotline: 0915234798
                         </p>
                     </div>
                     {/* Email*/}
@@ -42,7 +43,7 @@ const Footer = () => {
                             <EmailIcon className="text-gray-600" />
                         </div>
                         <p className="ml-3 w-full md:w-2/3 text-gray-600">
-                            Email: online.ipmvn@gmail.com
+                            Email: BookStore@gmail.com
                         </p>
                     </div>
                     {/* Policy*/}
@@ -51,7 +52,7 @@ const Footer = () => {
                             <PolicyIcon className="text-gray-600" />
                         </div>
                         <p className="ml-3 w-full md:w-2/3 text-gray-600">
-                            Giấy phép DKKD số 0101507251, cấp lần thứ 6 năm 2019
+                            Giấy phép DKKD số 0101507251, cấp lần thứ 6 năm 2024
                         </p>
                     </div>
                 </div>
@@ -72,7 +73,7 @@ const Footer = () => {
                         <li>Chính sách bảo mật</li>
                         <li>Chính sách thanh toán</li>
                         <li>Chính sách vận chuyển</li>
-                        <li>Chích sách đổi trả</li>
+                        <li>Chính sách đổi trả</li>
                     </ul>
                 </div>
 
@@ -83,7 +84,7 @@ const Footer = () => {
                         <Link to={`https://www.facebook.com/`} target='_blank'>
                             <FacebookIcon />
                         </Link>
-                        <Link to={`https://www.youtube.com/channel/UCnqGt1p0QZ9gw4-cykvjjSg`} target='_blank'>
+                        <Link to={`https://www.youtube.com/`} target='_blank'>
                             <YouTubeIcon />
                         </Link>
                         <Link to={`https://www.instagram.com/?hl=en`} target='_blank'>

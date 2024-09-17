@@ -28,7 +28,7 @@ const Header = () => {
                     <div className="w-full lg:w-5/12 mb-4 lg:mb-0">
                         <div className="flex items-center space-x-2">
                             <marquee behavior="scroll" direction="left" className="text-white text-sm"> {/* Chữ nhỏ hơn */}
-                                Chào mừng bạn đến với FOREVER. Nếu bạn cần giúp đỡ, Hãy liên lạc với chúng tôi qua số hotline: (+84) 123456789 hoặc email: bookstore@gmail.com
+                                Chào mừng bạn đến với FOREVER. Nếu bạn cần giúp đỡ, Hãy liên lạc với chúng tôi qua số hotline: (+84) 915234798 hoặc email: Bookstore@gmail.com
                             </marquee>
                         </div>
                     </div>
@@ -37,10 +37,10 @@ const Header = () => {
                     <div className="w-full lg:w-5/12 text-right">
                         <div className="space-x-4">
                             <a href="tel:(+84) 1900561595" className="text-white hover:text-gray-300"> {/* Chữ trắng */}
-                                <i className="fa fa-phone" aria-hidden="true"></i> (+84) 123456789
+                                <i className="fa fa-phone" aria-hidden="true"></i> (+84) 915234798
                             </a>
                             <a href="mailto:cskh_online@sachtructuyen.com.vn" className="text-white hover:text-gray-300"> {/* Chữ trắng */}
-                                <i className="fa fa-envelope" aria-hidden="true"></i> bookstore@gmail.com
+                                <i className="fa fa-envelope" aria-hidden="true"></i> Bookstore@gmail.com
                             </a>
                         </div>
                     </div>
