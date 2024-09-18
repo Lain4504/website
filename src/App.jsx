@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
@@ -11,15 +11,47 @@ import Register from "./pages/Register";
 import Collection from "./pages/Collection";
 import Post from "./pages/Post";
 import SearchResult from "./pages/SearchResult";
-import Search from "./components/Search";
+import Page404 from "./components/Page404";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Kiểm tra nếu trang hiện tại là 404
+  const is404Page = location.pathname === '/404';
+
+  // Chuyển hướng tới 404 nếu route không tồn tại
+  useEffect(() => {
+    const validRoutes = [
+      '/',
+      '/about',
+      '/collections/:id',
+      '/contact',
+      '/post',
+      '/login',
+      '/register',
+      '/search/:name'
+    ];
+
+    const pathExists = validRoutes.some(route => {
+      // Convert route pattern to regex
+      const regexPattern = route
+        .replace(/:[^/]+/, '[^/]+')  // Replace dynamic segments with regex patterns
+        .replace(/\/$/, '\\/?');    // Optional trailing slash
+      const regex = new RegExp(`^${regexPattern}$`);
+      return regex.test(location.pathname);
+    });
+
+    if (!pathExists && location.pathname !== '/404') {
+      navigate('/404');
+    }
+  }, [location, navigate]);
 
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />
-      
+      {/* Chỉ hiển thị Navbar và Footer khi không phải trang 404 */}
+      {!is404Page && <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />}
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
@@ -28,11 +60,12 @@ const App = () => {
         <Route path='/post' element={<Post />} />
         <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
         <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-        <Route path='/search/:name' element={<Search />} />
-        
+        <Route path='/search/:name' element={<SearchResult />} />
+        <Route path='/404' element={<Page404 />} />
       </Routes>
 
-      <Footer />
+      {/* Chỉ hiển thị Footer khi không phải trang 404 */}
+      {!is404Page && <Footer />}
     </div>
   );
 };
