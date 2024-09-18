@@ -3,9 +3,7 @@ import { getBooksByQuery, getBookByQuery } from "../services/BookService"
 import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getCollections, getCollectionById } from '../services/CollectionService'
-import { getCategories } from '../services/CategoryService'
 import Pagination from '../utils/Pagination'
-import Breadcrumbs from '../components/Breadcrumb'
 import Breadcrumb from '../components/Breadcrumb'
 
 const BooksByCollection = () => {
@@ -13,7 +11,6 @@ const BooksByCollection = () => {
     const [books, setBooks] = useState([])
     const [collections, setCollections] = useState([])
     const book_length = useRef(0)
-    const [categories, setCategories] = useState([])
     const [curCollection, setCurCollection] = useState()
     const { id } = useParams()
     const urlParams = new URLSearchParams(window.location.search);
@@ -39,10 +36,6 @@ const BooksByCollection = () => {
 
         getCollections()
             .then(res => setCollections(res.data))
-            .catch(error => console.error(error));
-
-        getCategories()
-            .then(res => setCategories(res.data))
             .catch(error => console.error(error));
     };
 
@@ -146,12 +139,12 @@ const BooksByCollection = () => {
     const breadcrumbs = [
         { title: 'Home', href: '/' },
         { title: curCollection ? curCollection.name : 'All' }
-      ];
+    ];
     return (
         <>
             <section>
                 <div className='mx-auto'>
-                <Breadcrumb items={breadcrumbs}/>
+                    <Breadcrumb items={breadcrumbs} />
                     <div className='flex flex-wrap flex-col md:flex-row'>
                         <div className='w-full lg:w-1/4 px-4 hidden lg:block'>
                             <div>
@@ -257,7 +250,8 @@ const BooksByCollection = () => {
                         </div>
                     </div>
 
-                    <Pagination page={page} totalPage={totalPage} setCurrentPage={setCurrentPage} />                    </div>
+                    <Pagination page={page} totalPage={totalPage} setCurrentPage={setCurrentPage} />
+                </div>
             </section>
         </>
     )
