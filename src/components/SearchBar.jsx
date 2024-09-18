@@ -1,26 +1,58 @@
-import React from 'react';
-import { assets } from '../assets/assets';
+import React, { useState, useEffect } from 'react'
+import { getBooksBySearchValue } from '../services/BookService'
 
-const SearchBar = ({ showSearch, setShowSearch }) => {
+const SearchBar = ({ setResult }) => {
+    const [input, setInput] = useState('')
 
-    return showSearch ? (
-        <div className='border-t border-b bg-gray-50 text-center'>
-            <form className='inline-flex items-center justify-center border border-gray-400 px-5 py-2 my-5 mx-3 rounded-full w-3/4 sm:w-1/2'>
-                <input 
-                    className='flex-1 outline-none bg-inherit text-sm' 
-                    type="text" 
-                    placeholder='Search' 
-                />
-                <img src={assets.search_icon} className='w-4' alt="Search Icon" />
-            </form>
-            <img 
-                onClick={() => setShowSearch(false)} 
-                src={assets.cross_icon} 
-                className='inline w-3 cursor-pointer' 
-                alt='Close Icon' 
+    const handleChange = (e) => {
+        setInput(e.target.value)
+        fetchData(e.target.value)
+    }
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            fetchData(input);
+        }, 300); 
+
+        return () => {
+            clearTimeout(delay);
+        };
+    }, [input]);
+
+    const fetchData = (value) => {
+        if (value === '') {
+            setResult({})
+            return
+        }
+        getBooksBySearchValue(value).then(res => {
+            setResult(res.data)
+        })
+    }
+
+    const redirectSearch = () => {
+        if (input.trim()) {
+            window.location.href = `/search/${input.trim()}`
+        }
+    }
+
+    return (
+        <div className="relative flex items-center">
+            <input 
+                type="text" 
+                onChange={handleChange} 
+                value={input} 
+                className="form-input py-2 px-4 rounded-l-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Search"
+                aria-label="Search" 
+                aria-describedby="search-addon" 
             />
+            <button 
+                onClick={redirectSearch} 
+                className="absolute right-0 rounded-r-md bg-blue-500 text-white p-2 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i className="fas fa-search"></i>
+            </button>
         </div>
-    ) : null;
+    )
 }
 
-export default SearchBar;
+export default SearchBar
