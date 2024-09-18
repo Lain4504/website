@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/ReactToastify.css';
 import { useCookies } from 'react-cookie';
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
@@ -14,7 +12,7 @@ import Register from "./pages/Register";
 import Collection from "./pages/Collection";
 import Post from "./pages/Post";
 import BooksBySearch from "./pages/BookBySearch";
-import SearchPage from "./pages/SearchPage";
+import SearchResult from "./pages/SearchResult";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -40,7 +38,6 @@ const App = () => {
 
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <ToastContainer />
 
       {/* Chỉ hiển thị Navbar và Footer khi không phải trang 404 */}
       {!is404Page && <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />}
@@ -53,7 +50,7 @@ const App = () => {
         <Route path='/post' element={<Post />} />
         <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
         <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
-        <Route path='/search' element={<SearchPage />} />
+        <Route path='/search' element={<SearchResult />} />
 
         {/* Trang 404 */}
         <Route path='/404' element={<Page404 />} />

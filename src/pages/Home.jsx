@@ -39,6 +39,7 @@ const Home = () => {
                 {activeTab === "hotdeals" && (
                     <ListProduct query="sorted-and-paged?sortBy=discount&page=0&size=10&sortOrder=desc"/>
                 )}
+                <h1 className="text-lg flex justify-center font-semibold">BÀI VIẾT MỚI</h1>
             </div>
         </>
     );
