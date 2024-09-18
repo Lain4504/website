@@ -4,9 +4,9 @@ import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import CollectionList from './CollectionList';
+import { SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
-    const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
 
@@ -33,14 +33,18 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             <div className='flex items-center justify-between py-5 font-medium sm:mt-32 xs:mt-32 xxs:mt-32 lg:mt-10 mt-16'>
                 <Link to='/'><img src={assets.logo} className="w-36" alt="Logo" /></Link>
                 <div className='flex items-center gap-6 ml-auto'>
-                    <img 
-                        onClick={() => setShowSearch(true)} 
-                        src={assets.search_icon} 
-                        className='w-5 cursor-pointer' 
-                        alt="Search Icon" 
+                    <SearchOutlined 
+                        style={{ fontSize: '24px' }} 
+                        onClick={() => setShowSearch(prev => !prev)}
+                        className='w-5 cursor-pointer'
+                        alt="Search Icon"
                     />
                     <div className='group relative'>
-                        <img src={assets.profile_icon} className='w-6 cursor-pointer' alt="Profile Icon" />
+                        <UserOutlined 
+                            style={{ fontSize: '24px' }} 
+                            className='w-6 cursor-pointer' 
+                            alt="Profile Icon" 
+                        />
                         <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
                             {cookies.authToken ? (
                                 <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
@@ -57,17 +61,21 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         </div>
                     </div>
                     <Link to='/cart' className='relative'>
-                        <img src={assets.cart_icon} className='w-5 min-w-5' alt="Cart Icon" />
+                        <ShoppingCartOutlined 
+                            style={{ fontSize: "24px" }} 
+                            className='w-5 min-w-5' 
+                            alt="Cart Icon" 
+                        />
                         <p className='absolute right-[-5px] bottom-[-5px] 
                                     w-4 text-center leading-4 bg-black
                                     text-white aspect-square rounded-full text-[8px]'>
                         </p>
                     </Link>
-                    <img 
-                        onClick={() => setVisible(true)} 
-                        src={assets.menu_icon} 
-                        className='w-5 cursor-pointer md:hidden' 
-                        alt="Menu Icon" 
+                    <img
+                        onClick={() => setVisible(true)}
+                        src={assets.menu_icon}
+                        className='w-5 cursor-pointer md:hidden'
+                        alt="Menu Icon"
                     />
                 </div>
 
@@ -88,7 +96,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                 </div>
             </div>
             <hr />
-            <SearchBar search={search} setSearch={setSearch} showSearch={showSearch} setShowSearch={setShowSearch} />
+            {showSearch && <SearchBar showSearch={showSearch} setShowSearch={setShowSearch} />}
             <div className='flex items-center justify-center py-5 font-medium'>
                 <ul className='hidden md:flex gap-16 text-md text-gray-700'>
                     <NavLink to='/' className='flex flex-col items-center gap-1'>
