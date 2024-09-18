@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BOOK_API_BASE_URL = "http://localhost:8081/api/v1/book"
+const BOOK_API_BASE_URL = "http://localhost:5146/api/book"
 
 const getBook = () => {
     return axios.get(BOOK_API_BASE_URL)
