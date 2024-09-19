@@ -31,13 +31,13 @@ const Home = () => {
 
                 {/* Content based on current tab */}
                 {activeTab === "new" && (
-                    <ListProduct query="sorted-and-paged?sortBy=id&page=0&size=10&sortOrder=desc" />
+                    <ListProduct query="sorted-and-paged?sortBy=Id&page=0&size=10&sortOrder=desc" />
                 )}
                 {activeTab === "bestseller" && (
-                    <ListProduct query="sorted-and-paged?sortBy=sold&page=0&size=10&sortOrder=desc" />
+                    <ListProduct query="sorted-and-paged?sortBy=Sold&page=0&size=10&sortOrder=desc" />
                 )}
                 {activeTab === "hotdeals" && (
-                    <ListProduct query="sorted-and-paged?sortBy=discount&page=0&size=10&sortOrder=desc"/>
+                    <ListProduct query="sorted-and-paged?sortBy=Discount&page=0&size=10&sortOrder=desc"/>
                 )}
                 <h1 className="text-lg flex justify-center font-semibold">BÀI VIẾT MỚI</h1>
             </div>

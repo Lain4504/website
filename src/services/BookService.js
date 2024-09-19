@@ -1,7 +1,6 @@
 import axios from "axios"
 
 const BOOK_URL = "http://localhost:5146/api/book"
-
 const getBook = () => {
     return axios.get(BOOK_URL)
 }
@@ -12,6 +11,14 @@ const getBookById = (id) => {
 
 const getBookByQuery = (query) => {
     return axios.get(BOOK_URL + '/' + query)
+    .then(response => {
+        console.log('Get All Books Response:', response);
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching all books:', error);
+        throw error;
+    });
 }
 
 const getBooksByCollectionId = (id) => {
