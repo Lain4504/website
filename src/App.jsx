@@ -14,6 +14,7 @@ import SearchResult from "./pages/SearchResult";
 import Page404 from "./components/Page404";
 import Activate from "./components/Activate";
 import ForgotPassword from "./components/ForgotPassword";
+import ProductDetail from "./pages/ProductDetail";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -35,7 +36,8 @@ const App = () => {
       '/register',
       '/search/:name',
       '/active',
-      '/forgot-password'
+      '/forgot-password',
+      '/products/:id'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -53,6 +55,7 @@ const App = () => {
   }, [location, navigate]);
 
   return (
+    <>
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       {/* Chỉ hiển thị Navbar và Footer khi không phải trang 404 */}
       {!is404Page && <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />}
@@ -68,11 +71,12 @@ const App = () => {
         <Route path='/active' element={<Activate />} />
         <Route path='/404' element={<Page404 />} />
         <Route path='/forgot-password' element={<ForgotPassword/>}/>
+        <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
       </Routes>
-
       {/* Chỉ hiển thị Footer khi không phải trang 404 */}
       {!is404Page && <Footer />}
     </div>
+     </>
   );
 };
 
