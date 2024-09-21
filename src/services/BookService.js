@@ -32,9 +32,9 @@ const getBooksByCollectionId = (id) => {
 const getBooksByQuery = (id, page, min, max) => {
     if(id === 'all')
     {
-        return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?sortBy=price&page=${page === null ? 0 : page - 1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
+        return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?sortBy=Price&page=${page === null ? 0 : page - 1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
     }
-    return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?collection=${id}&sortBy=price&page=${page -1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
+    return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?collection=${id}&sortBy=Price&page=${page -1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
 }
 
 const getBooksBySearchValue = (value) => {

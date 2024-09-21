@@ -82,6 +82,7 @@ const BooksByCollection = () => {
     const handlePrice = (e) => {
         const minValue = Number(e.target.dataset.min)
         const maxValue = Number(e.target.dataset.max)
+        setCurCollection(null);
         if (minValue && maxValue) {
             navigate(`/collections/${id}?min=${minValue}&max=${maxValue}${page ? `&page=${page}` : ''}`)
         }
@@ -97,31 +98,32 @@ const BooksByCollection = () => {
     }
     const handleChange = (e) => {
         const value = e.target.value
+        setCurCollection(null);
         switch (value) {
             case 'manual':
                 break;
             case 'newest':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=id&size=12&sortOrder=desc"')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Id&size=12&sortOrder=desc')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'best-selling':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=sold&size=12')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Sold&size=12')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'title-ascending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=title&size=12')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Title&size=12')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'title-descending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=title&size=12&sortOrder=desc')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Title&size=12&sortOrder=desc')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'price-ascending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=price&size=12')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Price&size=12')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'price-descending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=price&size=12&sortOrder=desc')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Price&size=12&sortOrder=desc')
                     .then(res => setBooks(res.data.content))
                 break;
             default:
