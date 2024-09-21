@@ -4,7 +4,7 @@ import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import CollectionList from './CollectionList';
-import { SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
@@ -39,6 +39,25 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         className='w-5 cursor-pointer'
                         alt="Search Icon"
                     />
+                   
+                    <Link to='wishlist' className='relative'>
+                    <HeartOutlined
+                    style={{fontSize: "24px"}}
+                    className='w-5 min-w-5'
+                    alt='Wishlist Icon'
+                    /> 
+                    </Link>
+                    <Link to='/cart' className='relative'>
+                        <ShoppingCartOutlined 
+                            style={{ fontSize: "24px" }} 
+                            className='w-5 min-w-5' 
+                            alt="Cart Icon" 
+                        />
+                        <p className='absolute right-[-5px] bottom-[-5px] 
+                                    w-4 text-center leading-4 bg-black
+                                    text-white aspect-square rounded-full text-[8px]'>
+                        </p>
+                    </Link>
                     <div className='group relative'>
                         <UserOutlined 
                             style={{ fontSize: '24px' }} 
@@ -60,17 +79,6 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                             )}
                         </div>
                     </div>
-                    <Link to='/cart' className='relative'>
-                        <ShoppingCartOutlined 
-                            style={{ fontSize: "24px" }} 
-                            className='w-5 min-w-5' 
-                            alt="Cart Icon" 
-                        />
-                        <p className='absolute right-[-5px] bottom-[-5px] 
-                                    w-4 text-center leading-4 bg-black
-                                    text-white aspect-square rounded-full text-[8px]'>
-                        </p>
-                    </Link>
                     <img
                         onClick={() => setVisible(true)}
                         src={assets.menu_icon}
