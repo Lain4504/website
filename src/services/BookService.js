@@ -1,7 +1,6 @@
 import axios from "axios"
 
 const BOOK_URL = "http://localhost:5146/api/book"
-
 const getBook = () => {
     return axios.get(BOOK_URL)
 }
@@ -12,6 +11,14 @@ const getBookById = (id) => {
 
 const getBookByQuery = (query) => {
     return axios.get(BOOK_URL + '/' + query)
+    .then(response => {
+        console.log('Get All Books Response:', response);
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching all books:', error);
+        throw error;
+    });
 }
 
 const getBooksByCollectionId = (id) => {
@@ -25,9 +32,9 @@ const getBooksByCollectionId = (id) => {
 const getBooksByQuery = (id, page, min, max) => {
     if(id === 'all')
     {
-        return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?sortBy=price&page=${page === null ? 0 : page - 1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
+        return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?sortBy=Price&page=${page === null ? 0 : page - 1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
     }
-    return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?collection=${id}&sortBy=price&page=${page -1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
+    return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?collection=${id}&sortBy=Price&page=${page -1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
 }
 
 const getBooksBySearchValue = (value) => {

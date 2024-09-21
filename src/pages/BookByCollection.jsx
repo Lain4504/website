@@ -82,6 +82,7 @@ const BooksByCollection = () => {
     const handlePrice = (e) => {
         const minValue = Number(e.target.dataset.min)
         const maxValue = Number(e.target.dataset.max)
+        setCurCollection(null);
         if (minValue && maxValue) {
             navigate(`/collections/${id}?min=${minValue}&max=${maxValue}${page ? `&page=${page}` : ''}`)
         }
@@ -97,31 +98,32 @@ const BooksByCollection = () => {
     }
     const handleChange = (e) => {
         const value = e.target.value
+        setCurCollection(null);
         switch (value) {
             case 'manual':
                 break;
             case 'newest':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=id&size=12&sortOrder=desc"')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Id&size=12&sortOrder=desc')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'best-selling':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=sold&size=12')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Sold&size=12')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'title-ascending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=title&size=12')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Title&size=12')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'title-descending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=title&size=12&sortOrder=desc')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Title&size=12&sortOrder=desc')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'price-ascending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=price&size=12')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Price&size=12')
                     .then(res => setBooks(res.data.content))
                 break;
             case 'price-descending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=price&size=12&sortOrder=desc')
+                getBookByQuery('sorted-and-paged/by-collection?sortBy=Price&size=12&sortOrder=desc')
                     .then(res => setBooks(res.data.content))
                 break;
             default:
@@ -227,19 +229,22 @@ const BooksByCollection = () => {
                             <div>
                                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
                                     {books.map(book => (
-                                        <div key={book.id}>
-                                            <div className="relative">
+                                        <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center">
+                                            <div className="relative" >
                                                 <Link to={`/products/${book.id}`}>
                                                     <img src={book.images[0].link} alt={book.title} className="w-full h-auto object-cover" />
                                                 </Link>
-                                                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold px-2 py-1">
+                                                <div className="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-bl-lg px-2 py-1">
                                                     -{book.discount * 100}%
                                                 </div>
+                                                <div className="absolute bottom-0 left-0 right-0 bg-black text-white text-center text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    {book.title}
+                                                </div>
                                             </div>
-                                            <div className="mt-2 text-center">
-                                                <Link to={`/products/${book.id}`} className="block font-medium text-gray-900 hover:underline">{book.title}</Link>
-                                                <div className="text-red-500 mt-1">
-                                                    <span> {book.salePrice.toLocaleString()}₫</span>
+                                            <div className="p-2">
+                                                <Link to={`/products/${book.id}`} className="text-gray-900 hover:text-gray-700 truncate block">{book.title}</Link>
+                                                <div className="flex items-center justify-center space-x-5">
+                                                    <span className="text-sm font-bold text-red-500"> {book.salePrice.toLocaleString()}₫</span>
                                                     <span className="text-gray-500 line-through ml-2">{book.price.toLocaleString()}₫</span>
                                                 </div>
                                             </div>
