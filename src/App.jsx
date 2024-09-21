@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Collection from "./pages/Collection";
+import Collection from "./pages/BookByCollection";
 import Post from "./pages/Post";
 import SearchResult from "./pages/SearchResult";
 import Page404 from "./components/Page404";
