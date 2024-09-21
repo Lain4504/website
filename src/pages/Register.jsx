@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, Input, Button, Alert, Typography } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Button, Alert, Typography, Modal } from 'antd';
 import { createAccount } from '../services/UserService';
 import { Link } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
@@ -7,6 +7,22 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 const Register = () => {
     const [form] = Form.useForm();
     const [existingAccountError, setExistingAccountError] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [countdown, setCountdown] = useState(30); // 30 giây đếm ngược
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Khóa nút resend email
+
+    // Bắt đầu đếm ngược 30 giây sau khi modal được hiển thị
+    useEffect(() => {
+        let timer;
+        if (isModalVisible && countdown > 0) {
+            timer = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+        } else if (countdown === 0) {
+            setIsButtonDisabled(false); // Hết 30 giây, mở khóa nút resend email
+        }
+        return () => clearInterval(timer); // Hủy timer khi không cần thiết
+    }, [isModalVisible, countdown]);
 
     const onSubmitHandler = (values) => {
         const account = { email: values.email, password: values.password };
@@ -14,11 +30,18 @@ const Register = () => {
         createAccount(account)
             .then(() => {
                 setExistingAccountError(false);
-                window.location.href = '/check-email';
+                setIsModalVisible(true); // Hiển thị modal khi đăng ký thành công
             })
             .catch(() => {
                 setExistingAccountError(true);
             });
+    };
+
+    const resendEmail = () => {
+        setCountdown(30); // Reset lại đếm ngược khi gửi lại email
+        setIsButtonDisabled(true); // Khóa nút resend email khi đếm ngược bắt đầu
+        // Gọi API resend email ở đây
+        console.log("Resending email...");
     };
 
     return (
@@ -82,7 +105,7 @@ const Register = () => {
                             ]}
                         >
                             <Input.Password
-                                className=" w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 placeholder="Nhập mật khẩu"
                                 iconRender={(visible) =>
                                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -110,7 +133,7 @@ const Register = () => {
                             ]}
                         >
                             <Input.Password
-                                className=" w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 placeholder="Xác nhận mật khẩu"
                                 iconRender={(visible) =>
                                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -138,6 +161,26 @@ const Register = () => {
                         </Link>
                     </p>
                 </div>
+
+                {/* Ant Design Modal */}
+                <Modal
+                    title="Xác nhận email"
+                    visible={isModalVisible}
+                    footer={[
+                        <Button
+                            key="resend"
+                            onClick={resendEmail}
+                            disabled={isButtonDisabled}
+                            className={`w-full ${isButtonDisabled ? 'bg-gray-400' : 'bg-green-600'} text-white`}
+                        >
+                            {isButtonDisabled ? `Resend Email (${countdown}s)` : 'Resend Email'}
+                        </Button>,
+                    ]}
+                    onCancel={() => setIsModalVisible(false)}
+                >
+                    <p>Chúng tôi đã gửi email xác nhận đến địa chỉ của bạn. Vui lòng kiểm tra hộp thư để hoàn tất đăng ký.</p>
+                    <p>Nếu bạn không thấy email, vui lòng kiểm tra hộp thư rác.</p>
+                </Modal>
             </div>
         </>
     );
