@@ -4,31 +4,19 @@ import { Input, Button, Form, message } from 'antd';
 // import { forgetPassword } from '../services/UserService';
 
 const ForgotPassword = () => {
-    const [emailData, setEmail] = useState({ email: '' });
     const [isSending, setIsSending] = useState(false);
-    const [emailError, setEmailError] = useState(false);
 
-    const handleSubmit = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailData.email)) {
-            setEmailError(true);
-            return;
-        }
-        forgetPassword(emailData)
+    const handleSubmit = (values) => {
+        // `values.email` will contain the email input if the form is valid
+        forgetPassword({ email: values.email })
             .then((res) => {
                 if (res.status === 200) {
                     setIsSending(true);
-                    setEmailError(false);
-                    message.success('Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.');
                 }
             })
             .catch((err) => {
                 message.error(err.response.data.message || 'Có lỗi xảy ra!');
             });
-    };
-
-    const handleChange = (e) => {
-        setEmail({ email: e.target.value });
     };
 
     return (
@@ -43,14 +31,20 @@ const ForgotPassword = () => {
                     <h3 className="text-2xl font-semibold text-center mb-4">Quên mật khẩu</h3>
                     <Form.Item
                         name="email"
-                        validateStatus={emailError ? 'error' : ''}
-                        help={emailError && 'Email không hợp lệ'}
+                        rules={[
+                            {
+                                type: 'email',
+                                message: 'Email không hợp lệ',
+                            },
+                            {
+                                required: true,
+                                message: 'Vui lòng nhập email của bạn',
+                            },
+                        ]}
                     >
                         <Input
                             type="text"
                             placeholder="Nhập email của bạn"
-                            value={emailData.email}
-                            onChange={handleChange}
                             required
                         />
                     </Form.Item>
