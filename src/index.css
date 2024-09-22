@@ -41,3 +41,18 @@ a.active hr{
 .animate-move-from-center {
     animation: moveFromCenter 0.6s ease-out forwards;
 }
+.product-image {
+    transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
+}
+
+.product-image:hover {
+    transform: scale(1.05); /* Phóng to ảnh khi hover */
+}
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
+}
+
+.product-card:hover {
+    transform: scale(1.05); /* Phóng to sản phẩm khi hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ khi hover */
+}

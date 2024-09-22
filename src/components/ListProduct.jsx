@@ -4,20 +4,25 @@ import { Link } from "react-router-dom";
 
 const ListProduct = (props) => {
     const [books, setBooks] = useState([]); // Initialize as an empty array
+    const [hoveredBookTitle, setHoveredBookTitle] = useState(""); // State to track hovered book title
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // State to track mouse position
 
     const fetchData = () => {
         getBookByQuery(props.query)
             .then(res => {
-                // Ensure `content` is an array
                 const booksData = Array.isArray(res.data.content) ? res.data.content : [];
                 setBooks(booksData);
             })
             .catch((error) => console.log("Error fetching book data " + error));
-    }
+    };
 
     useEffect(() => {
         fetchData();
     }, [props.query]);
+
+    const handleMouseMove = (e) => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
     return (
         <div className="py-12">
@@ -26,16 +31,19 @@ const ListProduct = (props) => {
                     {
                         books.length > 0 ? (
                             books.map(book => (
-                                <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center">
+                                <div
+                                    key={book.id}
+                                    className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
+                                    onMouseEnter={() => setHoveredBookTitle(book.title)} // Set title on mouse enter
+                                    onMouseLeave={() => setHoveredBookTitle("")} // Clear title on mouse leave
+                                    onMouseMove={handleMouseMove} // Update mouse position
+                                >
                                     <div className="relative">
                                         <Link to={`/products/${book.id}`}>
-                                            <img src={book.images[0]?.link} alt={book.title} className="w-full h-auto object-cover" />
+                                            <img src={book.images[0]?.link} alt={book.title} className="w-full h-auto object-cover product-image" />
                                         </Link>
                                         <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
                                             -{book.discount * 100}%
-                                        </div>
-                                        <div className="absolute bottom-0 left-0 right-0 bg-black text-white text-center text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            {book.title}
                                         </div>
                                     </div>
                                     <div className="p-2">
@@ -59,6 +67,17 @@ const ListProduct = (props) => {
                         </a>
                     </div>
                 </div>
+                {hoveredBookTitle && (
+                    <div
+                        className="fixed bg-gray-800 text-xs text-white p-2 rounded-md"
+                        style={{
+                            left: mousePosition.x + 10, // Adjust position to the right of the cursor
+                            top: mousePosition.y + 10 // Adjust position below the cursor
+                        }}
+                    >
+                        {hoveredBookTitle} {/* Display hovered book title */}
+                    </div>
+                )}
             </div>
         </div>
     );
