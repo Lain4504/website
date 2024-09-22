@@ -15,6 +15,7 @@ import Page404 from "./components/Page404";
 import Activate from "./components/Activate";
 import ForgotPassword from "./components/ForgotPassword";
 import ProductDetail from "./pages/ProductDetail";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -56,27 +57,37 @@ const App = () => {
 
   return (
     <>
-    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      {/* Chỉ hiển thị Navbar và Footer khi không phải trang 404 */}
-      {!is404Page && <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />}
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/collections/:id' element={<Collection />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/post' element={<Post />} />
-        <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-        <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-        <Route path='/search/:name' element={<SearchResult />} />
-        <Route path='/active' element={<Activate />} />
-        <Route path='/404' element={<Page404 />} />
-        <Route path='/forgot-password' element={<ForgotPassword/>}/>
-        <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
-      </Routes>
-      {/* Chỉ hiển thị Footer khi không phải trang 404 */}
-      {!is404Page && <Footer />}
-    </div>
-     </>
+      <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+        {/* Chỉ hiển thị Navbar và Footer khi không phải trang 404 */}
+        {!is404Page && <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />}
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/collections/:id' element={<Collection />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/post' element={<Post />} />
+          <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+          <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+          <Route path='/search/:name' element={<SearchResult />} />
+          <Route path='/active' element={<Activate />} />
+          <Route path='/404' element={<Page404 />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
+        </Routes>
+        <ScrollToTop />
+        {/* Chỉ hiển thị Footer khi không phải trang 404 */}
+        {!is404Page && <Footer />}
+      </div>
+
+
+
+
+      {/* Copyright */}
+      <div className="bg-black">
+        <hr />
+        <p className="py-5 text-sm text-center text-white"> Copyright 2024@ Book Store - All Right Reserved </p>
+      </div>
+    </>
   );
 };
 

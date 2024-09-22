@@ -33,25 +33,25 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             <div className='flex items-center justify-between py-5 font-medium sm:mt-32 xs:mt-32 xxs:mt-32 lg:mt-10 mt-16'>
                 <Link to='/'><img src={assets.logo} className="w-36" alt="Logo" /></Link>
                 <div className='flex items-center gap-6 ml-auto'>
-                    <SearchOutlined 
-                        style={{ fontSize: '24px' }} 
+                    <SearchOutlined
+                        style={{ fontSize: '24px' }}
                         onClick={() => setShowSearch(prev => !prev)}
                         className='w-5 cursor-pointer'
                         alt="Search Icon"
                     />
-                   
+
                     <Link to='wishlist' className='relative'>
-                    <HeartOutlined
-                    style={{fontSize: "24px"}}
-                    className='w-5 min-w-5'
-                    alt='Wishlist Icon'
-                    /> 
+                        <HeartOutlined
+                            style={{ fontSize: "24px" }}
+                            className='w-5 min-w-5'
+                            alt='Wishlist Icon'
+                        />
                     </Link>
                     <Link to='/cart' className='relative'>
-                        <ShoppingCartOutlined 
-                            style={{ fontSize: "24px" }} 
-                            className='w-5 min-w-5' 
-                            alt="Cart Icon" 
+                        <ShoppingCartOutlined
+                            style={{ fontSize: "24px" }}
+                            className='w-5 min-w-5'
+                            alt="Cart Icon"
                         />
                         <p className='absolute right-[-5px] bottom-[-5px] 
                                     w-4 text-center leading-4 bg-black
@@ -59,10 +59,10 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         </p>
                     </Link>
                     <div className='group relative'>
-                        <UserOutlined 
-                            style={{ fontSize: '24px' }} 
-                            className='w-6 cursor-pointer' 
-                            alt="Profile Icon" 
+                        <UserOutlined
+                            style={{ fontSize: '24px' }}
+                            className='w-6 cursor-pointer'
+                            alt="Profile Icon"
                         />
                         <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
                             {cookies.authToken ? (
@@ -107,27 +107,28 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             {showSearch && <SearchBar showSearch={showSearch} setShowSearch={setShowSearch} />}
             <div className='flex items-center justify-center py-5 font-medium'>
                 <ul className='hidden md:flex gap-16 text-md text-gray-700'>
-                    <NavLink to='/' className='flex flex-col items-center gap-1'>
+                    <NavLink to='/' className='nav-link flex flex-col items-center gap-1'>
                         <p>TRANG CHỦ</p>
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </NavLink>
-                    <h1 to='/about' className='flex flex-col items-center gap-1'>
+                    <h1 className='flex flex-col items-center gap-1'>
                         <CollectionList />
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </h1>
-                    <NavLink to='/post' className='flex flex-col items-center gap-1'>
+                    <NavLink to='/post' className='nav-link flex flex-col items-center gap-1'>
                         <p>TIN TỨC</p>
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </NavLink>
-                    <NavLink to='/about' className='flex flex-col items-center gap-1'>
+                    <NavLink to='/about' className='nav-link flex flex-col items-center gap-1'>
                         <p>VỀ FOREVER</p>
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </NavLink>
-                    <NavLink to='/contact' className='flex flex-col items-center gap-1'>
+                    <NavLink to='/contact' className='nav-link flex flex-col items-center gap-1'>
                         <p>LIÊN HỆ</p>
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </NavLink>
                 </ul>
+
             </div>
         </>
     );

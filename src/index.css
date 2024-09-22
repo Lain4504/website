@@ -56,3 +56,18 @@ a.active hr{
     transform: scale(1.05); /* Phóng to sản phẩm khi hover */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ khi hover */
 }
+
+/* styles.css */
+
+.nav-link {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-3px);
+    color: #000; /* Màu khi hover */
+}
+
+.nav-link:active {
+    transform: translateY(1px); /* Hiệu ứng khi nhấn */
+}

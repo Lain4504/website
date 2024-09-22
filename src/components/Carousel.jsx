@@ -22,7 +22,7 @@ const CarouselComponent = () => {
   }, []);
 
   return (
-    <Carousel autoplay>
+    <Carousel autoplay dots={{ className: 'custom-dots' }}>
       {sliders.map((slider) => (
         <div key={slider.id} className="w-full">
           <a href={slider.backLink}>
@@ -39,3 +39,18 @@ const CarouselComponent = () => {
 };
 
 export default CarouselComponent;
+
+// CSS styles
+const styles = `
+.custom-dots li {
+  background: black !important; // Set dot color to black
+}
+.custom-dots li.slick-active {
+  background: gray !important; // Optional: active dot color
+}
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
