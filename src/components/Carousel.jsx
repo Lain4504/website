@@ -22,7 +22,7 @@ const CarouselComponent = () => {
   }, []);
 
   return (
-    <Carousel autoplay dots={{ className: 'custom-dots' }}>
+    <Carousel autoplay dots={{ className: 'custom-dots' }} className="-z-10">
       {sliders.map((slider) => (
         <div key={slider.id} className="w-full">
           <a href={slider.backLink}>

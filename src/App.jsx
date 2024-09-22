@@ -16,6 +16,7 @@ import Activate from "./components/Activate";
 import ForgotPassword from "./components/ForgotPassword";
 import ProductDetail from "./pages/ProductDetail";
 import ScrollToTop from "./components/ScrollToTop";
+import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -75,18 +76,18 @@ const App = () => {
           <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
         </Routes>
         <ScrollToTop />
+        <FloatingPhoneIcon/>
         {/* Chỉ hiển thị Footer khi không phải trang 404 */}
         {!is404Page && <Footer />}
       </div>
 
-
-
-
       {/* Copyright */}
+      {!is404Page && 
       <div className="bg-black">
         <hr />
         <p className="py-5 text-sm text-center text-white"> Copyright 2024@ Book Store - All Right Reserved </p>
       </div>
+      }
     </>
   );
 };

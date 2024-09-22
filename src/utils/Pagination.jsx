@@ -30,7 +30,7 @@ const Pagination = ({ page, totalPage, setCurrentPage }) => {
     };
 
     return (
-        <div className="pagination flex justify-center items-center mt-6 space-x-2">
+        <div className="pagination flex justify-center items-center my-10 space-x-2">
             {/* Nút First */}
             <button
                 onClick={() => setCurrentPage(1)}
