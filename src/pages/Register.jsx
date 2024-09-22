@@ -3,6 +3,7 @@ import { Form, Input, Button, Alert, Typography, Modal } from 'antd';
 import { createAccount } from '../services/UserService';
 import { Link } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import Breadcrumb from '../components/Breadcrumb';
 
 const Register = () => {
     const [form] = Form.useForm();
@@ -43,9 +44,13 @@ const Register = () => {
         // Gọi API resend email ở đây
         console.log("Resending email...");
     };
-
+    const breadcrumbs = [
+        { title: 'Home', href: '/' },
+        { title: 'Register' }
+      ];
     return (
         <>
+                <Breadcrumb items={breadcrumbs} />
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

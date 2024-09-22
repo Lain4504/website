@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { getCollections, getCollectionById } from '../services/CollectionService'
 import Pagination from '../utils/Pagination'
 import Breadcrumb from '../components/Breadcrumb'
+import { Menu, Radio, Select } from 'antd'
 
 const BooksByCollection = () => {
     const navigate = useNavigate()
@@ -17,6 +18,8 @@ const BooksByCollection = () => {
     const [page, setPage] = useState(urlParams.get('page'));
     const [limit,] = useState(12);
     const totalPage = Math.ceil(book_length.current / limit);
+    const [hoveredBookTitle, setHoveredBookTitle] = useState("");
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // State to track mouse position
 
     const fetchData = (id) => {
         if (id === 'all') {
@@ -38,15 +41,6 @@ const BooksByCollection = () => {
             .then(res => setCollections(res.data))
             .catch(error => console.error(error));
     };
-
-
-    const collection_items = collections.map(collection => (
-        collection.isDisplay ? (
-            <li key={collection.id}>
-                <Link to={`/collections/${collection.id}`} className="hover:underline text-blue-600">{collection.name}</Link>
-            </li>
-        ) : null
-    ));
 
     const setCurrentPage = (value) => {
         window.scrollTo(0, 0);
@@ -80,24 +74,51 @@ const BooksByCollection = () => {
     }
 
     const handlePrice = (e) => {
-        const minValue = Number(e.target.dataset.min)
-        const maxValue = Number(e.target.dataset.max)
+        const value = e.target.value;
         setCurCollection(null);
-        if (minValue && maxValue) {
-            navigate(`/collections/${id}?min=${minValue}&max=${maxValue}${page ? `&page=${page}` : ''}`)
+        let minValue = null;
+        let maxValue = null;
+
+        switch (value) {
+            case 'all':
+                break;
+            case 'under-10000':
+                maxValue = 10000;
+                break;
+            case '10-20':
+                minValue = 10000;
+                maxValue = 20000;
+                break;
+            case '20-30':
+                minValue = 20000;
+                maxValue = 30000;
+                break;
+            case '30-40':
+                minValue = 30000;
+                maxValue = 40000;
+                break;
+            case '40-50':
+                minValue = 40000;
+                maxValue = 50000;
+                break;
+            case 'over-50000':
+                minValue = 50000;
+                break;
+            default:
+                break;
         }
-        else if (minValue) {
-            navigate(`/collections/${id}?min=${minValue}${page ? `&page=${page}` : ''}`)
-        }
-        else if (maxValue) {
-            navigate(`/collections/${id}?max=${maxValue}${page ? `&page=${page}` : ''}`)
-        }
-        else {
-            navigate(`/collections/${id}${page ? `?page=${page}` : ''}`)
+
+        if (minValue !== null && maxValue !== null) {
+            navigate(`/collections/${id}?min=${minValue}&max=${maxValue}${page ? `&page=${page}` : ''}`);
+        } else if (minValue !== null) {
+            navigate(`/collections/${id}?min=${minValue}${page ? `&page=${page}` : ''}`);
+        } else if (maxValue !== null) {
+            navigate(`/collections/${id}?max=${maxValue}${page ? `&page=${page}` : ''}`);
+        } else {
+            navigate(`/collections/${id}${page ? `?page=${page}` : ''}`);
         }
     }
-    const handleChange = (e) => {
-        const value = e.target.value
+    const handleChange = (value) => {
         setCurCollection(null);
         switch (value) {
             case 'manual':
@@ -142,6 +163,9 @@ const BooksByCollection = () => {
         { title: 'Home', href: '/' },
         { title: curCollection ? curCollection.name : 'All' }
     ];
+    const handleMouseMove = (e) => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+    };
     return (
         <>
             <section>
@@ -149,62 +173,31 @@ const BooksByCollection = () => {
                     <Breadcrumb items={breadcrumbs} />
                     <div className='flex flex-wrap flex-col md:flex-row'>
                         <div className='w-full lg:w-1/4 px-4 hidden lg:block'>
-                            <div>
-                                <h2 className="font-semibold text-lg">Danh Mục Sản Phẩm</h2>
-                                <ul className='mt-2 space-y-1'>
-                                    <li>
-                                        <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
-                                    </li>
-                                    {collection_items}
-                                </ul>
-                            </div>
+                            <h2 className="font-semibold text-lg">Danh Mục Sản Phẩm</h2>
+                            <Menu>
+                                <Menu.Item key="all">
+                                    <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
+                                </Menu.Item>
+                                {collections.map(collection => (
+                                    collection.isDisplay ? (
+                                        <Menu.Item key={collection.id}>
+                                            <Link to={`/collections/${collection.id}`} className="hover:underline text-blue-600">{collection.name}</Link>
+                                        </Menu.Item>
+                                    ) : null
+                                ))}
+                            </Menu>
 
                             <div className="mt-8">
                                 <h2 className="font-semibold text-lg">Khoảng Giá</h2>
-                                <ul className='mt-2 space-y-2'>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} type='radio' name='price-filter'></input>
-                                            <span>Tất cả</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} type='radio' data-max='10000' name='price-filter'></input>
-                                            <span>Nhỏ hơn 10,000₫</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} type='radio' data-min='10000' data-max='20000' name='price-filter'></input>
-                                            <span> Từ 10,000₫ - 20,000₫</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} type='radio' data-min='20000' data-max='30000' name='price-filter'></input>
-                                            <span>Từ 20,000₫ - 30,000₫</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} type='radio' data-min='30000' data-max='40000' name='price-filter'></input>
-                                            <span> Từ 30,000₫ - 40,000₫</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} data-min='40000' data-max='50000' type='radio' name='price-filter'></input>
-                                            <span>Từ 40,000₫ - 50,000₫</span>
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label>
-                                            <input onClick={handlePrice} type='radio' data-min='50000' name='price-filter'></input>
-                                            <span>Lớn hơn 50,000₫</span>
-                                        </label>
-                                    </li>
-                                </ul>
+                                <Radio.Group onChange={handlePrice} defaultValue="all" className='mt-2 space-y-2'>
+                                    <Radio value="all" className="block">Tất cả</Radio>
+                                    <Radio value="under-10000" className="block">Nhỏ hơn 10,000₫</Radio>
+                                    <Radio value="10-20" className="block">Từ 10,000₫ - 20,000₫</Radio>
+                                    <Radio value="20-30" className="block">Từ 20,000₫ - 30,000₫</Radio>
+                                    <Radio value="30-40" className="block">Từ 30,000₫ - 40,000₫</Radio>
+                                    <Radio value="40-50" className="block">Từ 40,000₫ - 50,000₫</Radio>
+                                    <Radio value="over-50000" className="block">Lớn hơn 50,000₫</Radio>
+                                </Radio.Group>
                             </div>
                         </div>
                         <div className='w-full lg:w-3/4 px-4'>
@@ -213,43 +206,64 @@ const BooksByCollection = () => {
                                     <h3 className='text-xl font-bold'>{id === 'all' ? "TẤT CẢ SẢN PHẨM" : curCollection ? curCollection.name : ''}</h3>
                                     <div className="text-right">
                                         <label htmlFor="SortBy">Sắp xếp</label>
-                                        <select onChange={(e) => handleChange(e)} name="SortBy" id="SortBy" className="ml-2 p-2 border border-gray-300 rounded">
-                                            <option value="manual">Tùy chọn</option>
-                                            <option value="newest">Mới nhất</option>
-                                            <option value="best-selling">Bán chạy nhất</option>
-                                            <option value="title-ascending">Tên A-Z</option>
-                                            <option value="title-descending">Tên Z-A</option>
-                                            <option value="price-ascending">Giá tăng dần</option>
-                                            <option value="price-descending">Giá giảm dần</option>
-                                        </select>
+                                        <Select
+                                            defaultValue="manual"
+                                            onChange={handleChange}
+                                            style={{ width: '120px', textAlign: "center" }}
+                                            className="ml-2 "
+                                        >
+                                            <Select.Option value="manual">Tùy chọn</Select.Option>
+                                            <Select.Option value="newest">Mới nhất</Select.Option>
+                                            <Select.Option value="best-selling">Bán chạy nhất</Select.Option>
+                                            <Select.Option value="title-ascending">Tên A-Z</Select.Option>
+                                            <Select.Option value="title-descending">Tên Z-A</Select.Option>
+                                            <Select.Option value="price-ascending">Giá tăng dần</Select.Option>
+                                            <Select.Option value="price-descending">Giá giảm dần</Select.Option>
+                                        </Select>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:grid-cols-3'>
                                     {books.map(book => (
-                                        <div key={book.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center">
-                                            <div className="relative" >
+                                        <div
+                                            key={book.id}
+                                            className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
+                                            onMouseEnter={() => setHoveredBookTitle(book.title)} // Set title on mouse enter
+                                            onMouseLeave={() => setHoveredBookTitle("")} // Clear title on mouse leave
+                                            onMouseMove={handleMouseMove} // Update mouse position
+                                        >
+                                            <div className="relative">
                                                 <Link to={`/products/${book.id}`}>
-                                                    <img src={book.images[0].link} alt={book.title} className="w-full h-auto object-cover" />
+                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-auto object-cover product-image" />
                                                 </Link>
-                                                <div className="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-bl-lg px-2 py-1">
+                                                <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
                                                     -{book.discount * 100}%
-                                                </div>
-                                                <div className="absolute bottom-0 left-0 right-0 bg-black text-white text-center text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                    {book.title}
                                                 </div>
                                             </div>
                                             <div className="p-2">
-                                                <Link to={`/products/${book.id}`} className="text-gray-900 hover:text-gray-700 truncate block">{book.title}</Link>
+                                                <div className="text-sm font-semibold mb-2 text-center">
+                                                    <Link to={`/products/${book.id}`} className="text-gray-900 hover:text-gray-700 truncate block">{book.title}</Link>
+                                                </div>
                                                 <div className="flex items-center justify-center space-x-5">
-                                                    <span className="text-sm font-bold text-red-500"> {book.salePrice.toLocaleString()}₫</span>
-                                                    <span className="text-gray-500 line-through ml-2">{book.price.toLocaleString()}₫</span>
+                                                    <span className="text-sm font-bold text-red-500">{book.salePrice.toLocaleString()}₫</span>
+                                                    <span className="text-gray-600 line-through ml-2">{book.price.toLocaleString()}₫</span>
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
+                                    {hoveredBookTitle && (
+                                        <div
+                                            className="fixed bg-gray-800 text-xs text-white p-2 rounded-md"
+                                            style={{
+                                                left: mousePosition.x + 10, // Adjust position to the right of the cursor
+                                                top: mousePosition.y + 10 // Adjust position below the cursor
+                                            }}
+                                        >
+                                            {hoveredBookTitle} {/* Display hovered book title */}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

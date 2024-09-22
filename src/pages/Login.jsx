@@ -3,6 +3,7 @@ import { login } from '../services/UserService';
 import { Form, Input, Button, notification } from 'antd';
 import { Link } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import Breadcrumb from '../components/Breadcrumb';
 
 const Login = ({ setCookies }) => {
     const [form] = Form.useForm();
@@ -35,8 +36,13 @@ const Login = ({ setCookies }) => {
                 setLoading(false);
             });
     };
-
+    const breadcrumbs = [
+        { title: 'Home', href: '/' },
+        { title: 'Login' }
+      ];
     return (
+        <>
+        <Breadcrumb items={breadcrumbs} />
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -120,6 +126,7 @@ const Login = ({ setCookies }) => {
                 </p>
             </div>
         </div>
+        </>
     );
 };
 
