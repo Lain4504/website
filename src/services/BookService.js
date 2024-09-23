@@ -1,37 +1,44 @@
 import axios from "axios"
 
-const BOOK_API_BASE_URL = "http://localhost:8081/api/v1/book"
-
+const BOOK_URL = "http://localhost:5146/api/book"
 const getBook = () => {
-    return axios.get(BOOK_API_BASE_URL)
+    return axios.get(BOOK_URL)
 }
 
 const getBookById = (id) => {
-    return axios.get(BOOK_API_BASE_URL + '/' + id)
+    return axios.get(BOOK_URL + '/' + id)
 }
 
 const getBookByQuery = (query) => {
-    return axios.get(BOOK_API_BASE_URL + '/' + query)
+    return axios.get(BOOK_URL + '/' + query)
+    .then(response => {
+        console.log('Get All Books Response:', response);
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching all books:', error);
+        throw error;
+    });
 }
 
 const getBooksByCollectionId = (id) => {
     if(id === 'all')
     {
-        return axios.get(BOOK_API_BASE_URL + '/sorted-and-paged')
+        return axios.get(BOOK_URL + '/sorted-and-paged')
     }
-    return axios.get(BOOK_API_BASE_URL + '/sorted-and-paged/by-collection?collection=' + id )
+    return axios.get(BOOK_URL + '/sorted-and-paged/by-collection?collection=' + id )
 }
 
 const getBooksByQuery = (id, page, min, max) => {
     if(id === 'all')
     {
-        return axios.get(BOOK_API_BASE_URL + `/sorted-and-paged/by-collection?sortBy=price&page=${page === null ? 0 : page - 1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
+        return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?sortBy=Price&page=${page === null ? 0 : page - 1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
     }
-    return axios.get(BOOK_API_BASE_URL + `/sorted-and-paged/by-collection?collection=${id}&sortBy=price&page=${page -1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
+    return axios.get(BOOK_URL + `/sorted-and-paged/by-collection?collection=${id}&sortBy=Price&page=${page -1}&size=12&sortOrder=asc${min ? `&min=${min}` : ''}${max ? `&max=${max}` : ''}`)
 }
 
 const getBooksBySearchValue = (value) => {
-    return axios.get(BOOK_API_BASE_URL + `/search?size=12&sortOrder=asc&name=${value}`)
+    return axios.get(BOOK_URL + `/search?size=12&sortOrder=asc&name=${value}`)
 }
 
 export {getBook, getBookByQuery, getBooksByCollectionId, getBooksByQuery, getBookById, getBooksBySearchValue}

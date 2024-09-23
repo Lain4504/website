@@ -1,37 +1,64 @@
-// SearchBar.js
-import React from 'react';
-import { assets } from '../assets/assets';
+import React, { useState, useEffect } from 'react'
+import { getBooksBySearchValue } from '../services/BookService'
+import { SearchOutlined } from '@ant-design/icons'
 
-const SearchBar = ({ search, setSearch, showSearch, setShowSearch }) => {
-    const handleSearchChange = (e) => {
-        setSearch(e.target.value);
+const SearchBar = ({ setResult }) => {
+    const [input, setInput] = useState('')
+
+    const handleChange = (e) => {
+        setInput(e.target.value)
+        fetchData(e.target.value)
     }
 
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        // Do something with the search query, e.g., navigate or update URL parameters
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            fetchData(input);
+        }, 300);
+
+        return () => {
+            clearTimeout(delay);
+        };
+    }, [input]);
+
+    const fetchData = (value) => {
+        if (value === '') {
+            setResult({})
+            return
+        }
+        getBooksBySearchValue(value).then(res => {
+            setResult(res.data)
+        })
     }
 
-    return showSearch ? (
-        <div className='border-t border-b bg-gray-50 text-center'>
-            <form onSubmit={handleSearchSubmit} className='inline-flex items-center justify-center border border-gray-400 px-5 py-2 my-5 mx-3 rounded-full w-3/4 sm:w-1/2'>
-                <input 
-                    value={search} 
-                    onChange={handleSearchChange} 
-                    className='flex-1 outline-none bg-inherit text-sm' 
-                    type="text" 
-                    placeholder='Search' 
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+        if (input.trim()) {
+            window.location.href = `/search/${input.trim()}`
+        }
+    }
+
+    return (
+        <div className="border-t border-b bg-gray-50 text-center">
+            <form
+                className='inline-flex items-center justify-center border border-gray-400 px-5 py-2 my-5 mx-3 rounded-full w-3/4 sm:w-1/2' onSubmit={handleSubmit} // Thêm onSubmit
+            >
+                <input
+                    type="text"
+                    onChange={handleChange}
+                    value={input}
+                    className='flex-1 outline-none bg-inherit text-sm'
+                    placeholder="Search"
+                    aria-label="Search"
+                    aria-describedby="search-addon"
                 />
-                <img src={assets.search_icon} className='w-4' alt="Search Icon" />
+                <button
+                    type="submit" // Đổi type thành submit để kích hoạt sự kiện submit của form
+                >
+                    <SearchOutlined style={{ fontSize: '20px', marginTop: '4px' }} alt="Search Icon" />
+                </button>
             </form>
-            <img 
-                onClick={() => setShowSearch(false)} 
-                src={assets.cross_icon} 
-                className='inline w-3 cursor-pointer' 
-                alt='Close Icon' 
-            />
         </div>
-    ) : null;
+    )
 }
 
-export default SearchBar;
+export default SearchBar
