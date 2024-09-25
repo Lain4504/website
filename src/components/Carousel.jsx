@@ -59,14 +59,14 @@ const CarouselComponent = () => {
         onClick={prev}
         aria-label="Previous"
       >
-        <LeftOutlined />
+        <LeftOutlined className="hover:text-blue-500" />
       </button>
       <button 
         className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2"
         onClick={next}
         aria-label="Next"
       >
-        <RightOutlined />
+        <RightOutlined className="hover:text-blue-500"/>
       </button>
     </div>
   );

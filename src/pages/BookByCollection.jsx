@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { getCollections, getCollectionById } from '../services/CollectionService'
 import Pagination from '../utils/Pagination'
 import Breadcrumb from '../components/Breadcrumb'
-import { Menu, Radio, Select } from 'antd'
+import { Menu, Radio, Select, Skeleton } from 'antd'
 
 const BooksByCollection = () => {
     const navigate = useNavigate()
@@ -20,8 +20,9 @@ const BooksByCollection = () => {
     const totalPage = Math.ceil(book_length.current / limit);
     const [hoveredBookTitle, setHoveredBookTitle] = useState("");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // State to track mouse position
-
+    const [loading, setLoading] = useState(true);
     const fetchData = (id) => {
+        setLoading(true);
         if (id === 'all') {
             setCurCollection(null); // Đặt lại tiêu đề khi id là 'all'
         } else {
@@ -35,8 +36,8 @@ const BooksByCollection = () => {
                 setBooks(res.data.content);
                 book_length.current = res.data.totalElements;
             })
-            .catch(error => console.error(error));
-
+            .catch(error => console.error(error))
+            .finally(() => setLoading(false));
         getCollections()
             .then(res => setCollections(res.data))
             .catch(error => console.error(error));
@@ -178,13 +179,16 @@ const BooksByCollection = () => {
                                 <Menu.Item key="all">
                                     <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
                                 </Menu.Item>
-                                {collections.map(collection => (
+                                {loading ? (
+                                        // Display a single large skeleton for the product list
+                                        <Skeleton active paragraph={{ rows: 4 }} className="col-span-4" />
+                                    ) : (collections.map(collection => (
                                     collection.isDisplay ? (
                                         <Menu.Item key={collection.id}>
                                             <Link to={`/collections/${collection.id}`} className="hover:underline text-blue-600">{collection.name}</Link>
                                         </Menu.Item>
                                     ) : null
-                                ))}
+                                )))}
                             </Menu>
 
                             <div className="mt-8">
@@ -226,7 +230,10 @@ const BooksByCollection = () => {
 
                             <div>
                                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:grid-cols-3'>
-                                    {books.map(book => (
+                                {loading ? (
+                                        // Display a single large skeleton for the product list
+                                        <Skeleton active paragraph={{ rows: 4 }} className="col-span-4" />
+                                    ) : (books.map(book => (
                                         <div
                                             key={book.id}
                                             className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
@@ -252,7 +259,7 @@ const BooksByCollection = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                    )))}
                                     {hoveredBookTitle && (
                                         <div
                                             className="fixed bg-gray-800 text-xs text-white p-2 rounded-md"
