@@ -57,6 +57,7 @@ const PostList = () => {
 
     const handleChangePage = (page) => {
         setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const indexOfLastPost = currentPage * pageSize;
