@@ -28,7 +28,7 @@ const CarouselComponent = () => {
           <a href={slider.backLink}>
             <img 
               src={slider.imageUrl} 
-              className="w-full h-auto object-contain" // Tailwind classes for image scaling
+              className="w-full h-auto object-contain"
               alt={`Slide ${slider.id}`} 
             />
           </a>

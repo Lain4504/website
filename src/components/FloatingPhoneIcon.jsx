@@ -4,7 +4,7 @@ import { PhoneOutlined } from '@ant-design/icons';
 
 const FloatingPhoneIcon = () => {
     const handleClick = () => {
-        window.open('https://www.facebook.com/your_fanpage', '_blank'); // Thay đổi URL này thành URL fanpage của bạn
+        window.open('https://www.facebook.com/your_fanpage', '_blank'); 
     };
 
     return (
