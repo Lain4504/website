@@ -1,60 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Dropdown, Menu, Skeleton } from 'antd'; // Import necessary Ant Design components
+import { Row, Col, Dropdown, Menu, Skeleton, Pagination } from 'antd'; // Import necessary Ant Design components
 import Breadcrumb from '../components/Breadcrumb';
-import { ArrowLeftOutlined, ArrowRightOutlined, DownOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, DownOutlined } from '@ant-design/icons';
+import mockPosts from '../components/mockJsonData';
 
 const PostList = () => {
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Check if mobile
-    const [isMedium, setIsMedium] = useState(window.innerWidth >= 768 && window.innerWidth < 992); // Check if md screen
-    const [posts, setPosts] = useState([]); // State to hold posts
-    const [categories, setCategories] = useState([]); // State to hold categories
-    const [loading, setLoading] = useState(true); // State to hold loading status
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [isMedium, setIsMedium] = useState(window.innerWidth >= 768 && window.innerWidth < 992);
+    const [posts, setPosts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1); // State for current page
+    const [pageSize] = useState(3); // Set your desired page size
+
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: 'Tin tức' }
     ];
 
-    useEffect(() => {
-        // Mock data for posts
-        const mockPosts = [
-            {
-                id: 1,
-                title: 'Trần Gian Ở Lại và những luyến lưu về tình yêu nơi trần thế',
-                date: '04/09/2024',
-                category: 'TIN TỨC',
-                image: 'https://file.hstatic.net/200000287623/article/456100341_938822808290964_7394982604345935159_n_08428383a253403880be311bff4d1ab9.jpg',
-                link: '/blogs/tintuc/tran-gian-o-lai-va-nhung-luyen-luu-ve-tinh-yeu-noi-tran-the',
-                content: 'Là một tập truyện ngắn được viết rải rác trong nhiều năm, tập truyện ngắn mới nhất của Giác - Trần Gian Ở Lại đã xuất sắc mô tả vẻ muôn hình vạn trạng của tình yêu và sự nổi loạn, gan dạ của tuổi trẻ...'
-            },
-            {
-                id: 2,
-                title: '[REVIEW ĐỘC GIẢ] CUỘN TRANH KỲ BÍ - BOYS LOVE DỄ THƯƠNG MANG MÀU SẮC HUYỀN ẢO',
-                date: '05/09/2024',
-                category: 'TIN TỨC',
-                image: 'https://file.hstatic.net/200000287623/file/1_79e6df722efe40e5a58ab2f225cff766_grande.png',
-                link: '/blogs/tintuc/mot-bai-viet-khac',
-                content: 'Để tránh cái nóng mùa này, có hai lựa chọn tương đối hay ho mà mình có thể nghĩ ra. Một là đọc cái gì đó thật dễ thương, tận hưởng cảm giác thỏa mãn như khi thưởng thức một thứ quả mọng mát lành...'
-            },
-            {
-                id: 3,
-                title: 'Điểm danh những cuốn truyện tranh có dung lượng KHỦNG trên 400 trang!',
-                date: '05/09/2024',
-                category: 'TIN TỨC',
-                image: 'https://file.hstatic.net/200000287623/file/3_1bf7a831bece4bac973064a97f87856a_1024x1024.png',
-                link: '/blogs/tintuc/mot-bai-viet-khac',
-                content: 'Thông thường, một cuốn truyện tranh sẽ rơi vào khoảng trên dưới 200 trang, rất vừa vặn để bạn đọc trong một buổi, thậm chí vài tiếng. Nhưng cũng có những tác phẩm có dung lượng dài hơi hơn vì nhiều lý do, ví như bên cạnh bản phổ thông nhiều tập thì cũng có bản gộp tập 2 trong 1 (trường hợp Tokyo Revengers); bản "shinsoban" (new edition) gộp tập, bổ sung các ngoại truyện và chương mới (trường hợp Nodame Cantabile); hoặc chỉ đơn giản là một oneshot có dung lượng dài hơi như một tiểu thuyết (trường hợp Solanin)...'
-            }
-        ];
+    const fetchData = () => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(mockPosts);
+            }, 1000);
+        });
+    };
 
-        // Simulate loading data
-        setTimeout(() => {
-            setPosts(mockPosts); // Set the mock data to the state
-            setLoading(false); // Set loading to false after data is loaded
-        }, 1000); // Simulate a 1 second loading time
+    useEffect(() => {
+        const loadPosts = async () => {
+            const fetchedPosts = await fetchData();
+            setPosts(fetchedPosts);
+            setLoading(false);
+        };
+        loadPosts();
     }, []);
 
     useEffect(() => {
-        // Mock data for categories
         const mockCategories = [
             { id: 1, name: 'Hoạt động' },
             { id: 2, name: 'Tin tức' },
@@ -71,8 +52,16 @@ const PostList = () => {
 
     useEffect(() => {
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize); // Cleanup listener
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    const handleChangePage = (page) => {
+        setCurrentPage(page);
+    };
+
+    const indexOfLastPost = currentPage * pageSize;
+    const indexOfFirstPost = indexOfLastPost - pageSize;
+    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost); // Get current posts
 
     const categoriesMenu = (
         <Menu>
@@ -98,13 +87,12 @@ const PostList = () => {
             )}
 
             <Row gutter={16}>
-                {/* Post List Section - Full width on mobile and md */}
                 <Col xs={24} sm={24} md={isMedium ? 24 : 18} lg={18}>
                     <div className='mt-8'>
                         {loading ? (
-                            <Skeleton active paragraph={{ rows: 4 }} /> // Show loading skeleton
+                            <Skeleton active paragraph={{ rows: 4 }} />
                         ) : (
-                            posts.map(post => (
+                            currentPosts.map(post => (
                                 <div key={post.id} className="mb-4 flex" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
                                     <div style={{ width: isMobile ? '100%' : '40%' }}>
                                         <a href={post.link}>
@@ -135,9 +123,18 @@ const PostList = () => {
                             ))
                         )}
                     </div>
+                    {/* Pagination centered */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={posts.length}
+                            onChange={handleChangePage}
+                            showSizeChanger={false} // Hide size changer if you want a fixed page size
+                        />
+                    </div>
                 </Col>
 
-                {/* Categories Section - Hidden on md */}
                 {!isMobile && !isMedium && (
                     <Col xs={24} sm={24} md={6} lg={6}>
                         <div className='border border-gray-300 shadow-md'>

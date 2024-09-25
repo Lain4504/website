@@ -1,40 +1,49 @@
-import React from 'react';
-import { Card } from 'antd'; // Import Card from Ant Design
+import React, { useEffect, useState } from 'react';
+import { Card, Skeleton } from 'antd'; // Import Card and Skeleton from Ant Design
+import mockPosts from './mockJsonData'; // Import the mock posts
 
 const ListPost = () => {
-    const mockPosts = [
-        {
-            id: 1,
-            title: 'Trần Gian Ở Lại và những luyến lưu về tình yêu nơi trần thế',
-            date: '04/09/2024',
-            category: 'TIN TỨC',
-            image: 'https://file.hstatic.net/200000287623/article/456100341_938822808290964_7394982604345935159_n_08428383a253403880be311bff4d1ab9.jpg',
-            link: '/blogs/tintuc/tran-gian-o-lai-va-nhung-luyen-luu-ve-tinh-yeu-noi-tran-the',
-            content: 'Là một tập truyện ngắn được viết rải rác trong nhiều năm...'
-        },
-        {
-            id: 2,
-            title: '[REVIEW ĐỘC GIẢ] CUỘN TRANH KỲ BÍ - BOYS LOVE DỄ THƯƠNG MANG MÀU SẮC HUYỀN ẢO',
-            date: '05/09/2024',
-            category: 'TIN TỨC',
-            image: 'https://file.hstatic.net/200000287623/file/1_79e6df722efe40e5a58ab2f225cff766_grande.png',
-            link: '/blogs/tintuc/mot-bai-viet-khac',
-            content: 'Để tránh cái nóng mùa này, có hai lựa chọn tương đối hay ho...'
-        },
-        {
-            id: 3,
-            title: 'Điểm danh những cuốn truyện tranh có dung lượng KHỦNG trên 400 trang!',
-            date: '05/09/2024',
-            category: 'TIN TỨC',
-            image: 'https://file.hstatic.net/200000287623/file/3_1bf7a831bece4bac973064a97f87856a_1024x1024.png',
-            link: '/blogs/tintuc/mot-bai-viet-khac',
-            content: 'Thông thường, một cuốn truyện tranh sẽ rơi vào khoảng trên dưới 200 trang...'
-        }
-    ];
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true); // Add loading state
+    const [error, setError] = useState(null); // Add error state
+
+    const fetchData = () => {
+        // Simulating a fetch call
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // Uncomment below line to simulate an error
+                // return reject(new Error('Failed to fetch posts'));
+                resolve(mockPosts);
+            }, 1000); // Simulating network delay
+        });
+    };
+
+    useEffect(() => {
+        const loadPosts = async () => {
+            try {
+                const fetchedPosts = await fetchData();
+                setPosts(fetchedPosts);
+            } catch (err) {
+                setError(err.message); // Set error message if fetching fails
+            } finally {
+                setLoading(false); // Set loading to false after fetching
+            }
+        };
+        loadPosts();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center mt-7">
+                <Skeleton active paragraph={{ rows: 4 }} style={{ width: '100%' }} /> {/* Skeleton for loading */}
+            </div>
+        );
+    }
+    if (error) return <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>; // Error message
 
     return (
         <div className="flex flex-wrap justify-center mt-7">
-            {mockPosts.map(post => (
+            {posts.map(post => (
                 <div key={post.id} className="w-full sm:w-1/2 lg:w-1/3 p-2">
                     <Card
                         hoverable
@@ -49,7 +58,7 @@ const ListPost = () => {
                         }
                     >
                         <div className="p-4">
-                            <p className=" text-lg font-semibold">
+                            <p className="text-lg font-semibold">
                                 <a href={post.link} className="hover:text-blue-600">{post.title}</a>
                             </p>
                             <div className="text-gray-700">{post.content}</div>
