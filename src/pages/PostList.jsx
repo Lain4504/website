@@ -76,7 +76,7 @@ const PostList = () => {
             {(isMobile || isMedium) && (
                 <div>
                     <Dropdown overlay={categoriesMenu} trigger={['click']}>
-                        <a onClick={e => e.preventDefault()} className="ant-dropdown-link" href="#">
+                        <a onClick={e => e.preventDefault()} className="ant-dropdown-link  text-gray-700 hover:text-blue-500 transition duration-300" href="#">
                             Thể loại bài viết <DownOutlined style={{ fontSize: '12px'}}/>
                         </a>
                     </Dropdown>
@@ -99,6 +99,7 @@ const PostList = () => {
                                             {post.title}
                                         </a>
                                     </h2>
+                                    <div className='mt-2'> 
                                     <span className='mr-3'>{post.date}</span>
                                     <span className='font-thin mr-3'>|</span>
                                     <span>
@@ -106,7 +107,8 @@ const PostList = () => {
                                         </span>
                                     <span>
                                     </span>
-                                    <p>
+                                    </div>
+                                    <p className='mt-2'>
                                         {post.content}
                                         <a href={post.link} className='text-blue-500'>
                                             Xem thêm <ArrowRightOutlined style={{ fontSize : '12px'}}/>

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Carousel } from "antd";
 import { getSlider } from "../services/CarouselService";
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'; // Import Ant Design icons
 
 const CarouselComponent = () => {
   const [sliders, setSliders] = useState([]);
+  const carouselRef = React.useRef(null); // Create a reference for the carousel
 
   // Function to fetch slider data from API
   const fetchData = () => {
@@ -21,20 +23,52 @@ const CarouselComponent = () => {
     fetchData();
   }, []);
 
+  // Custom function to go to the next slide
+  const next = () => {
+    if (carouselRef.current) {
+      carouselRef.current.next();
+    }
+  };
+
+  // Custom function to go to the previous slide
+  const prev = () => {
+    if (carouselRef.current) {
+      carouselRef.current.prev();
+    }
+  };
+
   return (
-    <Carousel autoplay dots={{ className: 'custom-dots' }} className="-z-10">
-      {sliders.map((slider) => (
-        <div key={slider.id} className="w-full">
-          <a href={slider.backLink}>
-            <img 
-              src={slider.imageUrl} 
-              className="w-full h-auto object-contain"
-              alt={`Slide ${slider.id}`} 
-            />
-          </a>
-        </div>
-      ))}
-    </Carousel>
+    <div className="relative">
+      <Carousel autoplay dots={{ className: 'custom-dots' }} className="-z-10" ref={carouselRef}>
+        {sliders.map((slider) => (
+          <div key={slider.id} className="w-full">
+            <a href={slider.backLink}>
+              <img 
+                src={slider.imageUrl} 
+                className="w-full h-auto object-contain"
+                alt={`Slide ${slider.id}`} 
+              />
+            </a>
+          </div>
+        ))}
+      </Carousel>
+      
+      {/* Navigation buttons */}
+      <button 
+        className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2"
+        onClick={prev}
+        aria-label="Previous"
+      >
+        <LeftOutlined />
+      </button>
+      <button 
+        className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-white rounded-full shadow-md p-2"
+        onClick={next}
+        aria-label="Next"
+      >
+        <RightOutlined />
+      </button>
+    </div>
   );
 };
 
