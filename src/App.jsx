@@ -17,6 +17,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import ProductDetail from "./pages/ProductDetail";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
+import PostList from "./pages/PostList";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
@@ -39,7 +40,8 @@ const App = () => {
       '/search/:name',
       '/active',
       '/forgot-password',
-      '/products/:id'
+      '/products/:id',
+      
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -66,7 +68,7 @@ const App = () => {
           <Route path='/about' element={<About />} />
           <Route path='/collections/:id' element={<Collection />} />
           <Route path='/contact' element={<Contact />} />
-          <Route path='/post' element={<Post />} />
+          <Route path='/post' element={<PostList />} />
           <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />

@@ -1,171 +1,109 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { getBooksByQuery, getBookByQuery } from "../services/BookService"
-import { useNavigate, useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import { getCollections, getCollectionById } from '../services/CollectionService'
-import Pagination from '../utils/Pagination'
-import Breadcrumb from '../components/Breadcrumb'
-import { Menu, Radio, Select } from 'antd'
+import React, { useEffect, useRef, useState } from 'react';
+import { getBooksByQuery, getBookByQuery } from "../services/BookService";
+import { useParams, Link } from 'react-router-dom';
+import { getCollections, getCollectionById } from '../services/CollectionService';
+import Breadcrumb from '../components/Breadcrumb';
+import { Menu, Select, Skeleton, Pagination } from 'antd';
 
 const BooksByCollection = () => {
-    const navigate = useNavigate()
-    const [books, setBooks] = useState([])
-    const [collections, setCollections] = useState([])
-    const book_length = useRef(0)
-    const [curCollection, setCurCollection] = useState()
-    const { id } = useParams()
-    const urlParams = new URLSearchParams(window.location.search);
-    const [page, setPage] = useState(urlParams.get('page'));
-    const [limit,] = useState(12);
-    const totalPage = Math.ceil(book_length.current / limit);
+    const [books, setBooks] = useState([]);
+    const [collections, setCollections] = useState([]);
+    const book_length = useRef(0);
+    const [curCollection, setCurCollection] = useState();
+    const { id } = useParams();
     const [hoveredBookTitle, setHoveredBookTitle] = useState("");
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // State to track mouse position
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [booksPerPage] = useState(12);
+    const [sortBy, setSortBy] = useState('manual');
 
     const fetchData = (id) => {
+        setLoading(true);
         if (id === 'all') {
-            setCurCollection(null); // Đặt lại tiêu đề khi id là 'all'
+            setCurCollection(null);
         } else {
             getCollectionById(id)
                 .then(res => setCurCollection(res.data))
                 .catch(error => console.error(error));
         }
 
-        getBooksByQuery(id, page, urlParams.get('min'), urlParams.get('max'))
+        getBooksByQuery(id)
             .then(res => {
                 setBooks(res.data.content);
                 book_length.current = res.data.totalElements;
             })
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
+            .finally(() => {
+                setTimeout(() => setLoading(false), 1000); // Introduce 1s delay here
+            });
 
         getCollections()
             .then(res => setCollections(res.data))
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
+            .finally(() => {
+                setTimeout(() => setLoading(false), 1000); // Introduce 1s delay here
+            });
     };
 
-    const setCurrentPage = (value) => {
-        window.scrollTo(0, 0);
-        if (value === '&laquo;') {
-            setPage(1)
-            return
-        }
-        else if (value === '&lsaquo;') {
-            if (page !== 1) {
-                setPage(page - 1)
-            }
-            return
-        }
-        else if (value === '&rsaquo;') {
-            if (page !== totalPage)
-                setPage(page + 1)
-            return
-        }
-        else if (value === '&raquo;') {
-            setPage(totalPage)
-            return
-        }
-        else if (value === '...') {
-            return
-        }
-        setPage(value)
-        if (id === 'all')
-            navigate(`/collections/all?page=${page}`)
-        else
-            navigate(`/collections/${id}?page=${page}`)
-    }
+    const indexOfLastBook = currentPage * booksPerPage;
+    const indexOfFirstBook = indexOfLastBook - booksPerPage;
+    const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
 
-    const handlePrice = (e) => {
-        const value = e.target.value;
-        setCurCollection(null);
-        let minValue = null;
-        let maxValue = null;
-
-        switch (value) {
-            case 'all':
-                break;
-            case 'under-10000':
-                maxValue = 10000;
-                break;
-            case '10-20':
-                minValue = 10000;
-                maxValue = 20000;
-                break;
-            case '20-30':
-                minValue = 20000;
-                maxValue = 30000;
-                break;
-            case '30-40':
-                minValue = 30000;
-                maxValue = 40000;
-                break;
-            case '40-50':
-                minValue = 40000;
-                maxValue = 50000;
-                break;
-            case 'over-50000':
-                minValue = 50000;
-                break;
-            default:
-                break;
-        }
-
-        if (minValue !== null && maxValue !== null) {
-            navigate(`/collections/${id}?min=${minValue}&max=${maxValue}${page ? `&page=${page}` : ''}`);
-        } else if (minValue !== null) {
-            navigate(`/collections/${id}?min=${minValue}${page ? `&page=${page}` : ''}`);
-        } else if (maxValue !== null) {
-            navigate(`/collections/${id}?max=${maxValue}${page ? `&page=${page}` : ''}`);
-        } else {
-            navigate(`/collections/${id}${page ? `?page=${page}` : ''}`);
-        }
-    }
     const handleChange = (value) => {
-        setCurCollection(null);
+        setSortBy(value); 
+        let collectionQuery = curCollection ? `collection=${curCollection.id}` : '';
+        let query = '';
+        setCurrentPage(1); // Reset to first page on sort change
         switch (value) {
             case 'manual':
                 break;
             case 'newest':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=Id&size=12&sortOrder=desc')
-                    .then(res => setBooks(res.data.content))
+                query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Id&sortOrder=desc`;
                 break;
             case 'best-selling':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=Sold&size=12')
-                    .then(res => setBooks(res.data.content))
+                query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Sold`;
                 break;
             case 'title-ascending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=Title&size=12')
-                    .then(res => setBooks(res.data.content))
+                query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Title`;
                 break;
             case 'title-descending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=Title&size=12&sortOrder=desc')
-                    .then(res => setBooks(res.data.content))
+                query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Title&sortOrder=desc`;
                 break;
             case 'price-ascending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=Price&size=12')
-                    .then(res => setBooks(res.data.content))
+                query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Price`;
                 break;
             case 'price-descending':
-                getBookByQuery('sorted-and-paged/by-collection?sortBy=Price&size=12&sortOrder=desc')
-                    .then(res => setBooks(res.data.content))
+                query = `sorted-and-paged/by-collection?${collectionQuery}sortBy=Price&sortOrder=desc`;
                 break;
             default:
                 break;
         }
-    }
+
+        if (query) {
+            getBookByQuery(query)
+                .then(res => setBooks(res.data.content));
+        }
+    };
 
     useEffect(() => {
-        fetchData(id)
-    }, [id, page, window.location.search])
+        setSortBy('manual');
+        fetchData(id);
+    }, [id]);
 
-    useEffect(() => {
-        setPage(1)
-    }, [id])
     const breadcrumbs = [
         { title: 'Home', href: '/' },
         { title: curCollection ? curCollection.name : 'All' }
     ];
+
     const handleMouseMove = (e) => {
         setMousePosition({ x: e.clientX, y: e.clientY });
     };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     return (
         <>
             <section>
@@ -178,27 +116,16 @@ const BooksByCollection = () => {
                                 <Menu.Item key="all">
                                     <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
                                 </Menu.Item>
-                                {collections.map(collection => (
+                                {loading ? (
+                                    <Skeleton active paragraph={{ rows: 4 }} className="col-span-4" />
+                                ) : (collections.map(collection => (
                                     collection.isDisplay ? (
                                         <Menu.Item key={collection.id}>
                                             <Link to={`/collections/${collection.id}`} className="hover:underline text-blue-600">{collection.name}</Link>
                                         </Menu.Item>
                                     ) : null
-                                ))}
+                                )))}
                             </Menu>
-
-                            <div className="mt-8">
-                                <h2 className="font-semibold text-lg">Khoảng Giá</h2>
-                                <Radio.Group onChange={handlePrice} defaultValue="all" className='mt-2 space-y-2'>
-                                    <Radio value="all" className="block">Tất cả</Radio>
-                                    <Radio value="under-10000" className="block">Nhỏ hơn 10,000₫</Radio>
-                                    <Radio value="10-20" className="block">Từ 10,000₫ - 20,000₫</Radio>
-                                    <Radio value="20-30" className="block">Từ 20,000₫ - 30,000₫</Radio>
-                                    <Radio value="30-40" className="block">Từ 30,000₫ - 40,000₫</Radio>
-                                    <Radio value="40-50" className="block">Từ 40,000₫ - 50,000₫</Radio>
-                                    <Radio value="over-50000" className="block">Lớn hơn 50,000₫</Radio>
-                                </Radio.Group>
-                            </div>
                         </div>
                         <div className='w-full lg:w-3/4 px-4'>
                             <div className='mb-6'>
@@ -207,9 +134,9 @@ const BooksByCollection = () => {
                                     <div className="text-right">
                                         <label htmlFor="SortBy">Sắp xếp</label>
                                         <Select
-                                            defaultValue="manual"
+                                            value={sortBy}
                                             onChange={handleChange}
-                                            style={{ width: '120px', textAlign: "center" }}
+                                            style={{ width: '140px', textAlign: "center" }}
                                             className="ml-2 "
                                         >
                                             <Select.Option value="manual">Tùy chọn</Select.Option>
@@ -226,13 +153,15 @@ const BooksByCollection = () => {
 
                             <div>
                                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:grid-cols-3'>
-                                    {books.map(book => (
+                                    {loading ? (
+                                        <Skeleton active paragraph={{ rows: 4 }} className="col-span-4" />
+                                    ) : (currentBooks.map(book => (
                                         <div
                                             key={book.id}
                                             className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
-                                            onMouseEnter={() => setHoveredBookTitle(book.title)} // Set title on mouse enter
-                                            onMouseLeave={() => setHoveredBookTitle("")} // Clear title on mouse leave
-                                            onMouseMove={handleMouseMove} // Update mouse position
+                                            onMouseEnter={() => setHoveredBookTitle(book.title)}
+                                            onMouseLeave={() => setHoveredBookTitle("")}
+                                            onMouseMove={handleMouseMove}
                                         >
                                             <div className="relative">
                                                 <Link to={`/products/${book.id}`}>
@@ -252,28 +181,37 @@ const BooksByCollection = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    ))}
+                                    )))}
                                     {hoveredBookTitle && (
                                         <div
                                             className="fixed bg-gray-800 text-xs text-white p-2 rounded-md"
                                             style={{
-                                                left: mousePosition.x + 10, // Adjust position to the right of the cursor
-                                                top: mousePosition.y + 10 // Adjust position below the cursor
+                                                left: mousePosition.x + 10,
+                                                top: mousePosition.y + 10
                                             }}
                                         >
-                                            {hoveredBookTitle} {/* Display hovered book title */}
+                                            {hoveredBookTitle}
                                         </div>
                                     )}
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                                    <Pagination
+                                        current={currentPage}
+                                        pageSize={booksPerPage}
+                                        total={book_length.current}
+                                        onChange={handlePageChange}
+                                        showSizeChanger={false}
+                                        showQuickJumper
+                                        className="mt-4"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <Pagination page={page} totalPage={totalPage} setCurrentPage={setCurrentPage} />
                 </div>
             </section>
         </>
-    )
-}
+    );
+};
 
 export default BooksByCollection;

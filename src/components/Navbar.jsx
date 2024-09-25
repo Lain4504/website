@@ -4,7 +4,8 @@ import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import CollectionList from './CollectionList';
-import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
+import { Dropdown, Menu } from 'antd';
 
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
@@ -26,6 +27,33 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
         setCookies('authToken', null);
         window.location.href = '/';
     };
+
+    const menu = (
+        <Menu style={{ width: '120px', fontSize: '16px'}}>
+            {cookies.authToken ? (
+                <>
+                    <Menu.Item key="1">
+                        <Link to='/account'>Tài khoản</Link>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                        <Link to='/orders'>Đơn hàng</Link>
+                    </Menu.Item>
+                    <Menu.Item key="3" onClick={logout}>
+                         Đăng xuất
+                    </Menu.Item>
+                </>
+            ) : (
+                <>
+                    <Menu.Item key="1">
+                        <Link to='/login'> Đăng nhập</Link>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                        <Link to='/register'> Đăng ký</Link>
+                    </Menu.Item>
+                </>
+            )}
+        </Menu>
+    );
 
     return (
         <>
@@ -58,27 +86,9 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                                     text-white aspect-square rounded-full text-[8px]'>
                         </p>
                     </Link>
-                    <div className='group relative'>
-                        <UserOutlined
-                            style={{ fontSize: '24px' }}
-                            className='w-6 cursor-pointer'
-                            alt="Profile Icon"
-                        />
-                        <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
-                            {cookies.authToken ? (
-                                <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
-                                    <p className='cursor-pointer hover:text-black'> Tài khoản</p>
-                                    <p className='cursor-pointer hover:text-black'> Đơn hàng</p>
-                                    <p className='cursor-pointer hover:text-black' onClick={logout}> Đăng xuất</p>
-                                </div>
-                            ) : (
-                                <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
-                                    <Link to='/login'><p className='cursor-pointer hover:text-black'> Đăng nhập</p></Link>
-                                    <Link to='/register'><p className='cursor-pointer hover:text-black'> Đăng ký</p></Link>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <UserOutlined style={{ fontSize: '24px' }} className='w-6 cursor-pointer' />
+                    </Dropdown>
                     <img
                         onClick={() => setVisible(true)}
                         src={assets.menu_icon}

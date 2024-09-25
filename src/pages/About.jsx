@@ -9,7 +9,7 @@ const About = () => {
   ];
   return (
     <div>
-      <Breadcrumb items={breadcrumbs} />
+      <Breadcrumb items={breadcrumbs}/>
       <div className='text-2xl pt-8 border-t'>
         <Title text1={'Giới thiệu về'} text2={'Forever'} />
       </div>
