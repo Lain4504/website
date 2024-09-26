@@ -60,6 +60,7 @@ const ListPost = () => {
     if (error) return <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>;
 
     return (
+        <>
         <div className="flex flex-col items-center mt-7">
             {/* List of Posts */}
             <div className="flex flex-wrap justify-center">
@@ -94,7 +95,7 @@ const ListPost = () => {
                     <div
                         key={index + 1}
                         onClick={() => handlePageChange(index + 1)}
-                        className={`w-5 h-5 rounded-full cursor-pointer ${
+                        className={`w-3 h-3 rounded-full cursor-pointer ${
                             currentPage === index + 1 ? 'bg-blue-500' : 'bg-gray-300'
                         }`}
                         style={{
@@ -104,6 +105,8 @@ const ListPost = () => {
                 ))}
             </div>
         </div>
+        <div className='mt-5'></div>
+        </>
     );
 };
 

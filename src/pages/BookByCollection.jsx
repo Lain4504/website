@@ -210,6 +210,7 @@ const BooksByCollection = () => {
                     </div>
                 </div>
             </section>
+            <div className='mt-5'></div>
         </>
     );
 };

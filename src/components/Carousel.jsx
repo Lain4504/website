@@ -39,7 +39,7 @@ const CarouselComponent = () => {
 
   return (
     <div className="relative">
-      <Carousel autoplay dots={{ className: 'custom-dots' }} className="-z-10" ref={carouselRef}>
+      <Carousel autoplay dots={{ className: 'custom-dots' }} className="-z-60" ref={carouselRef}>
         {sliders.map((slider) => (
           <div key={slider.id} className="w-full">
             <a href={slider.backLink}>
