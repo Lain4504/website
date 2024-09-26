@@ -7,12 +7,13 @@ const ListPost = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 3; // Number of posts per page
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [pageSize, setPageSize] = useState(3); // Default to 3
     const maxVisible = 12;
+
     const fetchData = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                // return reject(new Error('Failed to fetch posts'));
                 resolve(mockPosts);
             }, 1000);
         });
@@ -23,7 +24,7 @@ const ListPost = () => {
             try {
                 const fetchedPosts = await fetchData();
 
-                // Sort posts by date (assuming date is a valid sortable string)
+                // Sort posts by date
                 const sortedPosts = fetchedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 // Get the latest 12 posts
@@ -39,6 +40,27 @@ const ListPost = () => {
         loadPosts();
     }, []);
 
+    // Function to update pageSize based on window width
+    const updatePageSize = () => {
+        const width = window.innerWidth;
+        if (width >= 1024) {
+            setPageSize(3); // Full screen
+        } else if (width >= 640) {
+            setPageSize(2); // Half screen
+        } else {
+            setPageSize(1); // Mobile
+        }
+    };
+
+    useEffect(() => {
+        updatePageSize(); // Set initial page size
+        window.addEventListener('resize', updatePageSize); // Listen for resize events
+
+        return () => {
+            window.removeEventListener('resize', updatePageSize); // Cleanup on unmount
+        };
+    }, []);
+
     // Pagination logic
     const indexOfLastPost = currentPage * pageSize;
     const indexOfFirstPost = indexOfLastPost - pageSize;
@@ -46,7 +68,13 @@ const ListPost = () => {
     const totalPages = Math.ceil(posts.length / pageSize); // Calculate total pages
 
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page !== currentPage) {
+            setIsAnimating(true);
+            setTimeout(() => {
+                setCurrentPage(page);
+                setIsAnimating(false);
+            }, 300);
+        }
     };
 
     if (loading) {
@@ -61,9 +89,24 @@ const ListPost = () => {
 
     return (
         <>
-        <div className="flex flex-col items-center mt-7">
+        <style>{`
+            .post-container {
+                transition: opacity 0.3s ease-in-out;
+                opacity: 0; /* Start with opacity 0 */
+            }
+
+            .post-container.enter {
+                opacity: 1; /* Fade in */
+            }
+
+            .post-container.exit {
+                opacity: 0; /* Fade out */
+            }
+        `}</style>
+
+        <div className={`flex flex-col items-center mt-7`}>
             {/* List of Posts */}
-            <div className="flex flex-wrap justify-center">
+            <div className={`flex flex-wrap justify-center post-container ${isAnimating ? 'exit' : 'enter'}`}>
                 {currentPosts.map(post => (
                     <div key={post.id} className="w-full sm:w-1/2 lg:w-1/3 p-2">
                         <Card
