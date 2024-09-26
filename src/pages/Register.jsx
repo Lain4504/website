@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button, Alert, Typography, Modal } from 'antd';
 import { createAccount } from '../services/UserService';
 import { Link } from 'react-router-dom';
@@ -9,21 +9,6 @@ const Register = () => {
     const [form] = Form.useForm();
     const [existingAccountError, setExistingAccountError] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [countdown, setCountdown] = useState(30); // 30 giây đếm ngược
-    const [isButtonDisabled, setIsButtonDisabled] = useState(true); // Khóa nút resend email
-
-    // Bắt đầu đếm ngược 30 giây sau khi modal được hiển thị
-    useEffect(() => {
-        let timer;
-        if (isModalVisible && countdown > 0) {
-            timer = setInterval(() => {
-                setCountdown((prev) => prev - 1);
-            }, 1000);
-        } else if (countdown === 0) {
-            setIsButtonDisabled(false); // Hết 30 giây, mở khóa nút resend email
-        }
-        return () => clearInterval(timer); // Hủy timer khi không cần thiết
-    }, [isModalVisible, countdown]);
 
     const onSubmitHandler = (values) => {
         const account = { email: values.email, password: values.password };
@@ -38,19 +23,14 @@ const Register = () => {
             });
     };
 
-    const resendEmail = () => {
-        setCountdown(30); // Reset lại đếm ngược khi gửi lại email
-        setIsButtonDisabled(true); // Khóa nút resend email khi đếm ngược bắt đầu
-        // Gọi API resend email ở đây
-        console.log("Resending email...");
-    };
     const breadcrumbs = [
         { title: 'Home', href: '/' },
         { title: 'Register' }
-      ];
+    ];
+
     return (
         <>
-                <Breadcrumb items={breadcrumbs} />
+            <Breadcrumb items={breadcrumbs} />
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -171,17 +151,8 @@ const Register = () => {
                 <Modal
                     title="Xác nhận email"
                     visible={isModalVisible}
-                    footer={[
-                        <Button
-                            key="resend"
-                            onClick={resendEmail}
-                            disabled={isButtonDisabled}
-                            className={`w-full ${isButtonDisabled ? 'bg-gray-400' : 'bg-green-600'} text-white`}
-                        >
-                            {isButtonDisabled ? `Resend Email (${countdown}s)` : 'Resend Email'}
-                        </Button>,
-                    ]}
                     onCancel={() => setIsModalVisible(false)}
+                    footer={null}
                 >
                     <p>Chúng tôi đã gửi email xác nhận đến địa chỉ của bạn. Vui lòng kiểm tra hộp thư để hoàn tất đăng ký.</p>
                     <p>Nếu bạn không thấy email, vui lòng kiểm tra hộp thư rác.</p>
