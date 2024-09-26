@@ -10,5 +10,8 @@ const login = (account) => {
 
     return axios.post(ACCOUNT_URL + 'login', account);
 }
+const activateAccount = (token) => {
+    return axios.post("http://localhost:5146/api/user/activate/", token)
+}
 
-export {createAccount, login}
+export {createAccount, login, activateAccount}
