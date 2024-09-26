@@ -38,7 +38,7 @@ const App = () => {
       '/login',
       '/register',
       '/search/:name',
-      '/active',
+      '/activation/:token',
       '/forgot-password',
       '/products/:id',
       
@@ -72,7 +72,7 @@ const App = () => {
           <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />
-          <Route path='/active' element={<Activate />} />
+          <Route path='/activation/:token' element={<Activate />} />
           <Route path='/404' element={<Page404 />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
