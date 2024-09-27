@@ -14,6 +14,7 @@ import SearchResult from "./pages/SearchResult";
 import Page404 from "./components/Page404";
 import Activate from "./components/Activate";
 import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPasswordFogot";
 import ProductDetail from "./pages/ProductDetail";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
@@ -40,6 +41,7 @@ const App = () => {
       '/search/:name',
       '/activation/:token',
       '/forgot-password',
+      '/reset-password/:token',
       '/products/:id',
       
     ];
@@ -74,7 +76,8 @@ const App = () => {
           <Route path='/search/:name' element={<SearchResult />} />
           <Route path='/activation/:token' element={<Activate />} />
           <Route path='/404' element={<Page404 />} />
-          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/forgot-password' element={<ForgotPassword/>} />
+          <Route path='/reset-password/:token' element={<ResetPassword />} />
           <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
         </Routes>
         <ScrollToTop />

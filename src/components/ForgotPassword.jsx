@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Breadcrumb from './Breadcrumb';
 import { Input, Button, Form, message } from 'antd';
-// import { forgetPassword } from '../services/UserService';
+import { forgetPassword } from '../services/UserService';
 
 const ForgotPassword = () => {
     const [isSending, setIsSending] = useState(false);
 
     const handleSubmit = (values) => {
         // `values.email` will contain the email input if the form is valid
-        forgetPassword({ email: values.email })
+        forgetPassword(values.email )
             .then((res) => {
                 if (res.status === 200) {
                     setIsSending(true);
