@@ -18,6 +18,7 @@ const Login = ({ setCookies }) => {
         login(account)
             .then(res => {
                 setCookies('authToken', res.data.token);
+                setCookies('userId', res.data.user.id); 
                 notification.success({
                     message: 'Đăng nhập thành công',
                     description: 'Chào mừng bạn trở lại!',

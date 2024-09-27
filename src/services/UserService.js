@@ -7,10 +7,23 @@ const createAccount = (account) => {
 }
 
 const login = (account) => {
+
     return axios.post(ACCOUNT_URL + 'login', account);
 }
 const activateAccount = (token) => {
-    return axios.post("http://localhost:5146/api/user/activate/", token)
+    return axios.post(ACCOUNT_URL + 'activate', token)
 }
+const forgetPassword = (email) => {
+    return axios.post(ACCOUNT_URL + 'forgot-password', {
+        Email: email 
+    });
+};
+const resetPassword = (token) => {
+    return axios.post(ACCOUNT_URL + 'reset-password', token); 
+};
+const getUserProfile = async (userId) => {
+    return await axios.get(`${ACCOUNT_URL}get-profile/${userId}`); 
+};
 
-export {createAccount, login, activateAccount}
+
+export {createAccount, login, activateAccount, forgetPassword, resetPassword,getUserProfile }

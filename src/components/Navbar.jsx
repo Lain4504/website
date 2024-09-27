@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
@@ -7,10 +7,12 @@ import CollectionList from './CollectionList';
 import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
 
+
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
-
+    const { id } = useParams();
+    const [user, setUser] = useState([]);
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 640) {
@@ -29,17 +31,17 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
     };
 
     const menu = (
-        <Menu style={{ width: '120px', fontSize: '16px'}}>
+        <Menu style={{ width: '120px', fontSize: '16px' }}>
             {cookies.authToken ? (
                 <>
                     <Menu.Item key="1">
-                        <Link to='/account'>Tài khoản</Link>
+                    <Link to={`/get-profile/${user ? user.id : ''}`}>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
                         <Link to='/orders'>Đơn hàng</Link>
                     </Menu.Item>
                     <Menu.Item key="3" onClick={logout}>
-                         Đăng xuất
+                        Đăng xuất
                     </Menu.Item>
                 </>
             ) : (
@@ -55,6 +57,22 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
         </Menu>
     );
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!id) return; // Kiểm tra nếu userId tồn tại
+            try {
+                const response = await getUserProfile(id); // Gọi API
+                setUser(response.data); // Cập nhật dữ liệu người dùng từ API
+            } catch (error) {
+                console.error("Error fetching user:", error);
+                message.error("Có lỗi xảy ra khi lấy thông tin người dùng.");
+            } finally {
+                setLoading(false); // Đặt trạng thái loading thành false
+            }
+        };
+
+        fetchUser(); // Gọi hàm fetchUser
+    }, [id]);
     return (
         <>
             <Header />
