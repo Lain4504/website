@@ -19,7 +19,7 @@ import ProductDetail from "./pages/ProductDetail";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
 import PostList from "./pages/PostList";
-
+import UserProfile from "./pages/UserProfile";
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies([]);
   const location = useLocation();
@@ -42,8 +42,8 @@ const App = () => {
       '/activation/:token',
       '/forgot-password',
       '/reset-password/:token',
-      '/products/:id',
-      
+      '/products/id',
+      '/get-profile/:id'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -75,6 +75,7 @@ const App = () => {
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />
           <Route path='/activation/:token' element={<Activate />} />
+          <Route path='/get-profile/:id' element={<UserProfile />} />
           <Route path='/404' element={<Page404 />} />
           <Route path='/forgot-password' element={<ForgotPassword/>} />
           <Route path='/reset-password/:token' element={<ResetPassword />} />

@@ -21,5 +21,9 @@ const forgetPassword = (email) => {
 const resetPassword = (token) => {
     return axios.post(ACCOUNT_URL + 'reset-password', token); 
 };
+const getUserProfile = async (userId) => {
+    return await axios.get(`${ACCOUNT_URL}get-profile/${userId}`); 
+};
 
-export {createAccount, login, activateAccount, forgetPassword, resetPassword}
+
+export {createAccount, login, activateAccount, forgetPassword, resetPassword,getUserProfile }
