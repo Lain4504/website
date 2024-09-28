@@ -16,7 +16,9 @@ const Activate = () => {
         activateAccount(token)
             .then(() => {
                 message.success('Tài khoản đã được kích hoạt thành công!')
-                window.location.href = '/login'
+                setTimeout(() => {
+                    window.location.href = '/login'
+                }, 1000); // 1000ms = 1 giây
             })
             .catch(() => {
                 setError(true)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
@@ -7,10 +7,10 @@ import CollectionList from './CollectionList';
 import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
 
+
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
-
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 640) {
@@ -29,17 +29,17 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
     };
 
     const menu = (
-        <Menu style={{ width: '120px', fontSize: '16px'}}>
+        <Menu style={{ width: '120px', fontSize: '16px' }}>
             {cookies.authToken ? (
                 <>
                     <Menu.Item key="1">
-                        <Link to='/account'>Tài khoản</Link>
+                    <Link to={`/get-profile`}>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
                         <Link to='/orders'>Đơn hàng</Link>
                     </Menu.Item>
                     <Menu.Item key="3" onClick={logout}>
-                         Đăng xuất
+                        Đăng xuất
                     </Menu.Item>
                 </>
             ) : (
@@ -55,6 +55,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
         </Menu>
     );
 
+   
     return (
         <>
             <Header />
@@ -64,21 +65,21 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                     <SearchOutlined
                         style={{ fontSize: '24px' }}
                         onClick={() => setShowSearch(prev => !prev)}
-                        className='w-5 cursor-pointer'
+                        className='w-5 cursor-pointer hover:scale-110 hover:text-blue-500 transition-transform duration-300 ease-in-out'
                         alt="Search Icon"
                     />
 
                     <Link to='wishlist' className='relative'>
                         <HeartOutlined
                             style={{ fontSize: "24px" }}
-                            className='w-5 min-w-5'
+                            className='w-5 min-w-5 cursor-pointer hover:scale-110 hover:text-red-500 transition-transform duration-300 ease-in-out'
                             alt='Wishlist Icon'
                         />
                     </Link>
                     <Link to='/cart' className='relative'>
                         <ShoppingCartOutlined
                             style={{ fontSize: "24px" }}
-                            className='w-5 min-w-5'
+                            className='w-5 min-w-5 cursor-pointer hover:scale-110 hover:text-green-500 transition-transform duration-300 ease-in-out'
                             alt="Cart Icon"
                         />
                         <p className='absolute right-[-5px] bottom-[-5px] 
@@ -87,12 +88,14 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         </p>
                     </Link>
                     <Dropdown overlay={menu} trigger={['click']}>
-                        <UserOutlined style={{ fontSize: '24px' }} className='w-6 cursor-pointer' />
+                        <UserOutlined style={{ fontSize: '24px' }} 
+    className='w-6 cursor-pointer hover:scale-110 hover:text-purple-500 transition-transform duration-300 ease-in-out'
+    />
                     </Dropdown>
                     <img
                         onClick={() => setVisible(true)}
                         src={assets.menu_icon}
-                        className='w-5 cursor-pointer md:hidden'
+                        className='w-5 cursor-pointer md:hidden '
                         alt="Menu Icon"
                     />
                 </div>
