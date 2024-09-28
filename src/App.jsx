@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie'; // Sử dụng useCookies để truy xuất cookie
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
@@ -9,7 +9,6 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Collection from "./pages/BookByCollection";
-import Post from "./pages/Post";
 import SearchResult from "./pages/SearchResult";
 import Page404 from "./components/Page404";
 import Activate from "./components/Activate";
@@ -20,37 +19,23 @@ import ScrollToTop from "./components/ScrollToTop";
 import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
 import PostList from "./pages/PostList";
 import UserProfile from "./pages/UserProfile";
+
 const App = () => {
-  const [cookies, setCookies, removeCookies] = useCookies([]);
+  const [cookies, setCookies, removeCookies] = useCookies(['authToken']); // Lấy 'authToken' từ cookies
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Kiểm tra nếu trang hiện tại là 404
   const is404Page = location.pathname === '/404';
 
-  // Chuyển hướng tới 404 nếu route không tồn tại
   useEffect(() => {
     const validRoutes = [
-      '/',
-      '/about',
-      '/collections/:id',
-      '/contact',
-      '/post',
-      '/login',
-      '/register',
-      '/search/:name',
-      '/activation/:token',
-      '/forgot-password',
-      '/reset-password/:token',
-      '/products/id',
-      '/get-profile/:id'
+      '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
+      '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
+      '/products/:id', '/get-profile'
     ];
 
     const pathExists = validRoutes.some(route => {
-      // Convert route pattern to regex
-      const regexPattern = route
-        .replace(/:[^/]+/, '[^/]+')  // Replace dynamic segments with regex patterns
-        .replace(/\/$/, '\\/?');    // Optional trailing slash
+      const regexPattern = route.replace(/:[^/]+/, '[^/]+').replace(/\/$/, '\\/?');
       const regex = new RegExp(`^${regexPattern}$`);
       return regex.test(location.pathname);
     });
@@ -63,7 +48,6 @@ const App = () => {
   return (
     <>
       <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-        {/* Chỉ hiển thị Navbar và Footer khi không phải trang 404 */}
         {!is404Page && <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />}
         <Routes>
           <Route path='/' element={<Home />} />
@@ -75,25 +59,23 @@ const App = () => {
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />
           <Route path='/activation/:token' element={<Activate />} />
-          <Route path='/get-profile/:id' element={<UserProfile />} />
+          <Route path='/get-profile' element={<UserProfile cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/404' element={<Page404 />} />
-          <Route path='/forgot-password' element={<ForgotPassword/>} />
-          <Route path='/reset-password/:token' element={<ResetPassword />} />
-          <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookie={setCookies} />}></Route>
+          <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+          <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+          <Route path='/products/:id' element={<ProductDetail />} />
         </Routes>
         <ScrollToTop />
-        <FloatingPhoneIcon/>
-        {/* Chỉ hiển thị Footer khi không phải trang 404 */}
+        <FloatingPhoneIcon />
         {!is404Page && <Footer />}
       </div>
 
-      {/* Copyright */}
-      {!is404Page && 
-      <div className="bg-black">
-        <hr />
-        <p className="py-5 text-sm text-center text-white"> Copyright 2024@ Book Store - All Right Reserved </p>
-      </div>
-      }
+      {!is404Page && (
+        <div className="bg-black">
+          <hr />
+          <p className="py-5 text-sm text-center text-white"> Copyright 2024@ Book Store - All Right Reserved </p>
+        </div>
+      )}
     </>
   );
 };

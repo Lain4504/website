@@ -11,8 +11,6 @@ import { Dropdown, Menu } from 'antd';
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
-    const { id } = useParams();
-    const [user, setUser] = useState([]);
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 640) {
@@ -35,7 +33,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             {cookies.authToken ? (
                 <>
                     <Menu.Item key="1">
-                    <Link to={`/get-profile/${user ? user.id : ''}`}>Tài khoản</Link>
+                    <Link to={`/get-profile`}>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
                         <Link to='/orders'>Đơn hàng</Link>
@@ -57,22 +55,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
         </Menu>
     );
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            if (!id) return; // Kiểm tra nếu userId tồn tại
-            try {
-                const response = await getUserProfile(id); // Gọi API
-                setUser(response.data); // Cập nhật dữ liệu người dùng từ API
-            } catch (error) {
-                console.error("Error fetching user:", error);
-                message.error("Có lỗi xảy ra khi lấy thông tin người dùng.");
-            } finally {
-                setLoading(false); // Đặt trạng thái loading thành false
-            }
-        };
-
-        fetchUser(); // Gọi hàm fetchUser
-    }, [id]);
+   
     return (
         <>
             <Header />
@@ -82,21 +65,21 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                     <SearchOutlined
                         style={{ fontSize: '24px' }}
                         onClick={() => setShowSearch(prev => !prev)}
-                        className='w-5 cursor-pointer'
+                        className='w-5 cursor-pointer hover:scale-110 hover:text-blue-500 transition-transform duration-300 ease-in-out'
                         alt="Search Icon"
                     />
 
                     <Link to='wishlist' className='relative'>
                         <HeartOutlined
                             style={{ fontSize: "24px" }}
-                            className='w-5 min-w-5'
+                            className='w-5 min-w-5 cursor-pointer hover:scale-110 hover:text-red-500 transition-transform duration-300 ease-in-out'
                             alt='Wishlist Icon'
                         />
                     </Link>
                     <Link to='/cart' className='relative'>
                         <ShoppingCartOutlined
                             style={{ fontSize: "24px" }}
-                            className='w-5 min-w-5'
+                            className='w-5 min-w-5 cursor-pointer hover:scale-110 hover:text-green-500 transition-transform duration-300 ease-in-out'
                             alt="Cart Icon"
                         />
                         <p className='absolute right-[-5px] bottom-[-5px] 
@@ -105,12 +88,14 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         </p>
                     </Link>
                     <Dropdown overlay={menu} trigger={['click']}>
-                        <UserOutlined style={{ fontSize: '24px' }} className='w-6 cursor-pointer' />
+                        <UserOutlined style={{ fontSize: '24px' }} 
+    className='w-6 cursor-pointer hover:scale-110 hover:text-purple-500 transition-transform duration-300 ease-in-out'
+    />
                     </Dropdown>
                     <img
                         onClick={() => setVisible(true)}
                         src={assets.menu_icon}
-                        className='w-5 cursor-pointer md:hidden'
+                        className='w-5 cursor-pointer md:hidden '
                         alt="Menu Icon"
                     />
                 </div>
