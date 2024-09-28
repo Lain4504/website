@@ -24,6 +24,9 @@ const resetPassword = (token) => {
 const getUserProfile = async (userId) => {
     return await axios.get(`${ACCOUNT_URL}get-profile/${userId}`); 
 };
+const changePassword = (data) => {
+    return axios.post("http://localhost:8081/api/v1/auth/change-password", data)
 
+}
 
-export {createAccount, login, activateAccount, forgetPassword, resetPassword,getUserProfile }
+export {createAccount, login, activateAccount, forgetPassword, resetPassword,getUserProfile, changePassword }
