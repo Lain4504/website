@@ -36,7 +36,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                     <Link to={`/get-profile`}>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
-                        <Link to='/orders'>Đơn hàng</Link>
+                        <Link to='/orderlist'>Đơn hàng</Link>
                     </Menu.Item>
                     <Menu.Item key="3" onClick={logout}>
                         Đăng xuất

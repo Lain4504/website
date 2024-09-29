@@ -19,6 +19,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
 import PostList from "./pages/PostList";
 import UserProfile from "./pages/UserProfile";
+import OrderList from "./pages/OrderList";
+import ChangePassword from "./components/ChangePassword";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies(['authToken']); // Lấy 'authToken' từ cookies
@@ -31,7 +33,7 @@ const App = () => {
     const validRoutes = [
       '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
       '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
-      '/products/:id', '/get-profile'
+      '/products/:id', '/get-profile', '/orderlist','/change-password'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -64,6 +66,8 @@ const App = () => {
           <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/products/:id' element={<ProductDetail />} />
+          <Route path='/orderlist'element={<OrderList/>} />
+          <Route path="/change-password" element={<ChangePassword cookies={cookies}/>}></Route>
         </Routes>
         <ScrollToTop />
         <FloatingPhoneIcon />
