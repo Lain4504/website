@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUserProfile } from '../services/UserService';
-import { message, Modal, Button, Form, Input, Spin, Row, Col } from 'antd';
+import { message, Modal, Button, Form, Input, Spin, Row, Col, Select } from 'antd';
 import Breadcrumb from '../components/Breadcrumb';
 import UserSideBar from './UserSideBar';
 
@@ -36,7 +36,6 @@ const UserProfile = ({ cookies }) => {
                         const res = await getUserProfile(userId);
                         setProfileData(res?.data);
                         console.log("User profile data:", res?.data);
-                        // Set loading to false after 1 second delay
                         setTimeout(() => setLoading(false), 1000);
                     } catch (error) {
                         message.error('Failed to fetch user profile');
@@ -60,7 +59,7 @@ const UserProfile = ({ cookies }) => {
 
     const handleOk = async (values) => {
         console.log('Received values:', values);
-        // Here you would usually call an update API to save the changes
+        // Call update API here
         setIsModalVisible(false);
     };
 
@@ -89,10 +88,13 @@ const UserProfile = ({ cookies }) => {
                                                 <Form.Item label="Họ và Tên">
                                                     <Input value={profileData?.fullName || ''} disabled placeholder="Chưa có thông tin" />
                                                 </Form.Item>
-                                                <Form.Item label="Email">
-                                                    <Input value={profileData?.email || ''} disabled placeholder="Chưa có thông tin" />
+                                                <Form.Item label="Giới tính" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                                                    <Input value={profileData?.gender || ''} disabled placeholder="Chưa có thông tin" />
                                                 </Form.Item>
                                             </Form>
+                                            <Form.Item label="Email" style={{ marginTop: '16px' }}>
+                                                <Input value={profileData?.email || ''} disabled placeholder="Chưa có thông tin" />
+                                            </Form.Item>
                                         </Col>
                                         <Col xs={24} sm={12}>
                                             <Form layout="vertical">
@@ -138,6 +140,12 @@ const UserProfile = ({ cookies }) => {
                 <Form layout="vertical" onFinish={handleOk}>
                     <Form.Item name="fullName" label="Họ và Tên" rules={[{ required: true, message: 'Vui lòng nhập tên đầy đủ!' }]}>
                         <Input defaultValue={profileData?.fullName} />
+                    </Form.Item>
+                    <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}>
+                        <Select defaultValue={profileData?.gender} placeholder="Chọn giới tính">
+                            <Option value="Male">Nam</Option>
+                            <Option value="Female">Nữ</Option>
+                        </Select>
                     </Form.Item>
                     <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email!' }]}>
                         <Input type="email" defaultValue={profileData?.email} />
