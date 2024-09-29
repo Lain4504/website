@@ -30,7 +30,7 @@ const UserProfile = ({ cookies }) => {
             try {
                 const decoded = decodeJWT(token); // Sử dụng hàm decodeJWT custom
                 const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]; // Lấy ID người dùng từ token
-                console.log("User ID from token: ", userId);
+                // console.log("User ID from token: ", userId);
                 
                 const fetchUserInfo = async () => {
                     try {
@@ -65,9 +65,10 @@ const UserProfile = ({ cookies }) => {
             <div className="md:w-1/2 lg:w-1/3 text-center">
                 <div>
                     <p><strong>Full Name:</strong> {profileData?.fullName || 'Chưa có thông tin'}</p>
+                    <p><strong>Gender:</strong> {profileData?.gender || 'Chưa có thông tin'}</p>
                     <p><strong>Email:</strong> {profileData?.email || 'Chưa có thông tin'}</p>
                     <p><strong>Phone:</strong> {profileData?.phone || 'Chưa có thông tin'}</p>
-                    <p><strong>Date of Birth:</strong> {profileData?.dob || 'Chưa có thông tin'}</p>
+                    <p><strong>Date of Birth:</strong> {profileData?.dob ? new Date(profileData.dob).toLocaleDateString() : 'Chưa có thông tin'}</p>
                     <p><strong>Address:</strong> {profileData?.address || 'Chưa có thông tin'}</p>
                 </div>
             </div>
