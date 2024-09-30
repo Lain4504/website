@@ -34,8 +34,10 @@ const ChangePassword = ({ cookies }) => {
 
         try {
             await changePassword(data);
-            message.success('Đổi mật khẩu thành công'); // Show success message
-            window.location.href = '/account';
+            message.success('Đổi mật khẩu thành công');
+            setTimeout(() => {
+                window.location.href = '/get-profile';
+            }, 1000);
         } catch (err) {
             setError(err.response.data);
         }
