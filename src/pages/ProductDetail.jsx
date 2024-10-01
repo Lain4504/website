@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Row, Col, Image, Typography, Divider, Button, Modal } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { Typography, Button, Modal, Row, Col } from 'antd';
 
-const { Title, Text } = Typography;
 
 const ProductDetail = () => {
   // Dữ liệu giả cho cuốn sách
@@ -11,12 +9,13 @@ const ProductDetail = () => {
     specialEdition: 'Bản Đặc Biệt',
     price: 82500, // Đơn vị là VNĐ
     description:
-      'Ngày thành phố Kamakura đón trận gió đầu xuân...',
+      'Ngày thành phố Kamakura đón trận gió đầu xuân, một đoàn tàu tốc hành trật bánh khiến bao gia đình mất người thân, bao người chịu niềm đau tử biệt. Một phụ nữ mất vị hôn phu, một thanh niên mất cha, một thiếu niên mất người trong mộng…',
+    fullDescription:
+      'Ngày thành phố Kamakura đón trận gió đầu xuân, một đoàn tàu tốc hành trật bánh khiến bao gia đình mất người thân, bao người chịu niềm đau tử biệt. Một phụ nữ mất vị hôn phu, một thanh niên mất cha, một thiếu niên mất người trong mộng… Song, chừng hai tháng sau vụ tai nạn thảm khốc ấy, có tin đồn truyền tới tai những người bị bỏ lại thế gian. Rằng tại ga Nishi-Yuigahama, ga gần nhất với hiện trường tàu trật bánh, xuất hiện một linh hồn nữ giới. Nếu làm theo chỉ dẫn của linh hồn đó, ta có thể ngược quá khứ để lên chuyến tàu định mệnh kia. Khi hay tin đồn, thân bằng quyến thuộc của các nạn nhân đều tới ga Nishi-Yuigahama để một lần được gặp lại người đã qua đời. Tập truyện viết về những cuộc hội ngộ như thế, qua bốn phân đoạn nối với nhau bởi chuyến tàu. Quá khứ đã được định đoạt, nhưng tương lai vẫn có cơ may thay đổi. Những người ở lại sẽ ra sao khi hội ngộ người thân yêu đã khuất? Mời bạn cùng IPM chờ đón câu chuyện đẹp đẽ, giàu xúc cảm này để tìm câu trả lời nhé!',
     images: [
       'https://product.hstatic.net/200000287623/product/phep_mau_o_ga_nishi-yuigahama_-_bia1_46fbb580a679436695be10a8b42054a5_large.jpg',
       'https://product.hstatic.net/200000287623/product/phep_mau_o_ga_nishi-yuigahama_-_bia1_46fbb580a679436695be10a8b42054a5_large.jpg',
       'https://product.hstatic.net/200000287623/product/phep_mau_o_ga_nishi-yuigahama_-_bia1_46fbb580a679436695be10a8b42054a5_large.jpg',
-      // Thêm nhiều hình ảnh nếu cần
     ],
     publisher: 'Hồng Đức',
     publicationYear: 2024,
@@ -27,6 +26,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(book.images[0]);
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   // Giỏ hàng (giả lập)
   const [cartItems, setCartItems] = useState(0);
@@ -47,143 +47,103 @@ const ProductDetail = () => {
     setIsModalVisible(false);
   };
 
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
   return (
-    <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
-      <Row gutter={[16, 16]} className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
-        {/* Hình chính */}
-        <Col xs={24} sm={12} md={10} className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
-          <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
-            {book.images.map((image, index) => (
-              <Image
-                src={image}
-                alt={`Book Image ${index}`}
-                key={index}
-                width="100%"
-                style={{ objectFit: 'cover', borderRadius: 4, cursor: 'pointer' }}
-                onClick={() => setSelectedImage(image)} // Thay đổi hình khi nhấn
+    <div className="wrapper-detail">
+      <div className="container mx-auto px-4 py-8">
+        <Row gutter={16}>
+          <Col xs={24} md={10}>
+            <div className="relative">
+              <div className="absolute top-0 right-0 bg-red-500 text-white px-1 py-1 text-sm rounded-bl-lg">
+                -25%
+              </div>
+              <img
+                className="w-full h-auto max-w-full rounded-lg shadow-lg object-contain md:max-w-[300px] lg:max-w-[400px]"
+                src={selectedImage}
+                alt={book.title}
               />
-            ))}
-          </div>
-          <div className='w-full sm:w-[80%]'>
-            <Image
-              src={selectedImage}
-              alt="Main Book Cover"
-              width="100%"
-              style={{ objectFit: 'cover', borderRadius: 4 }}
-            />
-          </div>
-        </Col>
+            </div>
 
-        {/* Thông tin sách */}
-        <Col xs={24} sm={12} md={14} className='flex-1'>
-          <Title level={3} className='font-medium text-2xl mt-2'>{book.title}</Title>
-          <Text type="secondary" className='text-lg mt-2'>By {book.author}</Text>
-          <Divider />
-          <Text>
-            <strong>Price:</strong> <Text type="danger" className='mt-5 text-3xl font-medium'>{book.price.toLocaleString()}đ</Text>
-          </Text>
+          </Col>
+          <Col xs={24} md={14}>
+            <h1 className="text-2xl font-bold">{book.title}</h1>
+            <span className="text-gray-600">SKU: 8935250714112</span>
+            <div className="mt-2">
+              <span className="text-lg font-semibold text-green-600">{book.price.toLocaleString()}₫</span>
+              <del className="ml-2 text-gray-500">110,000₫</del>
+            </div>
+            <div className="mt-4">
+              <div className="flex justify-between">
+                <div>
+                  <strong>Tác giả:</strong> <span><a href="/collections/all/tacgia_takeshi-murase" className="text-blue-600 hover:underline">Takeshi Murase</a></span>
+                </div>
+                <div>
+                  <strong>Nhà xuất bản:</strong> <span>{book.publisher}</span>
+                </div>
+              </div>
+              <div className="flex justify-between mt-2">
+                <div>
+                  <strong>Năm xuất bản:</strong> <span>{book.publicationYear}</span>
+                </div>
+                <div>
+                  <strong>Hình thức:</strong> <span>{book.format}</span>
+                </div>
+              </div>
+              <div className="flex justify-between mt-2">
+                <div>
+                  <strong>Kích thước:</strong> <span>{book.dimensions}</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4">
+              <strong>Nội dung:</strong>
+              <p className="mt-2">
+                {showFullDescription ? book.fullDescription : book.description}
+              </p>
+              {book.fullDescription && !showFullDescription && (
+                <Button type="link" onClick={toggleDescription}>
+                  Xem thêm
+                </Button>
+              )}
+              {showFullDescription && (
+                <Button type="link" onClick={toggleDescription}>
+                  Rút gọn
+                </Button>
+              )}
+            </div>
 
-          {/* Thông tin bổ sung */}
-          <Row gutter={[16, 16]} className="mt-5">
-            <Col span={12}>
-              <Text><strong>Nhà xuất bản:</strong> {book.publisher}</Text>
-            </Col>
-            <Col span={12}>
-              <Text><strong>Năm xuất bản:</strong> {book.publicationYear}</Text>
-            </Col>
-            <Col span={12}>
-              <Text><strong>Hình thức:</strong> {book.format}</Text>
-            </Col>
-            <Col span={12}>
-              <Text><strong>Kích thước:</strong> {book.dimensions}</Text>
-            </Col>
-          </Row>
-
-          <Divider />
-          <Text className='mt-5 text-gray-500 md:w-4/5'>{book.description}</Text>
-
-          {/* Bộ đếm số lượng */}
-          <div className='flex items-center mt-4'>
-            <Button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</Button>
-            <Text className='mx-4'>{quantity}</Text>
-            <Button onClick={() => setQuantity(quantity + 1)}>+</Button>
-          </div>
-
-          <Button
-            type="primary"
-            icon={<ShoppingCartOutlined />}
-            size="large"
-            className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700 mt-5 flex items-center justify-center'
-            style={{ marginTop: '20px' }}
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </Button>
-          <Divider />
-        </Col>
-      </Row>
-
-      {/* Mô tả và đánh giá */}
-      <div className='mt-20'>
-        <div className='flex'>
-          <b className='border px-5 py-3 text-sm'>Description</b>
-          <p className='border px-5 py-3 text-sm'>Reviews</p>
-        </div>
-        <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-          <p><b>User1:</b> This book is fantastic!</p>
-          <p><b>User2:</b> A must-read for everyone.</p>
-        </div>
+            <form id="add-item-form" className="mt-4">
+              <div className="flex items-center">
+                <label className="mr-2">Phiên Bản:</label>
+                <select className="border rounded-md p-2">
+                  <option value="Bản Đặc Biệt">Bản Đặc Biệt</option>
+                  <option value="Bản Thường">Bản Thường</option>
+                </select>
+              </div>
+              <div className="flex items-center mt-4">
+                <label className="mr-2">Số lượng:</label>
+                <button type="button" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)} className="border rounded-md px-2">-</button>
+                <input type="text" value={quantity} readOnly className="border rounded-md w-16 text-center mx-2" />
+                <button type="button" onClick={() => setQuantity(quantity + 1)} className="border rounded-md px-2">+</button>
+              </div>
+              <div className="mt-4">
+                <Button type="primary" onClick={handleAddToCart} className="mr-2">Thêm vào giỏ</Button>
+                <Button type="default" className="hidden">Mua ngay</Button>
+              </div>
+            </form>
+            <div className="mt-4">
+              <p>Danh mục: <span className="text-blue-600 hover:underline"><a href="/collections/sach-moi">Sách Mới</a></span></p>
+            </div>
+          </Col>
+        </Row>
       </div>
 
-      {/* Modal hiển thị giỏ hàng */}
-      <Modal
-  title="Thông tin giỏ hàng"
-  visible={isModalVisible}
-  onCancel={handleCancel}
-  footer={null} // Bỏ nút Cancel và Ok
-  width={1000}
-  style={{ display: 'flex', flexDirection: 'column', height: '100%' }} // Make modal a flex container
->
-  <div style={{ flex: 1 }}> {/* Take up available space */}
-    <Row gutter={[16, 16]}>
-      {/* Dòng thông báo giỏ hàng */}
-      {/* Bên trái: Thông tin sản phẩm */}
-      <Col xs={24} sm={12}>
-        <Col xs={24}>
-          <h1 className='font-bold text-lg my-3'>Giỏ hàng của bạn đã được cập nhật</h1>
-        </Col>
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <Image
-              src={selectedImage}
-              alt="Book Image"
-              width={150}
-              style={{ objectFit: 'cover', borderRadius: 4 }}
-            />
-          </div>
-          <div className="ml-2" style={{ marginLeft: '10px' }}>
-            <Title level={4} className='mt-2'>{book.title}</Title>
-            <Text className='text-lg block'>{book.price.toLocaleString()}đ</Text>
-            <Text className='block'><strong>Số lượng:</strong> {quantity}</Text>
-          </div>
-        </div>
-      </Col>
-      {/* Bên phải: Thông tin số lượng và các nút */}
-      <Col xs={24} sm={12}>
-        <h1 className='font-bold text-lg my-3'>Giỏ hàng của bạn hiện có {cartItems} sản phẩm</h1>
-        <Divider />
-        <Text className='block mt-2'><strong>Tổng cộng:</strong> {totalPrice.toLocaleString()}đ</Text>
-      </Col>
-    </Row>
-  </div>
-  
-  {/* Bên dưới: Nút */}
-  <div className='flex justify-end mt-9'>
-    <Button type="primary" onClick={handleOk} style={{ marginRight: '8px' }}>Tiếp tục đặt hàng</Button>
-    <Button type="primary" danger onClick={handleOk}>Thanh toán</Button>
-  </div>
-</Modal>
-
+      <Modal title="Thông báo" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Đã thêm {quantity} sách vào giỏ hàng!</p>
+      </Modal>
     </div>
   );
 };
