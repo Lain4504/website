@@ -30,3 +30,4 @@ const changePassword = (data) => {
 }
 
 export {createAccount, login, activateAccount, forgetPassword, resetPassword,getUserProfile, changePassword }
+

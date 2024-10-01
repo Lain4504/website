@@ -34,6 +34,7 @@ const App = () => {
       '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
       '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
       '/products/:id', '/get-profile', '/orderlist','/change-password'
+
     ];
 
     const pathExists = validRoutes.some(route => {
