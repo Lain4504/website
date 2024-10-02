@@ -45,3 +45,4 @@ const changePassword = (token) => {
 };
 
 export { createAccount, login, activateAccount, forgetPassword, resetPassword, getUserProfile, changePassword };
+
