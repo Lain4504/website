@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Layout, Spin } from 'antd';
-import { cancelOrder } from '../services/OrderService';
+import { cancelOrder, getOrderByUserId } from '../services/OrderService';
 import UserSideBar from './UserSideBar';
 
 const { Content } = Layout;
@@ -26,9 +26,50 @@ const formatDate = (inputDate) => {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
 
-const OrderList = ({ orders }) => {
+const OrderList = ({cookies}) => {
     const [loading, setLoading] = useState(true);
+ 
+    const [orders, setOrders] = useState([]);
 
+     const decodeJWT = (token) => {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    };
+
+    useEffect(() => {
+        const token = cookies.authToken;
+        if (token) {
+            try {
+                const decoded = decodeJWT(token);
+                const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+                console.log("User ID from token: ", userId);
+
+                const fetchUserInfo = async () => {
+                    try {
+                        const res = await getOrderByUserId(userId);
+                        setOrders(res?.data);
+                        console.log("User profile data:", res?.data);
+                        setTimeout(() => setLoading(false), 1000);
+                    } catch (error) {
+                        message.error('Failed to fetch user profile');
+                        setLoading(false);
+                    }
+                };
+                fetchUserInfo();
+            } catch (error) {
+                message.error('Invalid token');
+                setLoading(false);
+            }
+        } else {
+            message.error('No token found');
+            setLoading(false);
+        }
+    }, [cookies.authToken]);
+    
     useEffect(() => {
         const timer = setTimeout(() => {
             setLoading(false);
