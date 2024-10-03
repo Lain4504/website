@@ -69,7 +69,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         alt="Search Icon"
                     />
 
-                    <Link to='wishlist' className='relative'>
+                    <Link to='/wishlist' className='relative'>
                         <HeartOutlined
                             style={{ fontSize: "24px" }}
                             className='w-5 min-w-5 cursor-pointer hover:scale-110 hover:text-red-500 transition-transform duration-300 ease-in-out'

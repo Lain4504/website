@@ -21,6 +21,7 @@ import PostList from "./pages/PostList";
 import UserProfile from "./pages/UserProfile";
 import OrderList from "./pages/OrderList";
 import ChangePassword from "./components/ChangePassword";
+import Wishlist from "./pages/WishList";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies(['authToken']); // Lấy 'authToken' từ cookies
@@ -33,7 +34,7 @@ const App = () => {
     const validRoutes = [
       '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
       '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
-      '/products/:id', '/get-profile', '/orderlist','/change-password'
+      '/products/:id', '/get-profile', '/orderlist','/change-password', '/wishlist'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -66,7 +67,8 @@ const App = () => {
           <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/products/:id' element={<ProductDetail />} />
-          <Route path='/orderlist'element={<OrderList/>} />
+          <Route path='/wishlist' element={<Wishlist cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>}></Route>
+          <Route path='/orderlist'element={<OrderList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
           <Route path="/change-password" element={<ChangePassword cookies={cookies}/>}></Route>
         </Routes>
         <ScrollToTop />
