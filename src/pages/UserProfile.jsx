@@ -28,7 +28,7 @@ const UserProfile = ({ cookies }) => {
         if (token) {
             try {
                 const decoded = decodeJWT(token);
-                const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+                const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
                 console.log("User ID from token: ", userId);
 
                 const fetchUserInfo = async () => {

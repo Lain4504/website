@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Layout, Spin } from 'antd';
+import { Table, Button, Layout, message } from 'antd';
+import { jwtDecode } from 'jwt-decode';  // Import the jwt-decode library
 import { cancelOrder, getOrderByUserId } from '../services/OrderService';
 import UserSideBar from './UserSideBar';
 
@@ -26,26 +27,17 @@ const formatDate = (inputDate) => {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
 
-const OrderList = ({cookies}) => {
+const OrderList = ({ cookies }) => {
     const [loading, setLoading] = useState(true);
- 
     const [orders, setOrders] = useState([]);
-
-     const decodeJWT = (token) => {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    };
 
     useEffect(() => {
         const token = cookies.authToken;
         if (token) {
             try {
-                const decoded = decodeJWT(token);
-                const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+                // Decode the JWT token using jwt-decode
+                const decoded = jwtDecode(token);
+                const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
                 console.log("User ID from token: ", userId);
 
                 const fetchUserInfo = async () => {
@@ -69,16 +61,15 @@ const OrderList = ({cookies}) => {
             setLoading(false);
         }
     }, [cookies.authToken]);
-    
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setLoading(false);
         }, 1000);
-        
+
         return () => clearTimeout(timer); // Cleanup on unmount
     }, []);
 
-    // Ant Design table columns setup
     const columns = [
         {
             title: 'Đơn hàng',
@@ -146,8 +137,8 @@ const OrderList = ({cookies}) => {
 
     return (
         <div className="flex h-a">
-        <UserSideBar />
-        <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4">
+            <UserSideBar />
+            <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4">
                 <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
                     {loading ? (
                         <Table
@@ -171,8 +162,8 @@ const OrderList = ({cookies}) => {
                         />
                     )}
                 </Content>
-                </div>
-                </div>
+            </div>
+        </div>
     );
 };
 
