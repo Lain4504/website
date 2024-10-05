@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Layout, message } from 'antd';
-import { jwtDecode } from 'jwt-decode';  // Import the jwt-decode library
+import { jwtDecode } from 'jwt-decode'; 
 import { cancelOrder, getOrderByUserId } from '../services/OrderService';
-import UserSideBar from './UserSideBar';
+import UserNavBar from './UserNavBar';
 
 const { Content } = Layout;
 
@@ -35,7 +35,6 @@ const OrderList = ({ cookies }) => {
         const token = cookies.authToken;
         if (token) {
             try {
-                // Decode the JWT token using jwt-decode
                 const decoded = jwtDecode(token);
                 const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
                 console.log("User ID from token: ", userId);
@@ -61,14 +60,6 @@ const OrderList = ({ cookies }) => {
             setLoading(false);
         }
     }, [cookies.authToken]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-
-        return () => clearTimeout(timer); // Cleanup on unmount
-    }, []);
 
     const columns = [
         {
@@ -136,34 +127,23 @@ const OrderList = ({ cookies }) => {
     ];
 
     return (
-        <div className="flex h-a">
-            <UserSideBar />
-            <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4">
+        <> 
+        <UserNavBar/>
+        <div className="flex h-a my-10">
+            <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto"> {/* Thêm overflow-x-auto */}
                 <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-                    {loading ? (
-                        <Table
-                            dataSource={[]} // Passing empty dataSource
-                            columns={columns}
-                            rowKey="id"
-                            pagination={false}
-                            className="w-full bg-white shadow-md rounded-lg"
-                            loading={{
-                                spinning: true,
-                                tip: 'Đang tải danh sách đơn hàng...',
-                            }}
-                        />
-                    ) : (
-                        <Table
-                            dataSource={orders}
-                            columns={columns}
-                            rowKey="id"
-                            pagination={false}
-                            className="w-full bg-white shadow-md rounded-lg"
-                        />
-                    )}
+                    <Table
+                        dataSource={loading ? [] : orders}
+                        columns={columns}
+                        rowKey="id"
+                        pagination={false}
+                        className="w-full bg-white shadow-md rounded-lg"
+                        loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
+                    />
                 </Content>
             </div>
         </div>
+        </>
     );
 };
 

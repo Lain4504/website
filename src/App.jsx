@@ -34,7 +34,7 @@ const App = () => {
     const validRoutes = [
       '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
       '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
-      '/products/:id', '/get-profile', '/orderlist','/change-password', '/wishlist'
+      '/products/:id', '/profile', '/orderlist','/change-password', '/wishlist'
 
     ];
 
@@ -63,7 +63,7 @@ const App = () => {
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />
           <Route path='/activation/:token' element={<Activate />} />
-          <Route path='/get-profile' element={<UserProfile cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+          <Route path='/profile' element={<UserProfile cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/404' element={<Page404 />} />
           <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />

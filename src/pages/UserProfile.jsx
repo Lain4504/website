@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getUserProfile } from '../services/UserService';
+import { getUserProfile, updateProfile } from '../services/UserService';
 import { message, Modal, Button, Form, Input, Spin, Row, Col, Select } from 'antd';
 import Breadcrumb from '../components/Breadcrumb';
-import UserSideBar from './UserSideBar';
-import { jwtDecode } from 'jwt-decode';  // Import the jwt-decode library
+import UserNavBar from './UserNavBar';
+import { jwtDecode } from 'jwt-decode';
 
 const UserProfile = ({ cookies }) => {
     const [loading, setLoading] = useState(true);
@@ -14,19 +14,18 @@ const UserProfile = ({ cookies }) => {
         { title: 'Home', href: '/' },
         { title: 'Profile' }
     ];
+
     useEffect(() => {
         const token = cookies.authToken;
         if (token) {
             try {
                 const decoded = jwtDecode(token);
                 const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-                console.log("User ID from token: ", userId);
 
                 const fetchUserInfo = async () => {
                     try {
                         const res = await getUserProfile(userId);
                         setProfileData(res?.data);
-                        console.log("User profile data:", res?.data);
                         setTimeout(() => setLoading(false), 1000);
                     } catch (error) {
                         message.error('Failed to fetch user profile');
@@ -49,9 +48,29 @@ const UserProfile = ({ cookies }) => {
     };
 
     const handleOk = async (values) => {
-        console.log('Received values:', values);
-        // Call update API here
-        setIsModalVisible(false);
+        const token = cookies.authToken;
+
+        if (!token) {
+            message.error('No token found');
+            return;
+        }
+
+        try {
+            const decoded = jwtDecode(token);
+            const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
+
+            // Call updateProfile with userId and values
+            await updateProfile(userId, values);
+            message.success('Profile updated successfully');
+            setIsModalVisible(false);
+
+            // Optionally, refresh the profile data
+            const res = await getUserProfile(userId);
+            setProfileData(res?.data);
+        } catch (error) {
+            message.error('Failed to update profile');
+            console.error('Error updating profile:', error);
+        }
     };
 
     const handleCancel = () => {
@@ -60,9 +79,9 @@ const UserProfile = ({ cookies }) => {
 
     return (
         <>
-            <Breadcrumb items={breadcrumbs} />
-            <div className="flex h-a">
-                <UserSideBar />
+            <Breadcrumb items={breadcrumbs} className="my-10" />
+            <UserNavBar />
+            <div className="flex h-auto my-10">
                 <div className="flex-1 p-6 bg-white shadow-md rounded-lg ml-4">
                     {loading ? (
                         <div className="flex justify-center items-center h-full">
@@ -102,7 +121,7 @@ const UserProfile = ({ cookies }) => {
                                     <Form layout="vertical">
                                         <Form.Item label={<strong>Địa chỉ:</strong>}>
                                             <Input
-                                                className="w-3/4" // Thiết lập chiều rộng là 3/4
+                                                className="w-3/4"
                                                 disabled
                                                 value={profileData?.address || 'Chưa có thông tin'}
                                             />
@@ -128,27 +147,35 @@ const UserProfile = ({ cookies }) => {
                 footer={null}
                 width={600}
             >
-                <Form layout="vertical" onFinish={handleOk}>
+                <Form
+                    layout="vertical"
+                    onFinish={handleOk}
+                    initialValues={{
+                        fullName: profileData?.fullName,
+                        gender: profileData?.gender,
+                        email: profileData?.email,
+                        phone: profileData?.phone,
+                        dob: profileData?.dob ? new Date(profileData.dob).toISOString().split('T')[0] : '',
+                        address: profileData?.address,
+                    }}
+                >
                     <Form.Item name="fullName" label="Họ và Tên" rules={[{ required: true, message: 'Vui lòng nhập tên đầy đủ!' }]}>
-                        <Input defaultValue={profileData?.fullName} />
+                        <Input />
                     </Form.Item>
                     <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}>
-                        <Select defaultValue={profileData?.gender} placeholder="Chọn giới tính">
-                            <Option value="Male">Nam</Option>
-                            <Option value="Female">Nữ</Option>
+                        <Select placeholder="Chọn giới tính">
+                            <Select.Option value="Male">Nam</Select.Option>
+                            <Select.Option value="Female">Nữ</Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email!' }]}>
-                        <Input type="email" defaultValue={profileData?.email} />
-                    </Form.Item>
                     <Form.Item name="phone" label="Số điện thoại" rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}>
-                        <Input defaultValue={profileData?.phone} />
+                        <Input />
                     </Form.Item>
                     <Form.Item name="dob" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}>
-                        <Input type="date" defaultValue={profileData?.dob ? new Date(profileData.dob).toISOString().split('T')[0] : ''} />
+                        <Input type="date" />
                     </Form.Item>
                     <Form.Item name="address" label="Địa chỉ" rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}>
-                        <Input defaultValue={profileData?.address} />
+                        <Input />
                     </Form.Item>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">

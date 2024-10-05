@@ -33,7 +33,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             {cookies.authToken ? (
                 <>
                     <Menu.Item key="1">
-                    <Link to={`/get-profile`}>Tài khoản</Link>
+                    <Link to={`/profile`}>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
                         <Link to='/orderlist'>Đơn hàng</Link>

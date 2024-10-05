@@ -4,7 +4,8 @@ import { getBookById } from '../services/BookService';
 import Breadcrumb from '../components/Breadcrumb';
 import { Link } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
-import { jwtDecode } from 'jwt-decode';  // Import the jwt-decode library
+import { jwtDecode } from 'jwt-decode';  
+import { message } from 'antd';
 
 const Wishlist = ({ cookies }) => {
   const [wishlist, setWishlist] = useState([]);
@@ -53,18 +54,27 @@ const Wishlist = ({ cookies }) => {
     }
   }, [cookies.authToken]);
 
-  const deleteWishlist = async (bookId) => {
+  const deleteWishlist = async (wishlistId) => {
     if (!userId) return;
     try {
-      await deleteWishList(userId, bookId);
-      const newWishlist = wishlist.filter(item => item.book?.id !== bookId);
+      await deleteWishList(wishlistId);
+      const newWishlist = wishlist.filter(item => item.id !== wishlistId);
       setWishlist(newWishlist);
-      alert('Book removed from wishlist');
+  
+      // Kiểm tra nếu sản phẩm đang hover bị xóa thì reset hoveredBookTitle
+      const deletedItem = wishlist.find(item => item.id === wishlistId);
+      if (deletedItem && deletedItem.book.title === hoveredBookTitle) {
+        setHoveredBookTitle('');
+      }
+  
+      message.success('Book removed from wishlist');
     } catch (error) {
-      alert('Failed to remove book from wishlist');
+      message.error('Failed to remove book from wishlist');
       console.error('Delete error', error);
     }
   };
+  
+  
 
   const handleMouseMove = (e) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
@@ -90,7 +100,7 @@ const Wishlist = ({ cookies }) => {
         {wishlist.length > 0 ? (
           wishlist.map((item) => (
             <div
-              key={item.book.id}
+              key={item.id}
               className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
               onMouseEnter={() => setHoveredBookTitle(item.book.title)}
               onMouseLeave={() => setHoveredBookTitle('')}
@@ -104,7 +114,7 @@ const Wishlist = ({ cookies }) => {
                   />
                 </Link>
                 <button
-                  onClick={() => deleteWishlist(item.book.id)}
+                  onClick={() => deleteWishlist(item.id)}
                   className="text-red-600 mt-2 flex items-center justify-center absolute top-0 left-1 border border-red-600 p-1 hover:bg-red-100"
                 >
                   <DeleteOutlined className="mr-0" />
