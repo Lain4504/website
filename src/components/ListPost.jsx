@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Skeleton } from 'antd';
 import { getAllPost } from '../services/PostService';
+import { Link } from 'react-router-dom';
 
 const ListPost = () => {
     const [posts, setPosts] = useState([]);
@@ -122,7 +123,7 @@ const ListPost = () => {
                             >
                                 <div className="p-4">
                                     <p className="text-lg font-semibold">
-                                        <a href={post.link} className="hover:text-blue-600">{post.title}</a>
+                                        <Link to={`/posts/${post.id}`} className="hover:text-blue-600">{post.title}</Link>
                                     </p>
                                     <div className="text-gray-700">{post.brief}</div>
                                 </div>

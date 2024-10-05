@@ -110,7 +110,7 @@ const OrderList = ({ cookies }) => {
             render: (_, order) => (
                 <div className="flex justify-center space-x-2">
                     <a href={`/order-detail/${order.id}`}>
-                        <Button type="primary" className="text-xs">Chi tiết</Button>
+                        <Button type="primary" className="text-xs bg-green-500">Chi tiết</Button>
                     </a>
                     {order.shippingState === 'NOTSHIPPING' && order.state !== 'CANCELED' && (
                         <Button

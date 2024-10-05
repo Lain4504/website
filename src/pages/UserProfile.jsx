@@ -9,6 +9,7 @@ const UserProfile = ({ cookies }) => {
     const [loading, setLoading] = useState(true);
     const [profileData, setProfileData] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [fade, setFade] = useState(true); // State to control fade effect
 
     const breadcrumbs = [
         { title: 'Home', href: '/' },
@@ -59,12 +60,9 @@ const UserProfile = ({ cookies }) => {
             const decoded = jwtDecode(token);
             const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
 
-            // Call updateProfile with userId and values
             await updateProfile(userId, values);
             message.success('Profile updated successfully');
             setIsModalVisible(false);
-
-            // Optionally, refresh the profile data
             const res = await getUserProfile(userId);
             setProfileData(res?.data);
         } catch (error) {
@@ -81,7 +79,7 @@ const UserProfile = ({ cookies }) => {
         <>
             <Breadcrumb items={breadcrumbs} className="my-10" />
             <UserNavBar />
-            <div className="flex h-auto my-10">
+            <div className={`flex h-auto my-10 transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
                 <div className="flex-1 p-6 bg-white shadow-md rounded-lg ml-4">
                     {loading ? (
                         <div className="flex justify-center items-center h-full">

@@ -71,3 +71,35 @@ a.active hr{
 .nav-link:active {
     transform: translateY(1px); /* Hiệu ứng khi nhấn */
 }
+/* Hide the categories column on medium screens and below */
+@media (max-width: 992px) {
+    .categories-column {
+      display: none;
+    }
+  }
+  
+  /* Center the content when categories are hidden */
+  .post-content-container {
+    text-align: center; /* Center the text content */
+    padding: 0 15px; /* Add padding for spacing */
+  }
+  
+  @media (max-width: 992px) {
+    /* Ensure the content column takes full width when categories are hidden */
+    .ant-col {
+      width: 100% !important;
+      max-width: 800px; /* Limit the maximum width of the content area */
+      margin: 0 auto; /* Center the content horizontally */
+      padding: 20px; /* Add some padding for better spacing */
+    }
+  }
+  
+  .search-bar {
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+    max-height: 0; /* Mặc định là không hiển thị */
+}
+
+.search-bar.open {
+    max-height: 100px; /* Thay đổi giá trị này theo chiều cao cần thiết */
+}
