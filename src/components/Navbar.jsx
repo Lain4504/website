@@ -4,7 +4,7 @@ import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import CollectionList from './CollectionList';
-import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
+import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
 
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
@@ -104,13 +104,13 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                             <img src={assets.dropdown_icon} className='h-4 rotate-180' alt="Dropdown Icon" />
                             <p>Back</p>
                         </div>
-                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/'>TRANG CHỦ</NavLink>
-                        <div className='py-2 pl-6 border'>
+                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border menu-item' to='/'>TRANG CHỦ</NavLink>
+                        <div className='py-2 pl-6 border menu-item'>
                             <CollectionList closeMenu={() => setVisible(false)} />
                         </div>
-                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/post'>TIN TỨC</NavLink>
-                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/about'>VỀ FOREVER</NavLink>
-                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border' to='/contact'>LIÊN HỆ</NavLink>
+                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border menu-item' to='/postcategory/all'>TIN TỨC</NavLink>
+                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border menu-item' to='/about'>VỀ FOREVER</NavLink>
+                        <NavLink onClick={() => setVisible(false)} className='py-2 pl-6 border menu-item' to='/contact'>LIÊN HỆ</NavLink>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         <CollectionList />
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </h1>
-                    <NavLink to='/post' className='nav-link flex flex-col items-center gap-1'>
+                    <NavLink to='/postcategory/all' className='nav-link flex flex-col items-center gap-1'>
                         <p>TIN TỨC</p>
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </NavLink>

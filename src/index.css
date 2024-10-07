@@ -27,6 +27,7 @@ a.active hr{
 .group:hover .group-hover\:opacity-100 {
     opacity: 1;
 }
+/*Product Cart Animation*/
 @keyframes moveFromCenter {
     0% {
         opacity: 0;
@@ -56,8 +57,21 @@ a.active hr{
     transform: scale(1.05); /* Phóng to sản phẩm khi hover */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ khi hover */
 }
+/*Post List in Home Page*/
+.post-container {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0; /* Start with opacity 0 */
+}
 
-/* styles.css */
+.post-container.enter {
+    opacity: 1; /* Fade in */
+}
+
+.post-container.exit {
+    opacity: 0; /* Fade out */
+}
+
+/*navbar lg screen */
 
 .nav-link {
     transition: transform 0.3s ease, color 0.3s ease;
@@ -71,6 +85,7 @@ a.active hr{
 .nav-link:active {
     transform: translateY(1px); /* Hiệu ứng khi nhấn */
 }
+  /*Post Detail Page*/
 /* Hide the categories column on medium screens and below */
 @media (max-width: 992px) {
     .categories-column {
@@ -83,7 +98,7 @@ a.active hr{
     text-align: center; /* Center the text content */
     padding: 0 15px; /* Add padding for spacing */
   }
-  
+
   @media (max-width: 992px) {
     /* Ensure the content column takes full width when categories are hidden */
     .ant-col {
@@ -93,7 +108,7 @@ a.active hr{
       padding: 20px; /* Add some padding for better spacing */
     }
   }
-  
+  /*Search bar smooth*/
   .search-bar {
     transition: max-height 0.3s ease-out;
     overflow: hidden;
@@ -103,3 +118,39 @@ a.active hr{
 .search-bar.open {
     max-height: 100px; /* Thay đổi giá trị này theo chiều cao cần thiết */
 }
+
+/* For dropdown effects for collection list in navbar */
+.dropdown-content {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px); /* Start slightly above */
+    pointer-events: none; /* Prevent interaction when invisible */
+}
+
+.dropdown-content.open {
+    opacity: 1;
+    transform: translateY(0); /* Move into position */
+    pointer-events: auto; /* Allow interaction when visible */
+}
+/* Breadscrum*/
+.breadcrumb-item {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.breadcrumb-item:hover {
+    transform: scale(1.05); /* Scale up the item */
+    color: #1890ff; /* Change color on hover */
+}
+
+/* Navbar mobile */
+
+.menu-item {
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effects */
+}
+
+.menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Change background color on hover */
+    transform: translateY(-2px); /* Slight upward movement */
+}
+
+

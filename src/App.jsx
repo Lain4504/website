@@ -34,10 +34,9 @@ const App = () => {
 
   useEffect(() => {
     const validRoutes = [
-      '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
+      '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', '/login', '/register',
       '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
-      '/products/:id', '/profile', '/orderlist','/change-password', '/wishlist', '/posts/:id', '/cart'
-
+      '/products/:id', '/profile', '/orderlist', '/change-password', '/wishlist', '/posts/:id', '/cart'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -51,6 +50,13 @@ const App = () => {
     }
   }, [location, navigate]);
 
+  useEffect(() => {
+    // Điều hướng người dùng khỏi trang login và register khi đã đăng nhập
+    if (cookies.authToken && (location.pathname === '/login' || location.pathname === '/register')) {
+      navigate('/');
+    }
+  }, [cookies, location, navigate]);
+
   return (
     <>
       <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
@@ -60,7 +66,7 @@ const App = () => {
           <Route path='/about' element={<About />} />
           <Route path='/collections/:id' element={<Collection />} />
           <Route path='/contact' element={<Contact />} />
-          <Route path='/post' element={<PostList />} />
+          <Route path='/postcategory/:id' element={<PostList />} />
           <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />
