@@ -63,7 +63,7 @@ const CollectionList = ({ closeMenu }) => {
         SẢN PHẨM
       </button>
       {isOpen && (
-        <div className="absolute z-10 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-lg font-light">
+        <div className="absolute mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-lg font-light z-20">
           <Link to={`/collections/all`} className="py-1" onClick={closeDropdown}>
             <a href="#" className="block px-4 py-2 text-sm border-b border-gray-200 text-black hover:bg-gray-100">TOÀN BỘ SẢN PHẨM</a>
           </Link>

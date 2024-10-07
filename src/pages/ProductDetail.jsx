@@ -4,6 +4,7 @@ import { ShoppingCartOutlined, MinusOutlined, PlusOutlined, LeftOutlined, RightO
 import { useParams } from 'react-router-dom';
 import { getBookById } from '../services/BookService';
 import parser from 'html-react-parser'; // Import html-react-parser
+import Breadcrumb from '../components/Breadcrumb';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -46,15 +47,19 @@ const ProductDetail = () => {
   const book_authors = book.author ? book.author : [];
   const totalPrice = book.salePrice ? book.salePrice * quantity : 0; // Calculate total price based on quantity and sale price
   const selectedImage = book_images.length > 0 ? book_images[0].link : ''; // Select the first image
-
+  const breadcrumbs = [
+    { title: 'Trang chủ', href: '/' },
+    { title:  book.title }
+];
   return (
     <div>
+      <Breadcrumb items={breadcrumbs} className="my-10" />
       <div className="container mx-auto px-4 py-8">
         <Row gutter={16}>
           <Col xs={24} md={10}>
             <div className="relative">
               {book.discount && (
-                <div className="absolute top-0 right-0 bg-red-500 text-white px-1 py-1 text-sm rounded-bl-lg z-50">
+                <div className="absolute top-0 right-0 bg-red-500 text-white px-1 py-1 text-sm rounded-bl-lg z-10">
                   -{book.discount * 100}%
                 </div>
               )}

@@ -38,7 +38,7 @@ const Login = ({ setCookies }) => {
             });
     };
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
+        { title: 'Trang chủ', href: '/' },
         { title: 'Login' }
       ];
     return (

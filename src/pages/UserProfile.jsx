@@ -12,8 +12,8 @@ const UserProfile = ({ cookies }) => {
     const [fade, setFade] = useState(true); // State to control fade effect
 
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
-        { title: 'Profile' }
+        { title: 'Trang chủ', href: '/' },
+        { title: 'Tài khoản' }
     ];
 
     useEffect(() => {

@@ -8,7 +8,7 @@ const Activate = () => {
     const token = useParams()
     const [error, setError] = useState(false)
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
+        { title: 'Trang chủ', href: '/' },
         { title: 'Active' }
     ]
 

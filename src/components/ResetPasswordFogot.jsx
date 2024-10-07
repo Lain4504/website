@@ -39,7 +39,7 @@ const ResetPassword = () => {
     };
     return (
         <div>
-            <Breadcrumb items={[{ title: 'Home', href: '/' }, { title: 'Đặt lại mật khẩu' }]} />
+            <Breadcrumb items={[{ title: 'Trang chủ', href: '/' }, { title: 'Đặt lại mật khẩu' }]} />
             <div className="flex justify-center items-center min-h-80 my-6">
                 <Form
                     name="resetPassword"

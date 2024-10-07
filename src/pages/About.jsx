@@ -4,12 +4,12 @@ import Breadcrumb from '../components/Breadcrumb';
 
 const About = () => {
   const breadcrumbs = [
-    { title: 'Home', href: '/' },
+    { title: 'Trang chủ', href: '/' },
     { title: 'About' }
   ];
   return (
     <div>
-      <Breadcrumb items={breadcrumbs}/>
+      <Breadcrumb items={breadcrumbs} className="my-10" />
       <div className='text-2xl pt-8 border-t'>
         <Title text1={'Giới thiệu về'} text2={'Forever'} />
       </div>

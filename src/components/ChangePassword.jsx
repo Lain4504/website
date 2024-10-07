@@ -19,7 +19,7 @@ const ChangePassword = ({ cookies }) => {
             message.error('Mật khẩu phải có ít nhất 6 ký tự và nhiều nhất 20 ký tự'); // Use Ant Design message for errors
             return;
         }
-        
+
         // Show confirmation modal
         setIsModalVisible(true);
     };
@@ -40,16 +40,20 @@ const ChangePassword = ({ cookies }) => {
         } catch (err) {
             message.error('Mật khẩu cũ không chính xác');
             setError(err.response.data);
-         }
+        }
         setIsModalVisible(false); // Close modal
     };
 
     const handleCancel = () => {
         setIsModalVisible(false); // Close modal
     };
-
+    const breadcrumbs = [
+        { title: 'Trang chủ', href: '/' },
+        { title: 'Thay đổi mật khẩu' }
+    ];
     return (
         <>
+            <Breadcrumb items={breadcrumbs} className="my-10" />
             <UserNavBar />
             <div className="flex h-a my-10">
                 <div className="flex-1 p-6 bg-white border-none rounded-lg ml-4"> {/* Removed shadow-md */}

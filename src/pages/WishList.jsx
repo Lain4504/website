@@ -88,7 +88,7 @@ const Wishlist = ({ cookies }) => {
   }, []);
 
   const breadcrumbs = [
-    { title: 'Home', href: '/' },
+    { title: 'Trang chủ', href: '/' },
     { title: 'Wishlist' }
   ];
 

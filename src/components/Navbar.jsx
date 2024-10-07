@@ -86,9 +86,9 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         </p>
                     </Link>
                     <Dropdown overlay={menu} trigger={['click']}>
-                        <UserOutlined style={{ fontSize: '24px' }} 
-    className='w-6 cursor-pointer hover:scale-110 hover:text-purple-500 transition-transform duration-300 ease-in-out'
-    />
+                        <UserOutlined style={{ fontSize: '24px' }}
+                            className='w-6 cursor-pointer hover:scale-110 hover:text-purple-500 transition-transform duration-300 ease-in-out'
+                        />
                     </Dropdown>
                     <img
                         onClick={() => setVisible(true)}

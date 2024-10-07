@@ -21,7 +21,7 @@ const ForgotPassword = () => {
 
     return (
         <div>
-            <Breadcrumb items={[{ title: 'Home', href: '/' }, { title: 'Quên mật khẩu' }]} />
+            <Breadcrumb items={[{ title: 'Trang chủ', href: '/' }, { title: 'Quên mật khẩu' }]} />
             <div className="flex justify-center items-center min-h-screen">
                 <Form
                     name="forgotPassword"

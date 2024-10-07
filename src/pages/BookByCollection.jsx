@@ -92,7 +92,7 @@ const BooksByCollection = () => {
     }, [id]);
 
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
+        { title: 'Trang chủ', href: '/' },
         { title: curCollection ? curCollection.name : 'All' }
     ];
 
