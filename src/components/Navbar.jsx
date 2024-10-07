@@ -7,10 +7,10 @@ import CollectionList from './CollectionList';
 import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined, LogoutOutlined, LoginOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
 
-
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 640) {
@@ -33,7 +33,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
             {cookies.authToken ? (
                 <>
                     <Menu.Item key="1">
-                    <Link to={`/get-profile`}>Tài khoản</Link>
+                        <Link to={`/profile`}>Tài khoản</Link>
                     </Menu.Item>
                     <Menu.Item key="2">
                         <Link to='/orderlist'>Đơn hàng</Link>
@@ -55,7 +55,6 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
         </Menu>
     );
 
-   
     return (
         <>
             <Header />
@@ -68,7 +67,6 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         className='w-5 cursor-pointer hover:scale-110 hover:text-blue-500 transition-transform duration-300 ease-in-out'
                         alt="Search Icon"
                     />
-
                     <Link to='/wishlist' className='relative'>
                         <HeartOutlined
                             style={{ fontSize: "24px" }}
@@ -117,7 +115,9 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                 </div>
             </div>
             <hr />
-            {showSearch && <SearchBar showSearch={showSearch} setShowSearch={setShowSearch} />}
+            <div className={`search-bar ${showSearch ? 'open' : ''}`}>
+                {showSearch && <SearchBar showSearch={showSearch} setShowSearch={setShowSearch} />}
+            </div>
             <div className='flex items-center justify-center py-5 font-medium'>
                 <ul className='hidden md:flex gap-16 text-md text-gray-700'>
                     <NavLink to='/' className='nav-link flex flex-col items-center gap-1'>
@@ -141,7 +141,6 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
                         <hr className='w-2/4 border-none h-[1.5px] bg-gray-700 hidden' />
                     </NavLink>
                 </ul>
-
             </div>
         </>
     );

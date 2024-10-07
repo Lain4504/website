@@ -22,6 +22,7 @@ import UserProfile from "./pages/UserProfile";
 import OrderList from "./pages/OrderList";
 import ChangePassword from "./components/ChangePassword";
 import Wishlist from "./pages/WishList";
+import PostDetail from "./pages/PostDetail";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies(['authToken']); // Lấy 'authToken' từ cookies
@@ -34,7 +35,7 @@ const App = () => {
     const validRoutes = [
       '/', '/about', '/collections/:id', '/contact', '/post', '/login', '/register',
       '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
-      '/products/:id', '/get-profile', '/orderlist','/change-password', '/wishlist'
+      '/products/:id', '/profile', '/orderlist','/change-password', '/wishlist', '/posts/:id'
 
     ];
 
@@ -63,11 +64,12 @@ const App = () => {
           <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/search/:name' element={<SearchResult />} />
           <Route path='/activation/:token' element={<Activate />} />
-          <Route path='/get-profile' element={<UserProfile cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+          <Route path='/profile' element={<UserProfile cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/404' element={<Page404 />} />
           <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/products/:id' element={<ProductDetail />} />
+          <Route path='/posts/:id' element={<PostDetail />} />
           <Route path='/wishlist' element={<Wishlist cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>}></Route>
           <Route path='/orderlist'element={<OrderList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
           <Route path="/change-password" element={<ChangePassword cookies={cookies}/>}></Route>

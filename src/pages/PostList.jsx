@@ -3,6 +3,7 @@ import { Row, Col, Dropdown, Menu, Skeleton, Pagination } from 'antd'; // Import
 import Breadcrumb from '../components/Breadcrumb';
 import { ArrowRightOutlined, DownOutlined } from '@ant-design/icons';
 import mockPosts from '../components/mockJsonData';
+import { getAllPostCategories } from '../services/PostService';
 
 const PostList = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -17,7 +18,6 @@ const PostList = () => {
         { title: 'Trang chủ', href: '/' },
         { title: 'Tin tức' }
     ];
-
     const fetchData = () => {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -36,13 +36,15 @@ const PostList = () => {
     }, []);
 
     useEffect(() => {
-        const mockCategories = [
-            { id: 1, name: 'Hoạt động' },
-            { id: 2, name: 'Tin tức' },
-            { id: 3, name: 'Lịch phát hành sách định kỳ' },
-            { id: 4, name: 'Review' }
-        ];
-        setCategories(mockCategories);
+        const loadPostCategories = async () =>{
+            try{
+                const response = await getAllPostCategories();
+                setCategories(response.data);
+            }catch(error){
+                console.error('Failed to fetch categories:', error);
+            }
+        }
+        loadPostCategories();
     }, []);
 
     const handleResize = () => {

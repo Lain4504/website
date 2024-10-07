@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Layout, Spin } from 'antd';
+import { Table, Button, Layout, message } from 'antd';
+import { jwtDecode } from 'jwt-decode'; 
 import { cancelOrder, getOrderByUserId } from '../services/OrderService';
-import UserSideBar from './UserSideBar';
+import UserNavBar from './UserNavBar';
 
 const { Content } = Layout;
 
@@ -26,26 +27,16 @@ const formatDate = (inputDate) => {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
 
-const OrderList = ({cookies}) => {
+const OrderList = ({ cookies }) => {
     const [loading, setLoading] = useState(true);
- 
     const [orders, setOrders] = useState([]);
-
-     const decodeJWT = (token) => {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    };
 
     useEffect(() => {
         const token = cookies.authToken;
         if (token) {
             try {
-                const decoded = decodeJWT(token);
-                const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+                const decoded = jwtDecode(token);
+                const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
                 console.log("User ID from token: ", userId);
 
                 const fetchUserInfo = async () => {
@@ -69,16 +60,7 @@ const OrderList = ({cookies}) => {
             setLoading(false);
         }
     }, [cookies.authToken]);
-    
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-        
-        return () => clearTimeout(timer); // Cleanup on unmount
-    }, []);
 
-    // Ant Design table columns setup
     const columns = [
         {
             title: 'Đơn hàng',
@@ -128,7 +110,7 @@ const OrderList = ({cookies}) => {
             render: (_, order) => (
                 <div className="flex justify-center space-x-2">
                     <a href={`/order-detail/${order.id}`}>
-                        <Button type="primary" className="text-xs">Chi tiết</Button>
+                        <Button type="primary" className="text-xs bg-green-500">Chi tiết</Button>
                     </a>
                     {order.shippingState === 'NOTSHIPPING' && order.state !== 'CANCELED' && (
                         <Button
@@ -145,34 +127,23 @@ const OrderList = ({cookies}) => {
     ];
 
     return (
-        <div className="flex h-a">
-        <UserSideBar />
-        <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4">
+        <> 
+        <UserNavBar/>
+        <div className="flex h-a my-10">
+            <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto"> {/* Thêm overflow-x-auto */}
                 <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-                    {loading ? (
-                        <Table
-                            dataSource={[]} // Passing empty dataSource
-                            columns={columns}
-                            rowKey="id"
-                            pagination={false}
-                            className="w-full bg-white shadow-md rounded-lg"
-                            loading={{
-                                spinning: true,
-                                tip: 'Đang tải danh sách đơn hàng...',
-                            }}
-                        />
-                    ) : (
-                        <Table
-                            dataSource={orders}
-                            columns={columns}
-                            rowKey="id"
-                            pagination={false}
-                            className="w-full bg-white shadow-md rounded-lg"
-                        />
-                    )}
+                    <Table
+                        dataSource={loading ? [] : orders}
+                        columns={columns}
+                        rowKey="id"
+                        pagination={false}
+                        className="w-full bg-white shadow-md rounded-lg"
+                        loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
+                    />
                 </Content>
-                </div>
-                </div>
+            </div>
+        </div>
+        </>
     );
 };
 

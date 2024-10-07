@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Skeleton } from 'antd';
-import mockPosts from './mockJsonData'; // Mock data
+import { getAllPost } from '../services/PostService';
+import { Link } from 'react-router-dom';
 
 const ListPost = () => {
     const [posts, setPosts] = useState([]);
@@ -11,32 +12,27 @@ const ListPost = () => {
     const [pageSize, setPageSize] = useState(3); // Default to 3
     const maxVisible = 12;
 
-    const fetchData = () => {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(mockPosts);
-            }, 1000);
-        });
+    // Fetch posts from the API
+    const loadPosts = async () => {
+        try {
+            const response = await getAllPost();
+            const fetchedPosts = response.data;
+            console.log("Post data is: ", response)
+            // Sort posts by date
+            const sortedPosts = fetchedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Get the latest 12 posts
+            const latestPosts = sortedPosts.slice(0, maxVisible);
+
+            setPosts(latestPosts);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        const loadPosts = async () => {
-            try {
-                const fetchedPosts = await fetchData();
-
-                // Sort posts by date
-                const sortedPosts = fetchedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                // Get the latest 12 posts
-                const latestPosts = sortedPosts.slice(0, maxVisible);
-
-                setPosts(latestPosts);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
         loadPosts();
     }, []);
 
@@ -89,7 +85,7 @@ const ListPost = () => {
 
     return (
         <>
-        <style>{`
+            <style>{`
             .post-container {
                 transition: opacity 0.3s ease-in-out;
                 opacity: 0; /* Start with opacity 0 */
@@ -104,51 +100,54 @@ const ListPost = () => {
             }
         `}</style>
 
-        <div className={`flex flex-col items-center mt-7`}>
-            {/* List of Posts */}
-            <div className={`flex flex-wrap justify-center post-container ${isAnimating ? 'exit' : 'enter'}`}>
-                {currentPosts.map(post => (
-                    <div key={post.id} className="w-full sm:w-1/2 lg:w-1/3 p-2">
-                        <Card
-                            hoverable
-                            className="bg-white border rounded shadow"
-                            cover={
-                                <div className="relative">
-                                    <img className="w-full h-auto rounded-t" src={post.image} alt={post.title} />
-                                    <div className="absolute top-2 left-2 bg-white bg-opacity-75 p-1 rounded">
-                                        <p className="text-sm text-gray-500">{post.date}</p>
+            <div className={`flex flex-col items-center mt-7`}>
+                {/* List of Posts */}
+                <div className={`flex flex-wrap justify-center post-container ${isAnimating ? 'exit' : 'enter'}`}>
+                    {currentPosts.map(post => (
+                        <div key={post.id} className="w-full sm:w-1/2 lg:w-1/3 p-2">
+                            <Card
+                                hoverable
+                                className="bg-white border rounded shadow"
+                                cover={
+                                    <div className="relative">
+                                        <img className="w-full h-auto rounded-t" src={post.thumbnail} alt={post.title} />
+                                        <div className="absolute top-2 left-2 bg-white bg-opacity-75 p-1 rounded">
+                                            <p className="text-sm text-gray-500"> {new Date(post.createdAt).toLocaleDateString('en-GB', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                            })}</p>
+                                        </div>
                                     </div>
+                                }
+                            >
+                                <div className="p-4">
+                                    <p className="text-lg font-semibold">
+                                        <Link to={`/posts/${post.id}`} className="hover:text-blue-600">{post.title}</Link>
+                                    </p>
+                                    <div className="text-gray-700">{post.brief}</div>
                                 </div>
-                            }
-                        >
-                            <div className="p-4">
-                                <p className="text-lg font-semibold">
-                                    <a href={post.link} className="hover:text-blue-600">{post.title}</a>
-                                </p>
-                                <div className="text-gray-700">{post.content}</div>
-                            </div>
-                        </Card>
-                    </div>
-                ))}
-            </div>
+                            </Card>
+                        </div>
+                    ))}
+                </div>
 
-            {/* Custom Pagination */}
-            <div className="flex justify-center mt-6 space-x-3">
-                {[...Array(totalPages)].map((_, index) => (
-                    <div
-                        key={index + 1}
-                        onClick={() => handlePageChange(index + 1)}
-                        className={`w-3 h-3 rounded-full cursor-pointer ${
-                            currentPage === index + 1 ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}
-                        style={{
-                            transition: 'background-color 0.3s',
-                        }}
-                    />
-                ))}
+                {/* Custom Pagination */}
+                <div className="flex justify-center mt-6 space-x-3">
+                    {[...Array(totalPages)].map((_, index) => (
+                        <div
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            className={`w-3 h-3 rounded-full cursor-pointer ${currentPage === index + 1 ? 'bg-blue-500' : 'bg-gray-300'
+                                }`}
+                            style={{
+                                transition: 'background-color 0.3s',
+                            }}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
-        <div className='mt-5'></div>
+            <div className='mt-5'></div>
         </>
     );
 };

@@ -44,5 +44,8 @@ const changePassword = (token) => {
     });
 };
 
-export { createAccount, login, activateAccount, forgetPassword, resetPassword, getUserProfile, changePassword };
+const updateProfile = (id, profileData) => {
+    return axios.put(`${ACCOUNT_URL}update-profile/${id}`, profileData);
+}
 
+export { createAccount, login, activateAccount, forgetPassword, resetPassword, getUserProfile, changePassword, updateProfile };

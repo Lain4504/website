@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
-import { ShoppingCartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined, MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { getBookById } from '../services/BookService';
-const { Title, Text, Paragraph } = Typography;
 import parser from 'html-react-parser'; // Import html-react-parser
+
+const { Title, Text, Paragraph } = Typography;
 
 const ProductDetail = () => {
   const [book, setBook] = useState({});
@@ -12,7 +13,8 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [cartItems, setCartItems] = useState(0);
-  
+  const carouselRef = useRef(null); // Tạo ref cho Carousel
+
   // Fetch book data by ID
   const fetchBook = async () => {
     const response = await getBookById(id);
@@ -42,10 +44,8 @@ const ProductDetail = () => {
 
   const book_images = book.images ? book.images : [];
   const book_authors = book.author ? book.author : [];
-  const book_collections = book.collections ? book.collections : [];
-  
-  const totalPrice = book.salePrice ? book.salePrice * quantity : 0; // Tính tổng tiền dựa trên số lượng và giá bán
-  const selectedImage = book_images.length > 0 ? book_images[0].link : ''; // Chọn hình ảnh đầu tiên
+  const totalPrice = book.salePrice ? book.salePrice * quantity : 0; // Calculate total price based on quantity and sale price
+  const selectedImage = book_images.length > 0 ? book_images[0].link : ''; // Select the first image
 
   return (
     <div>
@@ -58,20 +58,45 @@ const ProductDetail = () => {
                   -{book.discount * 100}%
                 </div>
               )}
-              <Carousel>
+              <Carousel ref={carouselRef}>
                 {book_images.map((image, index) => (
                   <div key={index}>
-                    <img
-                      className="w-full h-auto max-w-full rounded-lg shadow-lg object-contain"
+                    <Image
+                      width="100%"
+                      height="auto"
                       src={image.link}
                       alt={`Image ${index + 1}`}
+                      className="rounded-lg shadow-lg"
+                      preview={{ src: image.link }} // Allows clicking to see a larger image
                     />
                   </div>
                 ))}
               </Carousel>
+              <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
+                <Button
+                  shape="circle"
+                  icon={<LeftOutlined />}
+                  size="large"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', border: 'none', color: 'black' }}
+                  onClick={() => {
+                    carouselRef.current.prev();
+                  }}
+                />
+              </div>
+              <div className="absolute top-1/2 right-0 transform -translate-y-1/2">
+                <Button
+                  shape="circle"
+                  icon={<RightOutlined />}
+                  size="large"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', border: 'none', color: 'black' }}
+                  onClick={() => {
+                    carouselRef.current.next();
+                  }}
+                />
+              </div>
             </div>
           </Col>
-          <Col xs={24} md={14}>
+          <Col xs={24} md={24} lg={14}>
             <h1 className="text-xl font-bold my-2">{book.title}</h1>
             <span className="text-gray-600 text-sm">ISBN: {book.isbn} </span>
             <div className="mt-2">
@@ -102,8 +127,10 @@ const ProductDetail = () => {
                 <Col span={12}>
                   <strong>Kích thước:</strong> <span>{book.size}</span>
                 </Col>
+                <Col span={12}></Col> {/* Thêm cột rỗng nếu cần thiết */}
               </Row>
             </div>
+
 
             <div className="mt-4">
               <strong>Nội dung:</strong>
