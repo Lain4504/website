@@ -31,9 +31,9 @@ const Search = () => {
                                 result?.content ? (
                                     result?.content?.map(item => (
                                         <div key={item.id} className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center">
-                                            <div className="relative">
+                                            <div className="relative h-80">
                                                 <Link to={`/products/${item.id}`}>
-                                                    {item.images[0] && <img src={item.images[0].link} alt={item.title} className="w-full h-auto object-cover" />}
+                                                    {item.images[0] && <img src={item.images[0].link} alt={item.title} className="w-full h-full object-cover" />}
                                                 </Link>
                                                 {item.discount && (
                                                     <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">

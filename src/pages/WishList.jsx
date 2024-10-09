@@ -106,12 +106,12 @@ const Wishlist = ({ cookies }) => {
               onMouseEnter={() => setHoveredBookTitle(item.book.title)}
               onMouseLeave={() => setHoveredBookTitle('')}
             >
-              <div className="relative">
+              <div className="relative h-80">
                 <Link to={`/products/${item.book.id}`}>
                   <img
                     src={item.book.images[0]?.link}
                     alt={item.book.title}
-                    className="w-full h-auto object-cover product-image"
+                    className="w-full h-full object-cover"
                   />
                 </Link>
                 <button

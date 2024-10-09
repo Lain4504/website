@@ -151,9 +151,9 @@ const BooksByCollection = () => {
                                             onMouseLeave={() => setHoveredBookTitle("")}
                                             onMouseMove={handleMouseMove}
                                         >
-                                            <div className="relative">
+                                            <div className="relative h-80">
                                                 <Link to={`/products/${book.id}`}>
-                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-auto object-cover product-image" />
+                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-full object-cover" />
                                                 </Link>
                                                 <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
                                                     -{book.discount * 100}%
