@@ -55,6 +55,7 @@ const Wishlist = ({ cookies }) => {
   }, [cookies.authToken]);
 
   const deleteWishlist = async (wishlistId) => {
+    
     if (!userId) return;
     try {
       await deleteWishList(wishlistId);

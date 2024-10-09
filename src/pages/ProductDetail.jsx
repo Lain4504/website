@@ -1,33 +1,103 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
-import { ShoppingCartOutlined, MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
 import { getBookById } from '../services/BookService';
-import parser from 'html-react-parser'; // Import html-react-parser
+import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
+import parser from 'html-react-parser'; 
 import Breadcrumb from '../components/Breadcrumb';
 
 const { Title, Text, Paragraph } = Typography;
 
-const ProductDetail = () => {
+const ProductDetail = ({ cookies, cart, cartChange, setCartChange }) => {
   const [book, setBook] = useState({});
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [cartItems, setCartItems] = useState(0);
-  const carouselRef = useRef(null); // Tạo ref cho Carousel
+  const carouselRef = useRef(null);
+  const [userId, setUserId] = useState(null);
+  const [heart, setHeart] = useState(false);
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   // Fetch book data by ID
   const fetchBook = async () => {
     const response = await getBookById(id);
     const { data } = response;
-    console.log(data);
     setBook(data);
   };
 
+  const fetchWishlist = async (userId) => {
+    // Assuming there is a service to fetch wishlist and update heart state
+    const response = await getWishlistByUserId(userId);
+    console.log(response);
+    setWishlistItems(response.data);
+    const wishlisted = response.data.some(wishlistItem => wishlistItem.bookId === book.id);
+     console.log('Is the book wishlisted?', wishlisted); 
+    setHeart(wishlisted);
+  };
   useEffect(() => {
-    fetchBook();
-  }, []);
+    // Fetch book and wishlist data
+    const fetchData = async () => {
+      await fetchBook(); // Lấy dữ liệu sản phẩm
+      const token = cookies.authToken;
+  
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
+          setUserId(userId);
+          
+          // Gọi fetchWishlist sau khi có userId
+          fetchWishlist(userId);
+        } catch (error) {
+          console.error('Invalid token', error);
+        }
+      } else {
+        console.error('No token found');
+      }
+    };
+  
+    fetchData();
+  }, [cookies.authToken, id]);
+  
+  // Theo dõi sự thay đổi của `book` để cập nhật trạng thái `heart`
+  useEffect(() => {
+    if (book.id && userId) {
+      fetchWishlist(userId); // Kiểm tra wishlist mỗi khi book hoặc userId thay đổi
+    }
+  }, [book, userId]);
+  
 
+
+  // Handle adding/removing from wishlist
+  const toggleHeart = () => {
+    if (!userId) {
+        window.location.href = '/login';
+        return;
+    }
+
+    if (heart) {
+        // Tìm wishlistItem trong wishlistItems
+        const wishlistItem = wishlistItems.find(item => item.bookId === book.id);
+        if (wishlistItem) {
+            const wishlistId = wishlistItem.id; // Lấy wishlistId
+
+            // Gọi deleteWishList với wishlistId
+            deleteWishList(wishlistId).then(() => {
+                setHeart(false);
+                setWishlistItems(prevItems => prevItems.filter(item => item.id !== wishlistId)); // Cập nhật wishlistItems
+            }).catch(err => console.error(err));
+        }
+    } else {
+        // Gọi addWishList như cũ
+        addWishList( userId, book.id ).then(() => {
+            setHeart(true);
+            fetchWishlist(userId); // Cập nhật wishlistItems sau khi thêm
+        }).catch(err => console.error(err));
+    }
+};
   // Handle adding to cart
   const handleAddToCart = () => {
     setCartItems(cartItems + quantity);
@@ -45,12 +115,13 @@ const ProductDetail = () => {
 
   const book_images = book.images ? book.images : [];
   const book_authors = book.author ? book.author : [];
-  const totalPrice = book.salePrice ? book.salePrice * quantity : 0; // Calculate total price based on quantity and sale price
-  const selectedImage = book_images.length > 0 ? book_images[0].link : ''; // Select the first image
+  const totalPrice = book.salePrice ? book.salePrice * quantity : 0;
+  const selectedImage = book_images.length > 0 ? book_images[0].link : '';
   const breadcrumbs = [
     { title: 'Trang chủ', href: '/' },
-    { title:  book.title }
-];
+    { title: book.title }
+  ];
+
   return (
     <div>
       <Breadcrumb items={breadcrumbs} className="my-10" />
@@ -72,7 +143,7 @@ const ProductDetail = () => {
                       src={image.link}
                       alt={`Image ${index + 1}`}
                       className="rounded-lg shadow-lg"
-                      preview={{ src: image.link }} // Allows clicking to see a larger image
+                      preview={{ src: image.link }}
                     />
                   </div>
                 ))}
@@ -103,12 +174,16 @@ const ProductDetail = () => {
           </Col>
           <Col xs={24} md={24} lg={14}>
             <h1 className="text-xl font-bold my-2">{book.title}</h1>
-            <span className="text-gray-600 text-sm">ISBN: {book.isbn} </span>
+            <span className="text-gray-600 text-sm">ISBN: {book.isbn}</span>
             <div className="mt-2">
               <span className="text-lg font-semibold text-green-600">{book.salePrice ? book.salePrice.toLocaleString() : 'N/A'}₫</span>
               <del className="ml-2 text-gray-500">{book.price ? book.price.toLocaleString() : 'N/A'}₫</del>
             </div>
-
+            {heart ? (
+              <HeartFilled onClick={toggleHeart} style={{ color: '#c20000', cursor: 'pointer', fontSize: '24px' }} />
+            ) : (
+              <HeartOutlined onClick={toggleHeart} style={{ color: '#000000', cursor: 'pointer', fontSize: '24px' }} />
+            )}
             <div className="mt-4 text-xs">
               <Row gutter={16}>
                 <Col span={12}>
@@ -132,10 +207,9 @@ const ProductDetail = () => {
                 <Col span={12}>
                   <strong>Kích thước:</strong> <span>{book.size}</span>
                 </Col>
-                <Col span={12}></Col> {/* Thêm cột rỗng nếu cần thiết */}
+                <Col span={12}></Col>
               </Row>
             </div>
-
 
             <div className="mt-4">
               <strong>Nội dung:</strong>
@@ -168,7 +242,7 @@ const ProductDetail = () => {
                   style={{ backgroundColor: 'black', color: 'white' }}
                 />
               </div>
-
+              
               <div className="flex items-center mt-4">
                 <Button className="bg-red-600 text-white hover:bg-red-700 mr-2" onClick={handleAddToCart}>
                   Thêm vào giỏ hàng
@@ -178,15 +252,10 @@ const ProductDetail = () => {
                 </Button>
               </div>
             </form>
-
             <div className="mt-4">
               <p>Danh mục: <span className="text-blue-600 hover:underline"><a href="/collections/sach-moi">Sách Mới</a></span>, <span className="text-blue-600 hover:underline"><a href="/collections/light-novel">Light Novel</a></span></p>
             </div>
-          </Col>
-        </Row>
-      </div>
-
-      <Modal
+            <Modal
         title="Thông tin giỏ hàng"
         visible={isModalVisible}
         onCancel={handleCancel}
@@ -228,6 +297,10 @@ const ProductDetail = () => {
           <Button type="primary" danger onClick={handleOk}>Thanh toán</Button>
         </div>
       </Modal>
+          </Col>
+        </Row>
+        <Divider />
+      </div>
     </div>
   );
 };

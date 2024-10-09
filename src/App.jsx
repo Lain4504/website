@@ -24,6 +24,8 @@ import ChangePassword from "./components/ChangePassword";
 import Wishlist from "./pages/WishList";
 import PostDetail from "./pages/PostDetail";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import { getAllCartByUserId } from "./services/CartService";
 
 const App = () => {
   const [cookies, setCookies, removeCookies] = useCookies(['authToken']); // Lấy 'authToken' từ cookies
@@ -57,6 +59,35 @@ const App = () => {
     }
   }, [cookies, location, navigate]);
 
+  const [userId, setUserId] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [cartChange, setCartChange] = useState(false);
+
+  useEffect(() => {
+    const token = cookies.authToken;
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
+        setUserId(userId);
+      } catch (error) {
+        console.error('Invalid token', error);
+      }
+    } else {
+      console.error('No token found');
+    }
+  }, [cookies.authToken]);
+  const handleCart = async() => {
+    try{
+      const cartData = await getAllCartByUserId(userId);
+      setCart(cartData?.data);
+    } catch (error){
+      console.error(error);
+    }
+  };
+  useEffect(() =>{
+    handleCart();
+  },[cookies, cartChange]);
   return (
     <>
       <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
@@ -75,12 +106,13 @@ const App = () => {
           <Route path='/404' element={<Page404 />} />
           <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
           <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-          <Route path='/products/:id' element={<ProductDetail />} />
+          <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} setCart={setCart} setCartChange={setCartChange}/>} />
           <Route path='/posts/:id' element={<PostDetail />} />
           <Route path='/wishlist' element={<Wishlist cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>}/>
           <Route path='/orderlist'element={<OrderList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
           <Route path="/change-password" element={<ChangePassword cookies={cookies}/>}/>
-          <Route path="/cart" element={<Cart/>}/>
+          <Route path="/cart" element={<Cart cart={cart} setCart={setCart} setCartChange={setCartChange} cartChange={cartChange} />}/>
+          <Route path="/checkout" element={<Checkout/>}/>
         </Routes>
         <ScrollToTop />
         <FloatingPhoneIcon />
