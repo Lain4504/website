@@ -34,7 +34,7 @@ const ListProduct = (props) => {
                             books.map(book => (
                                 <div
                                     key={book.id}
-                                    className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
+                                    className="bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
                                     onMouseEnter={() => setHoveredBookTitle(book.title)}
                                     onMouseLeave={() => setHoveredBookTitle("")}
                                     onMouseMove={handleMouseMove}
