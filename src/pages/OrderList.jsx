@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Layout, message } from 'antd';
-import { jwtDecode } from 'jwt-decode'; 
+import { jwtDecode } from 'jwt-decode';
 import { cancelOrder, getOrderByUserId } from '../services/OrderService';
 import UserNavBar from './UserNavBar';
+import Breadcrumb from '../components/Breadcrumb';
 
 const { Content } = Layout;
 
 const handleCancel = (id) => {
     const confirm = window.confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');
     if (!confirm) return;
+    
     cancelOrder(id).then(res => {
-        window.location.reload();
+        // Update the orders state after cancellation
+        setOrders(prevOrders => 
+            prevOrders.map(order => 
+                order.id === id ? { ...order, state: 'CANCELED' } : order
+            )
+        );
+        message.success('Đơn hàng đã được hủy thành công');
+    }).catch(error => {
+        message.error('Hủy đơn hàng thất bại');
     });
 };
+
 
 const formatDate = (inputDate) => {
     const date = new Date(inputDate);
@@ -125,24 +136,28 @@ const OrderList = ({ cookies }) => {
             ),
         },
     ];
-
+    const breadcrumbs = [
+        { title: 'Trang chủ', href: '/' },
+        { title: 'Lịch sử đơn hàng' }
+    ];
     return (
-        <> 
-        <UserNavBar/>
-        <div className="flex h-a my-10">
-            <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto"> {/* Thêm overflow-x-auto */}
-                <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-                    <Table
-                        dataSource={loading ? [] : orders}
-                        columns={columns}
-                        rowKey="id"
-                        pagination={false}
-                        className="w-full bg-white shadow-md rounded-lg"
-                        loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
-                    />
-                </Content>
+        <>
+            <Breadcrumb items={breadcrumbs} className="my-10" />
+            <UserNavBar />
+            <div className="flex h-a my-10">
+                <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto"> 
+                    <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
+                        <Table
+                            dataSource={loading ? [] : orders}
+                            columns={columns}
+                            rowKey="id"
+                            pagination={false}
+                            className="w-full bg-white shadow-md rounded-lg"
+                            loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
+                        />
+                    </Content>
+                </div>
             </div>
-        </div>
         </>
     );
 };

@@ -3,12 +3,16 @@ import { useParams } from 'react-router-dom';
 import { getPostById, getAllPostCategories } from '../services/PostService'; // Import service methods
 import { Col, Row } from 'antd'; // Ant Design components
 import parser from 'html-react-parser'; // Import html-react-parser
+import Breadcrumb from '../components/Breadcrumb';
 
 const PostDetail = () => {
   const [post, setPost] = useState({});
   const { id } = useParams();
   const [categories, setCategories] = useState([]);
-
+  const breadcrumbs = [
+    { title: 'Trang chủ', href: '/' },
+    { title:  post.title }
+];
   // Fetch single post by ID
   const fetchPost = async () => {
     try {
@@ -40,6 +44,8 @@ const PostDetail = () => {
   }, []);
 
   return (
+    <> 
+    <Breadcrumb items={breadcrumbs} className="my-10" />
     <Row gutter={16} justify="center"> {/* Center align the row */}
       <Col xs={24} sm={24} md={categories.length > 0 ? 18 : 24} lg={categories.length > 0 ? 18 : 24}>
         {/* Dynamically set column width depending on categories */}
@@ -72,6 +78,7 @@ const PostDetail = () => {
         </Col>
       )}
     </Row>
+    </>
   );
 };
 

@@ -11,5 +11,11 @@ const getPostById = (id) => {
 const getAllPostCategories = () =>{
     return axios.get(POSTCATEGORY_URL);
 }
+const getPostByCategoryId = (id) => {
+    if (id === 'all') {
+        return axios.get(POST_URL + '/sorted-and-paged');
+    }
+    return axios.get(POST_URL + '/sorted-and-paged/by-postcategory?postcategory=' + id);
+};
 
-export {getAllPost, getPostById, getAllPostCategories}
+export {getAllPost, getPostById, getAllPostCategories, getPostByCategoryId}

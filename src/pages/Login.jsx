@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { login } from '../services/UserService';
 import { Form, Input, Button, notification } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import Breadcrumb from '../components/Breadcrumb';
 
 const Login = ({ setCookies }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-
+    const navigate = useNavigate();
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
@@ -24,7 +24,7 @@ const Login = ({ setCookies }) => {
                     description: 'Chào mừng bạn trở lại!',
                 });
                 setTimeout(() => {
-                    window.location.href = '/';
+                    navigate('/');
                 }, 1000);
             })
             .catch(err => {
@@ -38,7 +38,7 @@ const Login = ({ setCookies }) => {
             });
     };
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
+        { title: 'Trang chủ', href: '/' },
         { title: 'Login' }
       ];
     return (

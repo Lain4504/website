@@ -6,12 +6,17 @@ const getWishlistByUserId = (userId) => {
     return axios.get(WISHLIST_BASE_URL + '/user/' + userId);
 };
 
-const addWishList = (user, book) => {
-    return axios.post(WISHLIST_BASE_URL + `?user=${user}&book=${book}`);
+const addWishList = (userId, bookId) => {
+    const data = {
+        userId: userId,
+        bookId: bookId
+    };
+    return axios.post(WISHLIST_BASE_URL, data);
 };
 
+
 const deleteWishList = (wishlistId) => {
-    return axios.delete(WISHLIST_BASE_URL + '/' + wishlistId);
+    return axios.delete(`${WISHLIST_BASE_URL}/${wishlistId}`);
 };
 
 export { getWishlistByUserId, addWishList, deleteWishList };

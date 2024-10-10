@@ -4,12 +4,12 @@ import { assets } from '../assets/assets'
 import Breadcrumb from '../components/Breadcrumb';
 const Contact = () => {
   const breadcrumbs = [
-    { title: 'Home', href: '/' },
+    { title: 'Trang chủ', href: '/' },
     { title: 'Contact' }
   ];
   return (
     <div>
-      <Breadcrumb items={breadcrumbs}/>
+      <Breadcrumb items={breadcrumbs} className="my-10" />
       <div className='text-center text-2xl pt-10 border-t'>
       <Title text1={'CONTACT'} text2={'US'}/>
       </div>

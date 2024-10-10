@@ -38,7 +38,7 @@ const getBooksByQuery = (id) => {
 }
 
 const getBooksBySearchValue = (value) => {
-    return axios.get(BOOK_URL + `/search?size=12&sortOrder=asc&name=${value}`)
+    return axios.get(BOOK_URL + `/search?&title=${value}`)
 }
 
 export {getBook, getBookByQuery, getBooksByCollectionId, getBooksByQuery, getBookById, getBooksBySearchValue}

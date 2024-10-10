@@ -1,5 +1,6 @@
 import React from 'react'
-const Post = () => {
+
+const Payment = () => {
   return (
     <div>
       
@@ -7,4 +8,4 @@ const Post = () => {
   )
 }
 
-export default Post
+export default Payment

@@ -3,7 +3,7 @@ import { getBooksByQuery, getBookByQuery } from "../services/BookService";
 import { useParams, Link } from 'react-router-dom';
 import { getCollections, getCollectionById } from '../services/CollectionService';
 import Breadcrumb from '../components/Breadcrumb';
-import { Menu, Select, Skeleton, Pagination } from 'antd';
+import { Menu, Select, Pagination } from 'antd';
 
 const BooksByCollection = () => {
     const [books, setBooks] = useState([]);
@@ -13,13 +13,11 @@ const BooksByCollection = () => {
     const { id } = useParams();
     const [hoveredBookTitle, setHoveredBookTitle] = useState("");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [booksPerPage] = useState(12);
     const [sortBy, setSortBy] = useState('manual');
 
     const fetchData = (id) => {
-        setLoading(true);
         if (id === 'all') {
             setCurCollection(null);
         } else {
@@ -33,17 +31,11 @@ const BooksByCollection = () => {
                 setBooks(res.data.content);
                 book_length.current = res.data.totalElements;
             })
-            .catch(error => console.error(error))
-            .finally(() => {
-                setTimeout(() => setLoading(false), 1000); // Introduce 1s delay here
-            });
+            .catch(error => console.error(error));
 
         getCollections()
             .then(res => setCollections(res.data))
-            .catch(error => console.error(error))
-            .finally(() => {
-                setTimeout(() => setLoading(false), 1000); // Introduce 1s delay here
-            });
+            .catch(error => console.error(error));
     };
 
     const indexOfLastBook = currentPage * booksPerPage;
@@ -74,7 +66,7 @@ const BooksByCollection = () => {
                 query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Price`;
                 break;
             case 'price-descending':
-                query = `sorted-and-paged/by-collection?${collectionQuery}sortBy=Price&sortOrder=desc`;
+                query = `sorted-and-paged/by-collection?${collectionQuery}&sortBy=Price&sortOrder=desc`;
                 break;
             default:
                 break;
@@ -92,7 +84,7 @@ const BooksByCollection = () => {
     }, [id]);
 
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
+        { title: 'Trang chủ', href: '/' },
         { title: curCollection ? curCollection.name : 'All' }
     ];
 
@@ -114,17 +106,15 @@ const BooksByCollection = () => {
                             <h2 className="font-semibold text-lg">Danh Mục Sản Phẩm</h2>
                             <Menu>
                                 <Menu.Item key="all">
-                                    <Link to={`/collections/all`} className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
+                                    <Link to="/collections/all" className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
                                 </Menu.Item>
-                                {loading ? (
-                                    <Skeleton active paragraph={{ rows: 4 }} className="col-span-4" />
-                                ) : (collections.map(collection => (
+                                {collections.map(collection => (
                                     collection.isDisplay ? (
                                         <Menu.Item key={collection.id}>
                                             <Link to={`/collections/${collection.id}`} className="hover:underline text-blue-600">{collection.name}</Link>
                                         </Menu.Item>
                                     ) : null
-                                )))}
+                                ))}
                             </Menu>
                         </div>
                         <div className='w-full lg:w-3/4 px-4'>
@@ -153,9 +143,7 @@ const BooksByCollection = () => {
 
                             <div>
                                 <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:grid-cols-3'>
-                                    {loading ? (
-                                        <Skeleton active paragraph={{ rows: 4 }} className="col-span-4" />
-                                    ) : (currentBooks.map(book => (
+                                    {currentBooks.map(book => (
                                         <div
                                             key={book.id}
                                             className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
@@ -163,9 +151,9 @@ const BooksByCollection = () => {
                                             onMouseLeave={() => setHoveredBookTitle("")}
                                             onMouseMove={handleMouseMove}
                                         >
-                                            <div className="relative">
+                                            <div className="relative h-80">
                                                 <Link to={`/products/${book.id}`}>
-                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-auto object-cover product-image" />
+                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-full object-cover" />
                                                 </Link>
                                                 <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
                                                     -{book.discount * 100}%
@@ -181,7 +169,7 @@ const BooksByCollection = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    )))}
+                                    ))}
                                     {hoveredBookTitle && (
                                         <div
                                             className="fixed bg-gray-800 text-xs text-white p-2 rounded-md"
