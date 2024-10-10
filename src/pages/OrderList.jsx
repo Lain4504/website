@@ -10,10 +10,20 @@ const { Content } = Layout;
 const handleCancel = (id) => {
     const confirm = window.confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');
     if (!confirm) return;
+    
     cancelOrder(id).then(res => {
-        window.location.reload();
+        // Update the orders state after cancellation
+        setOrders(prevOrders => 
+            prevOrders.map(order => 
+                order.id === id ? { ...order, state: 'CANCELED' } : order
+            )
+        );
+        message.success('Đơn hàng đã được hủy thành công');
+    }).catch(error => {
+        message.error('Hủy đơn hàng thất bại');
     });
 };
+
 
 const formatDate = (inputDate) => {
     const date = new Date(inputDate);

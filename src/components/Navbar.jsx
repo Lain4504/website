@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
@@ -10,7 +10,7 @@ import { Dropdown, Menu } from 'antd';
 const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
-
+    const navigate = useNavigate()
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 640) {
@@ -25,7 +25,7 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
     const logout = () => {
         removeCookies('authToken');
         setCookies('authToken', null);
-        window.location.href = '/';
+        navigate('/');
     };
 
     const menu = (

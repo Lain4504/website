@@ -3,13 +3,14 @@ import { Button, Input, Layout, message, Modal } from 'antd'; // Import Ant Desi
 import { changePassword } from '../services/UserService';
 import UserNavBar from '../pages/UserNavBar';
 import Breadcrumb from './Breadcrumb';
+import { useNavigate } from 'react-router-dom';
 
 const ChangePassword = ({ cookies }) => {
     const [oldPassword, setOldPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
-
+    const navigate = useNavigate();
     const handleSave = () => {
         if (newPassword !== confirmPassword) {
             message.error('Mật khẩu không khớp'); // Use Ant Design message for errors
@@ -35,7 +36,7 @@ const ChangePassword = ({ cookies }) => {
             await changePassword(data);
             message.success('Đổi mật khẩu thành công');
             setTimeout(() => {
-                window.location.href = '/profile';
+                navigate('/profile');
             }, 1000);
         } catch (err) {
             message.error('Mật khẩu cũ không chính xác');

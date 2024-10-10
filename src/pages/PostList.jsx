@@ -109,9 +109,9 @@ const PostList = () => {
                                 </div>
                                 <div style={{ width: isMobile ? '100%' : '60%', paddingLeft: isMobile ? '0' : '16px' }}>
                                     <h2>
-                                        <a href={post.link} className='text-lg font-bold'>
+                                    <Link to={`/posts/${post.id}`}  className='text-lg font-bold'>
                                             {post.title}
-                                        </a>
+                                        </Link>
                                     </h2>
                                     <div className='mt-2'>
                                         <span className='mr-3'>{post.createdAt}</span>

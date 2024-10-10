@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { getBooksBySearchValue } from '../services/BookService'
 import { SearchOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const SearchBar = ({ setResult }) => {
     const [input, setInput] = useState('')
-
+    const navigate = useNavigate();
     const handleChange = (e) => {
         setInput(e.target.value)
         fetchData(e.target.value)
@@ -31,9 +32,9 @@ const SearchBar = ({ setResult }) => {
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault(); // Ngăn chặn hành vi mặc định của form
+        e.preventDefault(); 
         if (input.trim()) {
-            window.location.href = `/search/${input.trim()}`
+            navigate(`/search/${input.trim()}`)
         }
     }
 

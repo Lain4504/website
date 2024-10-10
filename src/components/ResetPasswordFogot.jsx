@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Breadcrumb from './Breadcrumb';
-import { useParams } from 'react-router-dom'; // Để lấy token từ URL
+import { useNavigate, useParams } from 'react-router-dom'; // Để lấy token từ URL
 import { Input, Button, Form, message } from 'antd';
 import { resetPassword } from '../services/UserService'; // Hàm gọi API
 
 const ResetPassword = () => {
     const [loading, setLoading] = useState(false);
     const { token } = useParams(); // Lấy token từ URL
-
+    const navigate = useNavigate()
     // Hàm để xử lý gửi form
     const handleSubmit = (values) => {
         setLoading(true);
@@ -27,7 +27,7 @@ const ResetPassword = () => {
             .then((response) => {
                 message.success('Mật khẩu đã được đặt lại thành công!');
                 setTimeout(() => {
-                    window.location.href = '/login'
+                    navigate('/login');
                 }, 1000); // 1000ms = 1 giây
             })
             .catch((error) => {

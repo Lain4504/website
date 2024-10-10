@@ -4,6 +4,7 @@ import { Button, Input, Alert } from 'antd';
 // import SelectAddress from '../Home/SelectAddress';
 // import { getProvince, getDistrict, getWard } from '../../services/CityService';
 import { updateCartItem } from '../services/CartService';
+import { useNavigate } from 'react-router-dom';
 
 const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     const [provinces, setProvices] = useState([]);
@@ -17,7 +18,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     const [wards, setWards] = useState([]);
     const [reset, setReset] = useState(false);
     const [error, setError] = useState({ emptyError: false, phoneError: false });
-
+    const navigate = useNavigate();
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setCart(prevCart => ({
@@ -53,7 +54,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
         updateCartItem(cart).then(res => {
             setCartChange(!cartChange);
         });
-        window.location.href = '/checkout/payment';
+        navigate('/checkout/payment');
     };
 
     useEffect(() => {

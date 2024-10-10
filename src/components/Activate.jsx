@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import Breadcrumb from './Breadcrumb'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { activateAccount } from '../services/UserService'
 import { Button, message } from 'antd'
 
 const Activate = () => {
+    const navigate = useNavigate();
     const token = useParams()
     const [error, setError] = useState(false)
     const breadcrumbs = [
@@ -17,7 +18,7 @@ const Activate = () => {
             .then(() => {
                 message.success('Tài khoản đã được kích hoạt thành công!')
                 setTimeout(() => {
-                    window.location.href = '/login'
+                    navigate('/login');
                 }, 1000); // 1000ms = 1 giây
             })
             .catch(() => {

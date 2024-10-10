@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
 import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { getBookById } from '../services/BookService';
 import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
@@ -20,7 +20,7 @@ const ProductDetail = ({ cookies, cart, cartChange, setCartChange }) => {
   const [userId, setUserId] = useState(null);
   const [heart, setHeart] = useState(false);
   const [wishlistItems, setWishlistItems] = useState([]);
-
+  const navigate = useNavigate();
   // Fetch book data by ID
   const fetchBook = async () => {
     const response = await getBookById(id);
@@ -74,7 +74,7 @@ const ProductDetail = ({ cookies, cart, cartChange, setCartChange }) => {
   // Handle adding/removing from wishlist
   const toggleHeart = () => {
     if (!userId) {
-      window.location.href = '/login';
+     navigate('/login');
       return;
     }
 

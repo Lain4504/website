@@ -2,17 +2,18 @@ import React, { useEffect } from 'react';
 import { Layout, Row, Col, Breadcrumb } from 'antd'; // Import Ant Design components
 import CheckoutInfo from './CheckoutInfo';
 import Sidebar from '../components/SideBar';
+import { useNavigate } from 'react-router-dom';
 const { Content } = Layout;
 
 const Checkout = ({ cart, setCart, cartChange, setCartChange, cookies }) => {
-
+    const navigate = useNavigate();
     // Redirect to login if the user is not authenticated
     useEffect(() => {
         if (!cookies.authToken) {
-            window.location.href = '/login';
+           navigate('/login');
         }
         if (cart?.orderDetails?.length === 0) {
-            window.location.href = '/cart';
+            navigate('/cart');
         }
     }, [cookies, cart]);
 

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Table, InputNumber, Button, Row, Col } from 'antd'
 import { updateCartItem } from '../services/CartService'
 import Breadcrumb from '../components/Breadcrumb';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = ({ cart, setCart, cartChange, setCartChange }) => {
   const [tempCart, setTempCart] = useState({});
-
+  const navigate = useNavigate();
   useEffect(() => {
     setTempCart(cart);
   }, [cart]);
@@ -32,13 +33,16 @@ const Cart = ({ cart, setCart, cartChange, setCartChange }) => {
 
   const updateCart = () => {
     updateCartItem(tempCart).then(res => {
+      setCart(tempCart);
       setCartChange(!cartChange);
+    }).catch(error => {
+      console.error("Error updating cart:", error);
     });
-    window.location.reload();
   }
 
+
   const checkout = () => {
-    window.location.href = '/checkout';
+    navigate('/checkout');
   }
 
   const columns = [
