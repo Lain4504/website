@@ -43,7 +43,7 @@ const BooksByCollection = () => {
     const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
 
     const handleChange = (value) => {
-        setSortBy(value); 
+        setSortBy(value);
         let collectionQuery = curCollection ? `collection=${curCollection.id}` : '';
         let query = '';
         setCurrentPage(1); // Reset to first page on sort change
@@ -142,24 +142,28 @@ const BooksByCollection = () => {
                             </div>
 
                             <div>
-                                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:grid-cols-3'>
+                                <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:grid-cols-3'>
                                     {currentBooks.map(book => (
                                         <div
                                             key={book.id}
-                                            className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
+                                            className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center transition-transform duration-300 ease-in-out"
                                             onMouseEnter={() => setHoveredBookTitle(book.title)}
                                             onMouseLeave={() => setHoveredBookTitle("")}
                                             onMouseMove={handleMouseMove}
                                         >
-                                            <div className="relative h-80">
+                                            <div className="relative h-48 xs:h-80 sm:h-96 md:h-96 lg:h-80 xl:h-80 transition-all duration-300 ease-in-out"> {/* Chiều cao dynamic và có hiệu ứng */}
                                                 <Link to={`/products/${book.id}`}>
-                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-full object-cover" />
+                                                    <img
+                                                        src={book.images[0]?.link}
+                                                        alt={book.title}
+                                                        className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105" /* Zoom in hiệu ứng khi hover */
+                                                    />
                                                 </Link>
                                                 <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
                                                     -{book.discount * 100}%
                                                 </div>
                                             </div>
-                                            <div className="p-2">
+                                            <div className="p-2 transition-opacity duration-300 ease-in-out">
                                                 <div className="text-sm font-semibold mb-2 text-center">
                                                     <Link to={`/products/${book.id}`} className="text-gray-900 hover:text-gray-700 truncate block">{book.title}</Link>
                                                 </div>
