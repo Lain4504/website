@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getCollections, getCollectionById } from '../services/CollectionService';
 import Breadcrumb from '../components/Breadcrumb';
 import { Menu, Select, Pagination } from 'antd';
+import Title from '../components/Title';
 
 const BooksByCollection = () => {
     const [books, setBooks] = useState([]);
@@ -16,7 +17,9 @@ const BooksByCollection = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [booksPerPage] = useState(12);
     const [sortBy, setSortBy] = useState('manual');
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     const fetchData = (id) => {
         if (id === 'all') {
             setCurCollection(null);
@@ -120,7 +123,15 @@ const BooksByCollection = () => {
                         <div className='w-full lg:w-3/4 px-4'>
                             <div className='mb-6'>
                                 <div className='flex justify-between items-center'>
-                                    <h3 className='text-xl font-bold'>{id === 'all' ? "TẤT CẢ SẢN PHẨM" : curCollection ? curCollection.name : ''}</h3>
+                                    <h3 className='text-xl font-bold'>
+                                        {id === 'all' ? (
+                                            <Title text1={'TẤT CÁ'} text2={'SẢN PHẨM'} />
+                                        ) : curCollection ? (
+                                            curCollection.name
+                                        ) : (
+                                            ''
+                                        )}
+                                    </h3>
                                     <div className="text-right">
                                         <label htmlFor="SortBy">Sắp xếp</label>
                                         <Select

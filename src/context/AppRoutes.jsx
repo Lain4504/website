@@ -9,7 +9,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Activate from '../components/Activate';
 import ForgotPassword from '../components/ForgotPassword';
-import ResetPassword from '../components/ResetPasswordFogot';
+import ResetPassword from '../components/ResetPasswordForgot';
 import ProductDetail from '../pages/ProductDetail';
 import PostList from '../pages/PostList';
 import UserProfile from '../pages/UserProfile';

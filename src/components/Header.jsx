@@ -1,8 +1,5 @@
 import React from "react";
-import EmailIcon from '@mui/icons-material/Email';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import InstagramIcon from '@mui/icons-material/Instagram';
+import { FacebookFilled, InstagramFilled, YoutubeFilled, MailFilled, PhoneFilled } from '@ant-design/icons';
 
 const Header = () => {
     return (
@@ -13,13 +10,13 @@ const Header = () => {
                     <div className="w-full lg:w-2/12 mb-4 lg:mb-0">
                         <div className="flex space-x-4">
                             <a href="https://www.facebook.com/" className="text-white hover:text-gray-300">
-                                <FacebookIcon />
+                                <FacebookFilled />
                             </a>
                             <a href="https://www.instagram.com/?hl=en" className="text-white hover:text-gray-300">
-                                <InstagramIcon />
+                                <InstagramFilled />
                             </a>
                             <a href="https://www.youtube.com/" className="text-white hover:text-gray-300">
-                                <YouTubeIcon />
+                                <YoutubeFilled />
                             </a>
                         </div>
                     </div>
@@ -27,7 +24,7 @@ const Header = () => {
                     {/* Short News */}
                     <div className="w-full lg:w-5/12 mb-4 lg:mb-0">
                         <div className="flex items-center space-x-2">
-                            <marquee behavior="scroll" direction="left" className="text-white text-sm"> {/* Chữ nhỏ hơn */}
+                            <marquee behavior="scroll" direction="left" className="text-white text-sm">
                                 Chào mừng bạn đến với FOREVER. Nếu bạn cần giúp đỡ, Hãy liên lạc với chúng tôi qua số hotline: (+84) 915234798 hoặc email: Bookstore@gmail.com
                             </marquee>
                         </div>
@@ -36,17 +33,16 @@ const Header = () => {
                     {/* Contact */}
                     <div className="w-full lg:w-5/12 text-right">
                         <div className="space-x-4">
-                            <a href="tel:(+84) 1900561595" className="text-white hover:text-gray-300"> {/* Chữ trắng */}
-                                <i className="fa fa-phone" aria-hidden="true"></i> (+84) 915234798
+                            <a href="tel:(+84) 1900561595" className="text-white hover:text-gray-300">
+                                <PhoneFilled /> (+84) 915234798
                             </a>
-                            <a href="mailto:cskh_online@sachtructuyen.com.vn" className="text-white hover:text-gray-300"> {/* Chữ trắng */}
-                                <i className="fa fa-envelope" aria-hidden="true"></i> Bookstore@gmail.com
+                            <a href="mailto:cskh_online@sachtructuyen.com.vn" className="text-white hover:text-gray-300">
+                                <MailFilled /> ForeverBookStore@gmail.com
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-          
         </div>
     );
 }

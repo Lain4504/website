@@ -151,7 +151,7 @@ const PostList = () => {
                             <div className='bg-white'>
                                 <ul>
                                     <li className='my-3'>
-                                        <Link to="#" onClick={() => {
+                                        <Link to={`/postcategory/all`} onClick={() => {
                                             setCurPostCategory('all');
                                             setCurrentPage(1); // Reset to page 1
                                         }} className='ml-3'>Tất cả</Link>

@@ -5,7 +5,7 @@ import Breadcrumb from '../components/Breadcrumb';
 const About = () => {
   const breadcrumbs = [
     { title: 'Trang chủ', href: '/' },
-    { title: 'About' }
+    { title: 'Về Forever' }
   ];
   return (
     <div>

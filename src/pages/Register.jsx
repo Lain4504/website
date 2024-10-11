@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Alert, Typography, Modal } from 'antd';
 import { createAccount } from '../services/UserService';
 import { Link } from 'react-router-dom';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
 import Breadcrumb from '../components/Breadcrumb';
+import Title from '../components/Title';
 
 const Register = () => {
     const [form] = Form.useForm();
@@ -16,13 +17,18 @@ const Register = () => {
         createAccount(account)
             .then(() => {
                 setExistingAccountError(false);
-                setIsModalVisible(true); // Hiển thị modal khi đăng ký thành công
+                setIsModalVisible(true); // Show modal on successful registration
             })
             .catch(() => {
                 setExistingAccountError(true);
             });
     };
-
+    const handleGoogleLogin = () => {
+        notification.info({
+            message: 'Google Login',
+            description: 'Chức năng đăng nhập bằng Google sẽ được thực hiện ở đây.',
+        });
+    };
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: 'Register' }
@@ -31,120 +37,144 @@ const Register = () => {
     return (
         <>
             <Breadcrumb items={breadcrumbs} />
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        ĐĂNG KÝ
-                    </h2>
-                </div>
-                <hr className="my-4 w-1/2 mx-auto border-t-2 border-gray-300" />
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <Form
-                        form={form}
-                        name="register"
-                        layout="vertical"
-                        onFinish={onSubmitHandler}
-                        autoComplete="off"
-                    >
-                        {existingAccountError && (
-                            <Alert
-                                message="Tài khoản đã tồn tại. Vui lòng thử lại với email khác."
-                                type="error"
-                                showIcon
-                                className="mb-4"
-                            />
-                        )}
-
-                        <Form.Item
-                            label="Địa chỉ email"
-                            name="email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Vui lòng nhập email!',
-                                },
-                                {
-                                    type: 'email',
-                                    message: 'Vui lòng nhập đúng định dạng email!',
-                                },
-                            ]}
-                        >
-                            <Input
-                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                placeholder="Nhập địa chỉ email"
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Mật khẩu"
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Vui lòng nhập mật khẩu!',
-                                },
-                                {
-                                    min: 6,
-                                    message: 'Mật khẩu phải dài hơn 6 ký tự!',
-                                },
-                            ]}
-                        >
-                            <Input.Password
-                                className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                placeholder="Nhập mật khẩu"
-                                iconRender={(visible) =>
-                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                }
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Xác nhận mật khẩu"
-                            name="confirmPassword"
-                            dependencies={['password']}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Vui lòng xác nhận mật khẩu!',
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (!value || getFieldValue('password') === value) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(new Error('Mật khẩu không khớp!'));
-                                    },
-                                }),
-                            ]}
-                        >
-                            <Input.Password
-                                className="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                placeholder="Xác nhận mật khẩu"
-                                iconRender={(visible) =>
-                                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                                }
-                            />
-                        </Form.Item>
-
-                        <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            <section className="bg-white dark:bg-gray-900">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-auto lg:py-0 mb-12">
+                    <a className="mb-6 text-2xl font-semibold">
+                        <Title text1={'Forever'} text2={'Book Store'} />
+                    </a>
+                    <div className="w-full bg-white rounded-lg border-1 border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
+                        <div className="p-6 space-y-4 lg:space-y-6 sm:p-8">
+                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                Tạo tài khoản
+                            </h1>
+                            <Form
+                                form={form}
+                                name="register"
+                                layout="vertical"
+                                onFinish={onSubmitHandler}
+                                autoComplete="off"
+                                className="space-y-2 max-md:-space-y-4 md:space-y-0 lg:space-y-2"
                             >
-                                Đăng ký
-                            </Button>
-                        </Form.Item>
-                    </Form>
+                                {existingAccountError && (
+                                    <Alert
+                                        message="Tài khoản đã tồn tại. Vui lòng thử lại với email khác."
+                                        type="error"
+                                        showIcon
+                                        className="mb-4"
+                                    />
+                                )}
+                                <Form.Item
+                                    label="Địa chỉ email"
+                                    name="email"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng nhập email!',
+                                        },
+                                        {
+                                            type: 'email',
+                                            message: 'Vui lòng nhập đúng định dạng email!',
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        placeholder="name@company.com"
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Mật khẩu"
+                                    name="password"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng nhập mật khẩu!',
+                                        },
+                                        {
+                                            min: 6,
+                                            message: 'Mật khẩu phải dài hơn 6 ký tự!',
+                                        },
+                                    ]}
+                                >
+                                    <div className="flex items-center">
+                                        <Input.Password
+                                            className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            placeholder="••••••••"
+                                            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                        />
+                                    </div>
+                                </Form.Item>
+                                <Form.Item
+                                    label="Xác nhận mật khẩu"
+                                    name="confirmPassword"
+                                    dependencies={['password']}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng xác nhận mật khẩu!',
+                                        },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (!value || getFieldValue('password') === value) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(new Error('Mật khẩu không khớp!'));
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <div className="flex items-center">
+                                        <Input.Password
+                                            className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            placeholder="••••••••"
+                                            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                        />
+                                    </div>
+                                </Form.Item>
+                                <Form.Item>
+                                    <div className="flex items-start">
+                                        <div className="flex items-center h-5">
+                                            <input
+                                                id="terms"
+                                                aria-describedby="terms"
+                                                type="checkbox"
+                                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                                required
+                                            />
+                                        </div>
 
-                    <p className="mt-10 text-center text-sm text-gray-500">
-                        Đã có tài khoản?{' '}
-                        <Link to="/login">
-                            <span className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 cursor-pointer">
-                                Đăng nhập tại đây
-                            </span>
-                        </Link>
-                    </p>
+                                        <div className="ml-3 text-sm">
+                                            <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">
+                                                Tôi chấp nhận <a className="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Điều khoản và Điều kiện</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                    >
+                                        Tạo tài khoản
+                                    </Button>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button
+                                        type="default"
+                                        className="w-full flex items-center justify-center mt-4"
+                                        onClick={handleGoogleLogin}
+                                    >
+                                        <GoogleOutlined style={{ marginRight: 8, color: '#4285F4' }} />
+                                        Tạo tài khoản bằng Google
+                                    </Button>
+                                </Form.Item>
+                            </Form>
+                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                Đã có tài khoản? <Link to="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Đăng nhập tại đây</Link>
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Ant Design Modal */}
@@ -157,7 +187,7 @@ const Register = () => {
                     <p>Chúng tôi đã gửi email xác nhận đến địa chỉ của bạn. Vui lòng kiểm tra hộp thư để hoàn tất đăng ký.</p>
                     <p>Nếu bạn không thấy email, vui lòng kiểm tra hộp thư rác.</p>
                 </Modal>
-            </div>
+            </section>
         </>
     );
 };

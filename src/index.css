@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,10 +7,10 @@ a.active hr{
     display: block;
 }
 *{
-    font-family: 'Noto Sans', sans-serif;
+    font-family: Outfit;
 }
 .prata-regular{
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Prata", serif;
     font-weight: 400;
     font-style: normal;
 
@@ -163,4 +163,19 @@ a.active hr{
     max-width: 100%; /* Ensures image is responsive */
     height: auto;
   }
-  
+  /* styles.css */
+.custom-space {
+    margin-bottom: 1rem; /* Khoảng cách cho tất cả các kích thước màn hình */
+}
+
+@media (max-width: 767px) {
+    .custom-space {
+        margin-bottom: 0; /* Xóa khoảng cách cho màn hình nhỏ */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .custom-space {
+        margin-bottom: 0.5rem; /* Giảm khoảng cách cho màn hình trung bình */
+    }
+}

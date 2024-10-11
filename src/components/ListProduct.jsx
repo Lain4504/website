@@ -67,8 +67,8 @@ const ListProduct = (props) => {
                         )
                     }
                     <div className="col-span-full text-right mt-4">
-                        <Button href={`collections/all`} className="text-blue-500 hover:underline">
-                            Xem thêm &gt;&gt;
+                        <Button className="text-blue-500 hover:underline">
+                           <Link to={`collections/all`}> Xem thêm &gt;&gt;</Link> 
                         </Button>
                     </div>
                 </div>
