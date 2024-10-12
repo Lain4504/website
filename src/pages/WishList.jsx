@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { deleteWishList, getWishlistByUserId } from '../services/WishlistService';
 import { getBookById } from '../services/BookService';
 import Breadcrumb from '../components/Breadcrumb';
@@ -6,13 +6,14 @@ import { Link } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
 import { jwtDecode } from 'jwt-decode';
 import { message } from 'antd';
+import { AuthContext } from '../context/AuthContext';
 
-const Wishlist = ({ cookies }) => {
+const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
-  const [userId, setUserId] = useState(null);
   const [hoveredBookTitle, setHoveredBookTitle] = useState("");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
+  const { currentUser } = useContext(AuthContext); // Lấy currentUser từ AuthContext
+  const userId = currentUser ? currentUser.userId : null;
   const fetchBookDetails = async (bookId) => {
     try {
       const res = await getBookById(bookId);
@@ -37,22 +38,9 @@ const Wishlist = ({ cookies }) => {
       console.error('Failed to fetch wishlist', error);
     }
   };
-
   useEffect(() => {
-    const token = cookies.authToken;
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-        setUserId(userId);
         fetchWishlist(userId);
-      } catch (error) {
-        console.error('Invalid token', error);
-      }
-    } else {
-      console.error('No token found');
-    }
-  }, [cookies.authToken]);
+  }, [userId]);
 
   const deleteWishlist = async (wishlistId) => {
 

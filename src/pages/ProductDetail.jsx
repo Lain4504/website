@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
 import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,69 +7,64 @@ import { getBookById } from '../services/BookService';
 import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
 import parser from 'html-react-parser';
 import Breadcrumb from '../components/Breadcrumb';
+import { AuthContext } from '../context/AuthContext';
 
 const { Title, Text, Paragraph } = Typography;
 
-const ProductDetail = ({ cookies, cart, cartChange, setCartChange }) => {
+const ProductDetail = () => {
   const [book, setBook] = useState({});
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [cartItems, setCartItems] = useState(0);
   const carouselRef = useRef(null);
-  const [userId, setUserId] = useState(null);
   const [heart, setHeart] = useState(false);
   const [wishlistItems, setWishlistItems] = useState([]);
+  const { currentUser } = useContext(AuthContext); // Lấy currentUser từ AuthContext
+  const userId = currentUser ? currentUser.userId : null;
   const navigate = useNavigate();
-  // Fetch book data by ID
   const fetchBook = async () => {
-    const response = await getBookById(id);
-    const { data } = response;
-    setBook(data);
+    try {
+      const response = await getBookById(id);
+      const { data } = response;
+      setBook(data);
+    } catch (error) {
+      console.error('Error fetching book:', error);
+    }
   };
-
+  
   const fetchWishlist = async (userId) => {
-    // Assuming there is a service to fetch wishlist and update heart state
-    const response = await getWishlistByUserId(userId);
-    console.log(response);
-    setWishlistItems(response.data);
-    const wishlisted = response.data.some(wishlistItem => wishlistItem.bookId === book.id);
-    console.log('Is the book wishlisted?', wishlisted);
-    setHeart(wishlisted);
+    if (!userId) return; // Return early if userId is not available
+
+    try {
+      const response = await getWishlistByUserId(userId);
+      console.log(response);
+      setWishlistItems(response.data);
+      const wishlisted = response.data.some(wishlistItem => wishlistItem.bookId === book.id);
+      console.log('Is the book wishlisted?', wishlisted);
+      setHeart(wishlisted);
+    } catch (error) {
+      console.error('Error fetching wishlist:', error);
+    }
   };
   useEffect(() => {
     // Fetch book and wishlist data
     const fetchData = async () => {
-      await fetchBook(); // Lấy dữ liệu sản phẩm
-      const token = cookies.authToken;
-
-      if (token) {
-        try {
-          const decoded = jwtDecode(token);
-          const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-          setUserId(userId);
-
-          // Gọi fetchWishlist sau khi có userId
-          fetchWishlist(userId);
-        } catch (error) {
-          console.error('Invalid token', error);
-        }
-      } else {
-        console.error('No token found');
+      await fetchBook();
+      if (userId) {
+        fetchWishlist(userId); // Call fetchWishlist after fetching book
       }
     };
 
     fetchData();
-  }, [cookies.authToken, id]);
-
-  // Theo dõi sự thay đổi của `book` để cập nhật trạng thái `heart`
-  useEffect(() => {
-    if (book.id && userId) {
-      fetchWishlist(userId); // Kiểm tra wishlist mỗi khi book hoặc userId thay đổi
-    }
-  }, [book, userId]);
-
-
+  }, [id, userId]); 
+    // Theo dõi sự thay đổi của `book` để cập nhật trạng thái `heart`
+    useEffect(() => {
+      if (book.id && userId) {
+        fetchWishlist(userId); // Kiểm tra wishlist mỗi khi book hoặc userId thay đổi
+      }
+    }, [book, userId]);
+  
 
   // Handle adding/removing from wishlist
   const toggleHeart = () => {

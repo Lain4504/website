@@ -20,17 +20,19 @@ import PostDetail from '../pages/PostDetail';
 import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
 import Page404 from '../components/Page404';
+import PrivateRoute from './PrivateRoute';
 
-const AppRoutes = ({ cookies, setCookies, removeCookies, cart, setCart, cartChange, setCartChange }) => {
+const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Điều hướng nếu không tìm thấy trang
+  // Redirect to 404 if the route is invalid
   useEffect(() => {
     const validRoutes = [
-      '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', '/login', '/register',
-      '/search/:name', '/activation/:token', '/forgot-password', '/reset-password/:token',
-      '/products/:id', '/profile', '/orderlist', '/change-password', '/wishlist', '/posts/:id', '/cart'
+      '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', 
+      '/login', '/register', '/search/:name', '/activation/:token', 
+      '/forgot-password', '/reset-password/:token', '/products/:id', 
+      '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',"/change-password", "/checkout"
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -51,21 +53,23 @@ const AppRoutes = ({ cookies, setCookies, removeCookies, cart, setCart, cartChan
       <Route path='/collections/:id' element={<Collection />} />
       <Route path='/contact' element={<Contact />} />
       <Route path='/postcategory/:id' element={<PostList />} />
-      <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-      <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
       <Route path='/search/:name' element={<SearchResult />} />
       <Route path='/activation/:token' element={<Activate />} />
-      <Route path='/profile' element={<UserProfile cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-      <Route path='/forgot-password' element={<ForgotPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-      <Route path='/reset-password/:token' element={<ResetPassword cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} />} />
-      <Route path='/products/:id' element={<ProductDetail cookies={cookies} setCookies={setCookies} removeCookies={removeCookies} setCart={setCart} setCartChange={setCartChange}/>} />
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/reset-password/:token' element={<ResetPassword />} />
+      <Route path='/products/:id' element={<ProductDetail setCart={setCart} setCartChange={setCartChange} />} />
       <Route path='/posts/:id' element={<PostDetail />} />
-      <Route path='/wishlist' element={<Wishlist cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>}/>
-      <Route path='/orderlist' element={<OrderList cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
-      <Route path="/change-password" element={<ChangePassword cookies={cookies}/>}/>
-      <Route path="/cart" element={<Cart cart={cart} setCart={setCart} setCartChange={setCartChange} cartChange={cartChange} />}/>
-      <Route path="/checkout" element={<Checkout/>}/>
+      <Route path="/cart" element={<Cart cart={cart} setCart={setCart} setCartChange={setCartChange} cartChange={cartChange} />} />
       <Route path='/404' element={<Page404 />} />
+
+      {/* Private routes that require authentication */}
+      <Route path='/wishlist' element={<PrivateRoute> <Wishlist /></PrivateRoute>} />
+      <Route path='/orderlist' element={<PrivateRoute> <OrderList /></PrivateRoute>} />
+      <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+      <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+      <Route path='/profile' element={<PrivateRoute><UserProfile /></PrivateRoute>} />
     </Routes>
   );
 };

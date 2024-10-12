@@ -1,42 +1,49 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { login } from '../services/UserService';
 import { Form, Input, Button, notification } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
 import Breadcrumb from '../components/Breadcrumb';
 import Title from '../components/Title';
+import { AuthContext } from '../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
-const Login = ({ setCookies }) => {
+const Login = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { dispatch } = useContext(AuthContext);
 
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
 
-        let account = { email, password };
-        login(account)
-            .then(res => {
-                setCookies('authToken', res.data.token);
-                setCookies('userId', res.data.user.id);
-                notification.success({
-                    message: 'Đăng nhập thành công',
-                    description: 'Chào mừng bạn trở lại!',
-                });
-                setTimeout(() => {
-                    navigate('/');
-                }, 1000);
-            })
-            .catch(err => {
-                notification.error({
-                    message: 'Đăng nhập không thành công',
-                    description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
-                });
-            })
-            .finally(() => {
-                setLoading(false);
+        try {
+            const res = await login({ email, password });
+            const token = res.data.token;
+            const decodedToken = jwtDecode(token);
+            console.log("Decode:", decodedToken)
+            const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
+            console.log("userId:", userId)
+            dispatch({ type: "LOGIN", payload: { token, userId } });
+            localStorage.setItem("user", JSON.stringify({ token, userId }));
+            console.log("Current User in Login:", res)
+            notification.success({
+                message: 'Đăng nhập thành công',
+                description: 'Chào mừng bạn trở lại!',
             });
+
+            navigate('/');
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
+
+            notification.error({
+                message: 'Đăng nhập không thành công',
+                description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleGoogleLogin = () => {
@@ -48,7 +55,7 @@ const Login = ({ setCookies }) => {
 
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
-        { title: 'Đăng nhập' }
+        { title: 'Đăng nhập' },
     ];
 
     return (
@@ -60,7 +67,7 @@ const Login = ({ setCookies }) => {
                         <Title text1={'Forever'} text2={'Book Store'} />
                     </a>
                     <div className="w-full bg-white rounded-lg border-1 border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
-                    <div className="p-6 space-y-4 lg:space-y-6 sm:p-8">
+                        <div className="p-6 space-y-4 lg:space-y-6 sm:p-8">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Đăng nhập vào tài khoản của bạn
                             </h1>
@@ -68,7 +75,7 @@ const Login = ({ setCookies }) => {
                                 form={form}
                                 onFinish={onSubmitHandler}
                                 layout="vertical"
-                                className="space-y-0 max-lg:-space-y-6" 
+                                className="space-y-0 max-lg:-space-y-6"
                             >
                                 <Form.Item
                                     label="Địa chỉ email"
@@ -105,14 +112,13 @@ const Login = ({ setCookies }) => {
                                         },
                                     ]}
                                 >
-                                    <div className="flex items-center">
-                                        <Input.Password
-                                            className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                            placeholder="Nhập mật khẩu"
-                                            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                        />
-                                    </div>
+                                    <Input.Password
+                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        placeholder="Nhập mật khẩu"
+                                        iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                                    />
                                 </Form.Item>
+
                                 <Form.Item>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-start">
@@ -135,6 +141,7 @@ const Login = ({ setCookies }) => {
                                         </Link>
                                     </div>
                                 </Form.Item>
+
                                 <Form.Item>
                                     <Button
                                         type="primary"
@@ -145,6 +152,7 @@ const Login = ({ setCookies }) => {
                                         Đăng nhập
                                     </Button>
                                 </Form.Item>
+
                                 <Form.Item>
                                     <Button
                                         type="default"

@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import Header from './Header';
 import SearchBar from './SearchBar';
 import CollectionList from './CollectionList';
 import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
+import { AuthContext } from '../context/AuthContext';
 
-const Navbar = ({ cookies, setCookies, removeCookies }) => {
+const Navbar = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const authContext = useContext(AuthContext); 
+
+    // Ghi log current user cho debugging
+    useEffect(() => {
+        console.log("Current user in Navbar:", authContext.currentUser);
+    }, [authContext.currentUser]);
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 640) {
@@ -23,14 +31,12 @@ const Navbar = ({ cookies, setCookies, removeCookies }) => {
     }, []);
 
     const logout = () => {
-        removeCookies('authToken');
-        setCookies('authToken', null);
-        navigate('/');
+        authContext.dispatch({ type: "LOGOUT", isSessionExpired: false }); // Logout bình thường
     };
 
     const menu = (
         <Menu style={{ width: '120px', fontSize: '16px' }}>
-            {cookies.authToken ? (
+            {authContext.currentUser ? ( // Kiểm tra nếu người dùng đã đăng nhập
                 <>
                     <Menu.Item key="1">
                         <Link to={`/profile`}>Tài khoản</Link>

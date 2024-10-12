@@ -14,7 +14,7 @@ const useCart = (userId) => {
         console.error(error);
       }
     };
-    
+
     if (userId) {
       handleCart();
     }

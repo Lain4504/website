@@ -1,33 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
-import {jwtDecode} from 'jwt-decode';
+import { useContext, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext'; // Import your AuthContext
 
 const useAuth = () => {
-  const [cookies, setCookies, removeCookies] = useCookies(['authToken']);
-  const [userId, setUserId] = useState(null);
+  const { dispatch, currentUser } = useContext(AuthContext); // Get dispatch and currentUser from AuthContext
   const location = useLocation();
   const navigate = useNavigate();
+  const userId = currentUser ? currentUser.userId : null; // Directly retrieve userId from currentUser
 
   useEffect(() => {
-    if (cookies.authToken) {
-      try {
-        const decoded = jwtDecode(cookies.authToken);
-        const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-        setUserId(userId);
-      } catch (error) {
-        console.error('Invalid token', error);
-      }
-    }
-  }, [cookies.authToken]);
+    console.log("Current user in useAuth:", currentUser); // Log the current user for debugging
+  }, [currentUser]);
 
   useEffect(() => {
-    if (cookies.authToken && (location.pathname === '/login' || location.pathname === '/register')) {
-      navigate('/');
+    if (currentUser && (location.pathname === '/login' || location.pathname === '/register')) {
+      navigate('/'); // Redirect authenticated users away from login/register
     }
-  }, [cookies, location, navigate]);
+  }, [currentUser, location, navigate]);
 
-  return { cookies, setCookies, removeCookies, userId };
+  return { userId }; 
 };
 
 export default useAuth;

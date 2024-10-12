@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Table, Button, Layout, message } from 'antd';
 import { jwtDecode } from 'jwt-decode';
 import { cancelOrder, getOrderByUserId } from '../services/OrderService';
 import UserNavBar from './UserNavBar';
 import Breadcrumb from '../components/Breadcrumb';
+import { AuthContext } from '../context/AuthContext';
 
 const { Content } = Layout;
 
@@ -41,15 +42,10 @@ const formatDate = (inputDate) => {
 const OrderList = ({ cookies }) => {
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState([]);
-
+    const { currentUser } = useContext(AuthContext); // Lấy currentUser từ AuthContext
+    const userId = currentUser ? currentUser.userId : null;
     useEffect(() => {
-        const token = cookies.authToken;
-        if (token) {
             try {
-                const decoded = jwtDecode(token);
-                const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-                console.log("User ID from token: ", userId);
-
                 const fetchUserInfo = async () => {
                     try {
                         const res = await getOrderByUserId(userId);
@@ -66,11 +62,7 @@ const OrderList = ({ cookies }) => {
                 message.error('Invalid token');
                 setLoading(false);
             }
-        } else {
-            message.error('No token found');
-            setLoading(false);
-        }
-    }, [cookies.authToken]);
+    }, [userId]);
 
     const columns = [
         {
