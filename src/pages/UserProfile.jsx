@@ -1,30 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getUserProfile, updateProfile } from '../services/UserService';
 import { message, Modal, Button, Form, Input, Spin, Row, Col, Select } from 'antd';
 import Breadcrumb from '../components/Breadcrumb';
 import UserNavBar from './UserNavBar';
 import { jwtDecode } from 'jwt-decode';
+import { AuthContext } from '../context/AuthContext';
 
-const UserProfile = ({ cookies }) => {
+const UserProfile = () => {
     const [loading, setLoading] = useState(true);
     const [profileData, setProfileData] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [fade, setFade] = useState(true); // State to control fade effect
-
+    const { currentUser } = useContext(AuthContext); 
+    const userId = currentUser ? currentUser.userId : null;
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: 'Tài khoản' }
     ];
 
     useEffect(() => {
-        const token = cookies.authToken;
-        if (token) {
             try {
-                const decoded = jwtDecode(token);
-                const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-
                 const fetchUserInfo = async () => {
                     try {
+                        console.log(userId)
                         const res = await getUserProfile(userId);
                         setProfileData(res?.data);
                         setTimeout(() => setLoading(false), 1000);
@@ -38,28 +36,14 @@ const UserProfile = ({ cookies }) => {
                 message.error('Invalid token');
                 setLoading(false);
             }
-        } else {
-            message.error('No token found');
-            setLoading(false);
-        }
-    }, [cookies.authToken]);
+    }, [userId]);
 
     const showModal = () => {
         setIsModalVisible(true);
     };
 
     const handleOk = async (values) => {
-        const token = cookies.authToken;
-
-        if (!token) {
-            message.error('No token found');
-            return;
-        }
-
         try {
-            const decoded = jwtDecode(token);
-            const userId = decoded[Object.keys(decoded).find(key => key.includes("nameidentifier"))];
-
             await updateProfile(userId, values);
             message.success('Profile updated successfully');
             setIsModalVisible(false);

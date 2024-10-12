@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,10 +7,10 @@ a.active hr{
     display: block;
 }
 *{
-    font-family: 'Noto Sans', sans-serif;
+    font-family: Outfit;
 }
 .prata-regular{
-    font-family: 'Noto Sans', sans-serif;
+    font-family: "Prata", serif;
     font-weight: 400;
     font-style: normal;
 
@@ -42,20 +42,13 @@ a.active hr{
 .animate-move-from-center {
     animation: moveFromCenter 0.6s ease-out forwards;
 }
-.product-image {
-    transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
-}
-
-.product-image:hover {
-    transform: scale(1.05); /* Phóng to ảnh khi hover */
-}
 .product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng chuyển đổi */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .product-card:hover {
-    transform: scale(1.05); /* Phóng to sản phẩm khi hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Thêm bóng đổ khi hover */
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
 }
 /*Post List in Home Page*/
 .post-container {
@@ -154,3 +147,35 @@ a.active hr{
 }
 
 
+.post-content img {
+    display: block;
+    margin: 0 auto; /* Centers the image horizontally */
+    max-width: 100%; /* Ensures image is responsive */
+    height: auto;
+  }
+  
+  .post-content figure {
+    display: flex;
+    justify-content: center; /* Center the image in the figure */
+  }
+  
+  .post-content figure img {
+    max-width: 100%; /* Ensures image is responsive */
+    height: auto;
+  }
+  /* styles.css */
+.custom-space {
+    margin-bottom: 1rem; /* Khoảng cách cho tất cả các kích thước màn hình */
+}
+
+@media (max-width: 767px) {
+    .custom-space {
+        margin-bottom: 0; /* Xóa khoảng cách cho màn hình nhỏ */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .custom-space {
+        margin-bottom: 0.5rem; /* Giảm khoảng cách cho màn hình trung bình */
+    }
+}

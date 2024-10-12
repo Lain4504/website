@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Dropdown, Menu, Pagination } from 'antd'; 
+import { Row, Col, Dropdown, Menu, Pagination } from 'antd';
 import Breadcrumb from '../components/Breadcrumb';
 import { ArrowRightOutlined, DownOutlined } from '@ant-design/icons';
 import { getAllPostCategories, getPostByCategoryId } from '../services/PostService';
@@ -23,7 +23,7 @@ const PostList = () => {
             console.error('Failed to fetch posts:', error);
         }
     };
-    
+
     useEffect(() => {
         const loadPostCategories = async () => {
             try {
@@ -43,8 +43,8 @@ const PostList = () => {
             fetchData(curPostCategory);
         }
     }, [curPostCategory]);
-    
-    
+
+
     const handleResize = () => {
         setIsMobile(window.innerWidth < 768);
         setIsMedium(window.innerWidth >= 768 && window.innerWidth < 992);
@@ -70,18 +70,19 @@ const PostList = () => {
                 setCurPostCategory('all');
                 setCurrentPage(1); // Reset to page 1
             }}>
-                <span>Tất cả</span>
+                <Link to="/postcategory/all">Tất cả</Link>
             </Menu.Item>
             {categories.map(category => (
                 <Menu.Item key={category.id} onClick={() => {
                     setCurPostCategory(category.id);
                     setCurrentPage(1); // Reset to page 1
                 }}>
-                    <span>{category.name}</span>
+                    <Link to={`/postcategory/${category.id}`}>{category.name}</Link>
                 </Menu.Item>
             ))}
         </Menu>
     );
+    
     return (
         <div>
             <Breadcrumb items={[{ title: 'Trang chủ', href: '/' }, { title: 'Tin tức' }]} />
@@ -109,7 +110,7 @@ const PostList = () => {
                                 </div>
                                 <div style={{ width: isMobile ? '100%' : '60%', paddingLeft: isMobile ? '0' : '16px' }}>
                                     <h2>
-                                    <Link to={`/posts/${post.id}`}  className='text-lg font-bold'>
+                                        <Link to={`/posts/${post.id}`} className='text-lg font-bold'>
                                             {post.title}
                                         </Link>
                                     </h2>
@@ -142,39 +143,39 @@ const PostList = () => {
                 </Col>
 
                 {!isMobile && !isMedium && (
-    <Col xs={24} sm={24} md={6} lg={6}>
-        <div className='border border-gray-300 shadow-md'>
-            <div className='bg-black p-4'>
-                <h1 className='text-white'>THỂ LOẠI BÀI VIẾT</h1>
-            </div>
-            <div className='bg-white'>
-                <ul>
-                    <li className='my-3'>
-                        <Link to="#" onClick={() => {
-                            setCurPostCategory('all'); 
-                            setCurrentPage(1); // Reset to page 1
-                        }} className='ml-3'>Tất cả</Link>
-                        <hr className='my-2' />
-                    </li>
-                    {categories.map(category => (
-                        <li key={category.id} className='my-3'>
-                            <a 
-                                className='ml-3'
-                                onClick={() => {
-                                    setCurPostCategory(category.id); // Sửa đổi ở đây
-                                    setCurrentPage(1); // Reset to page 1
-                                }}
-                            >
-                                {category.name}
-                            </a>
-                            <hr className='my-2' />
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </div>
-    </Col>
-)}
+                    <Col xs={24} sm={24} md={6} lg={6}>
+                        <div className='border border-gray-300 shadow-md'>
+                            <div className='bg-black p-4'>
+                                <h1 className='text-white'>THỂ LOẠI BÀI VIẾT</h1>
+                            </div>
+                            <div className='bg-white'>
+                                <ul>
+                                    <li className='my-3'>
+                                        <Link to={`/postcategory/all`} onClick={() => {
+                                            setCurPostCategory('all');
+                                            setCurrentPage(1); // Reset to page 1
+                                        }} className='ml-3'>Tất cả</Link>
+                                        <hr className='my-2' />
+                                    </li>
+                                    {categories.map(category => (
+                                        <li key={category.id} className='my-3'>
+                                            <Link to={`/postcategory/${category.id}`}
+                                                className='ml-3'
+                                                onClick={() => {
+                                                    setCurPostCategory(category.id); // Sửa đổi ở đây
+                                                    setCurrentPage(1); // Reset to page 1
+                                                }}
+                                            >
+                                                {category.name}
+                                            </Link>
+                                            <hr className='my-2' />
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </Col>
+                )}
             </Row>
         </div>
     );

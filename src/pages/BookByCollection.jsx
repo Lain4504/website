@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getCollections, getCollectionById } from '../services/CollectionService';
 import Breadcrumb from '../components/Breadcrumb';
 import { Menu, Select, Pagination } from 'antd';
+import Title from '../components/Title';
 
 const BooksByCollection = () => {
     const [books, setBooks] = useState([]);
@@ -16,7 +17,9 @@ const BooksByCollection = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [booksPerPage] = useState(12);
     const [sortBy, setSortBy] = useState('manual');
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     const fetchData = (id) => {
         if (id === 'all') {
             setCurCollection(null);
@@ -43,7 +46,7 @@ const BooksByCollection = () => {
     const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
 
     const handleChange = (value) => {
-        setSortBy(value); 
+        setSortBy(value);
         let collectionQuery = curCollection ? `collection=${curCollection.id}` : '';
         let query = '';
         setCurrentPage(1); // Reset to first page on sort change
@@ -120,7 +123,15 @@ const BooksByCollection = () => {
                         <div className='w-full lg:w-3/4 px-4'>
                             <div className='mb-6'>
                                 <div className='flex justify-between items-center'>
-                                    <h3 className='text-xl font-bold'>{id === 'all' ? "TẤT CẢ SẢN PHẨM" : curCollection ? curCollection.name : ''}</h3>
+                                    <h3 className='text-xl font-bold'>
+                                        {id === 'all' ? (
+                                            <Title text1={'TẤT CÁ'} text2={'SẢN PHẨM'} />
+                                        ) : curCollection ? (
+                                            curCollection.name
+                                        ) : (
+                                            ''
+                                        )}
+                                    </h3>
                                     <div className="text-right">
                                         <label htmlFor="SortBy">Sắp xếp</label>
                                         <Select
@@ -142,24 +153,28 @@ const BooksByCollection = () => {
                             </div>
 
                             <div>
-                                <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:grid-cols-3'>
+                                <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:grid-cols-3'>
                                     {currentBooks.map(book => (
                                         <div
                                             key={book.id}
-                                            className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center"
+                                            className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center transition-transform duration-300 ease-in-out"
                                             onMouseEnter={() => setHoveredBookTitle(book.title)}
                                             onMouseLeave={() => setHoveredBookTitle("")}
                                             onMouseMove={handleMouseMove}
                                         >
-                                            <div className="relative h-80">
+                                            <div className="relative h-48 xs:h-80 sm:h-96 md:h-96 lg:h-80 xl:h-80 transition-all duration-300 ease-in-out"> {/* Chiều cao dynamic và có hiệu ứng */}
                                                 <Link to={`/products/${book.id}`}>
-                                                    <img src={book.images[0]?.link} alt={book.title} className="w-full h-full object-cover" />
+                                                    <img
+                                                        src={book.images[0]?.link}
+                                                        alt={book.title}
+                                                        className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105" /* Zoom in hiệu ứng khi hover */
+                                                    />
                                                 </Link>
                                                 <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
                                                     -{book.discount * 100}%
                                                 </div>
                                             </div>
-                                            <div className="p-2">
+                                            <div className="p-2 transition-opacity duration-300 ease-in-out">
                                                 <div className="text-sm font-semibold mb-2 text-center">
                                                     <Link to={`/products/${book.id}`} className="text-gray-900 hover:text-gray-700 truncate block">{book.title}</Link>
                                                 </div>
