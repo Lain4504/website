@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Input, Layout, message, Modal } from 'antd'; // Import Ant Design components
 import { changePassword } from '../services/UserService';
 import UserNavBar from '../pages/UserNavBar';
 import Breadcrumb from './Breadcrumb';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const ChangePassword = ({ cookies }) => {
     const [oldPassword, setOldPassword] = useState('');
@@ -11,6 +12,7 @@ const ChangePassword = ({ cookies }) => {
     const [newPassword, setNewPassword] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
     const navigate = useNavigate();
+    const {currentUser} = useContext(AuthContext)
     const handleSave = () => {
         if (newPassword !== confirmPassword) {
             message.error('Mật khẩu không khớp'); // Use Ant Design message for errors
@@ -29,7 +31,7 @@ const ChangePassword = ({ cookies }) => {
         const data = {
             oldPassword,
             newPassword,
-            token: cookies.authToken,
+            token: currentUser.token, // Use the token from localStorage
         };
 
         try {
