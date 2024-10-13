@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const INITIAL_STATE = {
-  currentUser: JSON.parse(localStorage.getItem("user")) || null, // Lấy thông tin người dùng từ localStorage
+  currentUser: JSON.parse(localStorage.getItem("user")) || null,
   isSessionExpired: false,
 };
 
@@ -15,14 +15,13 @@ export const AuthContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Interceptor để bắt lỗi 401 và tự động logout
     const interceptor = axios.interceptors.response.use(
       response => response,
       error => {
         if (error.response && error.response.status === 401) {
           console.log("Nhận mã lỗi 401 - Thoát phiên...");
           dispatch({ type: "LOGOUT", isSessionExpired: true });
-          navigate('/login'); // Điều hướng đến trang đăng nhập
+          navigate('/login');
         }
         return Promise.reject(error);
       }
@@ -34,17 +33,36 @@ export const AuthContextProvider = ({ children }) => {
   }, [dispatch, navigate]);
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(state.currentUser)); 
-    // Lưu user vào localStorage
+    localStorage.setItem("user", JSON.stringify(state.currentUser));
   }, [state.currentUser]);
+
+  useEffect(() => {
+    // Kiểm tra tính hợp lệ của token
+    const checkTokenExpiration = () => {
+      const token = state.currentUser?.token; 
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1])); 
+        const expirationDate = new Date(payload.exp * 1000); 
+
+        if (expirationDate < new Date()) {
+          console.log("Token đã hết hạn - Thoát phiên...");
+          dispatch({ type: "LOGOUT", isSessionExpired: true });
+          navigate('/'); 
+        }
+      }
+    };
+
+    checkTokenExpiration(); // Gọi hàm kiểm tra khi currentUser thay đổi
+  }, [state.currentUser, dispatch, navigate]);
 
   return (
     <AuthContext.Provider value={{ 
       currentUser: state.currentUser, 
-      userId: state.currentUser?.userId, // Extract userId if available
+      userId: state.currentUser?.userId,
       isSessionExpired: state.isSessionExpired, 
       dispatch 
-  }}>      {children}
+    }}>
+      {children}
     </AuthContext.Provider>
   );
 };

@@ -27,7 +27,6 @@ const CollectionList = ({ closeMenu }) => {
         setIsOpen(false);
       }
     };
-
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);

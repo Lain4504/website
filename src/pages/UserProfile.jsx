@@ -1,53 +1,47 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getUserProfile, updateProfile } from '../services/UserService';
-import { message, Modal, Button, Form, Input, Spin, Row, Col, Select } from 'antd';
+import { message, Spin, Row, Col, Input, Button, Form } from 'antd';
 import Breadcrumb from '../components/Breadcrumb';
 import UserNavBar from './UserNavBar';
-import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from '../context/AuthContext';
+import EditProfileModal from '../components/EditProfileModal'; // Import modal for editing profile
 
 const UserProfile = () => {
-    const [loading, setLoading] = useState(true);
-    const [profileData, setProfileData] = useState(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [fade, setFade] = useState(true); // State to control fade effect
+    const [loading, setLoading] = useState(true); // Loading state
+    const [profileData, setProfileData] = useState(null); // User profile data
+    const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
     const { currentUser } = useContext(AuthContext); 
-    const userId = currentUser ? currentUser.userId : null;
+    const userId = currentUser ? currentUser.userId : null; // Extract user ID from context
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: 'Tài khoản' }
     ];
 
+    // Fetch user profile data
     useEffect(() => {
+        const fetchUserInfo = async () => {
             try {
-                const fetchUserInfo = async () => {
-                    try {
-                        console.log(userId)
-                        const res = await getUserProfile(userId);
-                        setProfileData(res?.data);
-                        setTimeout(() => setLoading(false), 1000);
-                    } catch (error) {
-                        message.error('Failed to fetch user profile');
-                        setLoading(false);
-                    }
-                };
-                fetchUserInfo();
+                const res = await getUserProfile(userId);
+                setProfileData(res?.data);
             } catch (error) {
-                message.error('Invalid token');
-                setLoading(false);
+                message.error('Failed to fetch user profile');
+            } finally {
+                setLoading(false); // Set loading to false after fetch
             }
+        };
+        if (userId) fetchUserInfo(); // Fetch user info only if userId is available
     }, [userId]);
 
     const showModal = () => {
-        setIsModalVisible(true);
+        setIsModalVisible(true); // Show edit modal
     };
 
     const handleOk = async (values) => {
         try {
-            await updateProfile(userId, values);
+            await updateProfile(userId, values); // Update profile with new values
             message.success('Profile updated successfully');
             setIsModalVisible(false);
-            const res = await getUserProfile(userId);
+            const res = await getUserProfile(userId); // Refetch updated profile data
             setProfileData(res?.data);
         } catch (error) {
             message.error('Failed to update profile');
@@ -56,14 +50,14 @@ const UserProfile = () => {
     };
 
     const handleCancel = () => {
-        setIsModalVisible(false);
+        setIsModalVisible(false); // Hide edit modal
     };
 
     return (
         <>
             <Breadcrumb items={breadcrumbs} className="my-10" />
             <UserNavBar />
-            <div className={`flex h-auto my-10 transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="flex h-auto my-10">
                 <div className="flex-1 p-6 bg-white shadow-md rounded-lg ml-4">
                     {loading ? (
                         <div className="flex justify-center items-center h-full">
@@ -121,54 +115,20 @@ const UserProfile = () => {
                 </div>
             </div>
 
-            {/* Modal for Editing Profile */}
-            <Modal
-                title="Chỉnh sửa thông tin"
+            {/* EditProfileModal for editing user details */}
+            <EditProfileModal
                 visible={isModalVisible}
                 onCancel={handleCancel}
-                footer={null}
-                width={600}
-            >
-                <Form
-                    layout="vertical"
-                    onFinish={handleOk}
-                    initialValues={{
-                        fullName: profileData?.fullName,
-                        gender: profileData?.gender,
-                        email: profileData?.email,
-                        phone: profileData?.phone,
-                        dob: profileData?.dob ? new Date(profileData.dob).toISOString().split('T')[0] : '',
-                        address: profileData?.address,
-                    }}
-                >
-                    <Form.Item name="fullName" label="Họ và Tên" rules={[{ required: true, message: 'Vui lòng nhập tên đầy đủ!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="gender" label="Giới tính" rules={[{ required: true, message: 'Vui lòng chọn giới tính!' }]}>
-                        <Select placeholder="Chọn giới tính">
-                            <Select.Option value="Male">Nam</Select.Option>
-                            <Select.Option value="Female">Nữ</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name="phone" label="Số điện thoại" rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name="dob" label="Ngày sinh" rules={[{ required: true, message: 'Vui lòng nhập ngày sinh!' }]}>
-                        <Input type="date" />
-                    </Form.Item>
-                    <Form.Item name="address" label="Địa chỉ" rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Lưu
-                        </Button>
-                        <Button onClick={handleCancel} className="ml-2">
-                            Hủy
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
+                onSubmit={handleOk}
+                initialValues={{
+                    fullName: profileData?.fullName,
+                    gender: profileData?.gender,
+                    email: profileData?.email,
+                    phone: profileData?.phone,
+                    dob: profileData?.dob ? new Date(profileData.dob).toISOString().split('T')[0] : '',
+                    address: profileData?.address,
+                }}
+            />
         </>
     );
 };
