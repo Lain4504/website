@@ -1,6 +1,6 @@
 import React from 'react';
-import Title from '../components/Title';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/Breadcrumb';
+import Title from '../../components/Title';
 
 const Contact = () => {
   const breadcrumbs = [

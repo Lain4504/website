@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Home from '../pages/Home';
-import About from '../pages/About';
-import Contact from '../pages/Contact';
 import Collection from '../pages/BookByCollection';
 import SearchResult from '../pages/SearchResult';
 import Login from '../pages/Login';
@@ -21,6 +19,9 @@ import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
 import Page404 from '../components/Page404';
 import PrivateRoute from './PrivateRoute';
+import PrivacyPolicy from '../pages/information-page/PrivacyPolicy';
+import Contact from '../pages/information-page/Contact';
+import About from '../pages/information-page/About';
 
 const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
   const location = useLocation();
@@ -32,7 +33,7 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
       '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', 
       '/login', '/register', '/search/:name', '/activation/:token', 
       '/forgot-password', '/reset-password/:token', '/products/:id', 
-      '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',"/change-password", "/checkout"
+      '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',"/change-password", "/checkout","/privacypolicy"
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -70,6 +71,10 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
       <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
       <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
       <Route path='/profile' element={<PrivateRoute><UserProfile /></PrivateRoute>} />
+
+
+      {/*Information Page */}
+      <Route path='/privacypolicy' element={<PrivacyPolicy/>}></Route>
     </Routes>
   );
 };

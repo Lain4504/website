@@ -63,10 +63,10 @@ const Footer = () => {
                     <div>
                         <p className="text-xl font-medium mb-5">Chính sách</p>
                         <ul className="flex flex-col gap-1 text-gray-600">
-                            <li>Chính sách bảo mật</li>
-                            <li>Chính sách thanh toán</li>
-                            <li>Chính sách vận chuyển</li>
-                            <li>Chính sách đổi trả</li>
+                            <Link to={'/privacypolicy'}><li>Chính sách bảo mật</li></Link>
+                            <Link to={'/privacypolicy'}><li>Chính sách thanh toán</li></Link>
+                            <Link to={'/privacypolicy'}><li>Chính sách vận chuyển</li></Link> 
+                            <Link to={'/privacypolicy'}><li>Chính sách đổi trả</li></Link>
                         </ul>
                     </div>
 

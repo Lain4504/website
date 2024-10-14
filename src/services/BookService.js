@@ -43,4 +43,15 @@ const getBookByQuery = (query) => {
         throw error;
     });
 }
-export {getBook, getBookByQuery, getBooksByCollectionId, getBooksByQuery, getBookById, getBooksBySearchValue, getCollectionByBookId}
+const getBookByAuthorId = (authorId) =>{
+    return axios.get(BOOK_URL + `/` + `author/${authorId}`);
+}
+export {
+    getBook, 
+    getBookByQuery, 
+    getBooksByCollectionId, 
+    getBooksByQuery, getBookById, 
+    getBooksBySearchValue, 
+    getCollectionByBookId,
+    getBookByAuthorId
+}
