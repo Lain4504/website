@@ -3,6 +3,7 @@ import OurPolicy from "../components/OurPolicy";
 import ListProduct from "../components/ListProduct";
 import Carousel from "../components/Carousel";
 import ListPost from "../components/ListPost";
+import Title from "../components/Title";
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState("new"); // Default tab: "new"
@@ -42,7 +43,8 @@ const Home = () => {
                 )}
                 {/* <h1 className="text-lg flex justify-center font-semibold">BÀI VIẾT MỚI</h1> */}
             </div>
-            <h1 className='text-center text-lg font-semibold'>BÀI VIẾT MỚI NHẤT</h1>
+            <h1 className='text-center text-xl'>
+                <Title text1={'BÀI VIẾT'} text2={'MỚI NHẤT'}/></h1>
             <ListPost/>
         </>
     );

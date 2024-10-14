@@ -9,17 +9,9 @@ const getBookById = (id) => {
     return axios.get(BOOK_URL + '/' + id)
 }
 
-const getBookByQuery = (query) => {
-    return axios.get(BOOK_URL + '/' + query)
-    .then(response => {
-        console.log('Get All Books Response:', response);
-        return response;
-    })
-    .catch(error => {
-        console.error('Error fetching all books:', error);
-        throw error;
-    });
-}
+const getCollectionByBookId = (bookId) => {
+    return axios.get(`${BOOK_URL}/get-collections/${bookId}`);
+};
 
 const getBooksByCollectionId = (id) => {
     if(id === 'all')
@@ -40,5 +32,26 @@ const getBooksByQuery = (id) => {
 const getBooksBySearchValue = (value) => {
     return axios.get(BOOK_URL + `/search?&title=${value}`)
 }
-
-export {getBook, getBookByQuery, getBooksByCollectionId, getBooksByQuery, getBookById, getBooksBySearchValue}
+const getBookByQuery = (query) => {
+    return axios.get(BOOK_URL + '/' + query)
+    .then(response => {
+        console.log('Get All Books Response:', response);
+        return response;
+    })
+    .catch(error => {
+        console.error('Error fetching all books:', error);
+        throw error;
+    });
+}
+const getBookByAuthorId = (authorId) =>{
+    return axios.get(BOOK_URL + `/` + `author/${authorId}`);
+}
+export {
+    getBook, 
+    getBookByQuery, 
+    getBooksByCollectionId, 
+    getBooksByQuery, getBookById, 
+    getBooksBySearchValue, 
+    getCollectionByBookId,
+    getBookByAuthorId
+}

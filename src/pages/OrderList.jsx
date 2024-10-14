@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, Button, Layout, message } from 'antd';
-import { jwtDecode } from 'jwt-decode';
 import { cancelOrder, getOrderByUserId } from '../services/OrderService';
 import UserNavBar from './UserNavBar';
 import Breadcrumb from '../components/Breadcrumb';

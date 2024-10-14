@@ -11,21 +11,28 @@ const BooksByCollection = () => {
     const [collections, setCollections] = useState([]);
     const book_length = useRef(0);
     const [curCollection, setCurCollection] = useState();
+    const [curCollectionId, setCurCollectionId] = useState(); // New state for collection ID
     const { id } = useParams();
     const [hoveredBookTitle, setHoveredBookTitle] = useState("");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [currentPage, setCurrentPage] = useState(1);
     const [booksPerPage] = useState(12);
     const [sortBy, setSortBy] = useState('manual');
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
     const fetchData = (id) => {
         if (id === 'all') {
             setCurCollection(null);
+            setCurCollectionId(null); // Reset current collection ID
         } else {
             getCollectionById(id)
-                .then(res => setCurCollection(res.data))
+                .then(res => {
+                    setCurCollection(res.data);
+                    setCurCollectionId(res.data.id); // Update current collection ID
+                })
                 .catch(error => console.error(error));
         }
 
@@ -98,7 +105,7 @@ const BooksByCollection = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-
+    
     return (
         <>
             <section>
@@ -106,15 +113,17 @@ const BooksByCollection = () => {
                     <Breadcrumb items={breadcrumbs} />
                     <div className='flex flex-wrap flex-col md:flex-row'>
                         <div className='w-full lg:w-1/4 px-4 hidden lg:block'>
-                            <h2 className="font-semibold text-lg">Danh Mục Sản Phẩm</h2>
-                            <Menu>
-                                <Menu.Item key="all">
-                                    <Link to="/collections/all" className="hover:underline text-blue-600">TẤT CẢ SẢN PHẨM</Link>
+                            <h2 className="text-lg"> <Title text1={'Danh Mục'} text2={'Sản Phẩm'}/></h2>
+                            <Menu selectedKeys={[curCollectionId]} mode="inline">
+                                <Menu.Item key="all" className={`hover:underline ${curCollectionId === null ? 'font-semibold underline' : ''}`}>
+                                    <Link to="/collections/all" className="">TẤT CẢ SẢN PHẨM</Link>
                                 </Menu.Item>
                                 {collections.map(collection => (
                                     collection.isDisplay ? (
-                                        <Menu.Item key={collection.id}>
-                                            <Link to={`/collections/${collection.id}`} className="hover:underline text-blue-600">{collection.name}</Link>
+                                        <Menu.Item 
+                                            key={collection.id} 
+                                            className={`hover:underline ${curCollectionId === collection.id ? 'font-semibold underline' : ''}`}>
+                                            <Link to={`/collections/${collection.id}`} className="">{collection.name}</Link>
                                         </Menu.Item>
                                     ) : null
                                 ))}
@@ -123,9 +132,9 @@ const BooksByCollection = () => {
                         <div className='w-full lg:w-3/4 px-4'>
                             <div className='mb-6'>
                                 <div className='flex justify-between items-center'>
-                                    <h3 className='text-xl font-bold'>
+                                    <h3 className='text-lg font-semibold'>
                                         {id === 'all' ? (
-                                            <Title text1={'TẤT CÁ'} text2={'SẢN PHẨM'} />
+                                           'TẤT CÁ SẢN PHẨM'
                                         ) : curCollection ? (
                                             curCollection.name
                                         ) : (

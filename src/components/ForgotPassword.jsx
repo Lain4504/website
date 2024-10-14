@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Breadcrumb from './Breadcrumb';
 import { Input, Button, Form, message } from 'antd';
 import { forgetPassword } from '../services/UserService';
-import Title from './Title';
 
 const ForgotPassword = () => {
     const [isSending, setIsSending] = useState(false);

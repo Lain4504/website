@@ -2,12 +2,13 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
 import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import { getBookById } from '../services/BookService';
+import { getBookById, getCollectionByBookId } from '../services/BookService';
 import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
 import parser from 'html-react-parser';
 import Breadcrumb from '../components/Breadcrumb';
 import { AuthContext } from '../context/AuthContext';
+import { getPublisherById } from '../services/PublisherService';
+import TabSwitchProductDetail from '../components/TabSwitchProductDetail';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -20,19 +21,33 @@ const ProductDetail = () => {
   const carouselRef = useRef(null);
   const [heart, setHeart] = useState(false);
   const [wishlistItems, setWishlistItems] = useState([]);
-  const { currentUser } = useContext(AuthContext); // Lấy currentUser từ AuthContext
+  const { currentUser } = useContext(AuthContext);
   const userId = currentUser ? currentUser.userId : null;
+  const [collections, setCollections] = useState([]);
+  const [publisher, setPublisher] = useState(null);
   const navigate = useNavigate();
   const fetchBook = async () => {
     try {
       const response = await getBookById(id);
       const { data } = response;
       setBook(data);
+      if (data.publisherId) {
+        const publisherResponse = await getPublisherById(data.publisherId);
+        setPublisher(publisherResponse.data);
+      }
     } catch (error) {
       console.error('Error fetching book:', error);
     }
   };
-  
+  const fetchCollections = async (id) => {
+    try {
+      const response = await getCollectionByBookId(id);
+      setCollections(response.data);
+      console.log("Book's Collection:", collections)
+    } catch (error) {
+      console.error("Error fetching collections:", error);
+    }
+  };
   const fetchWishlist = async (userId) => {
     if (!userId) return; // Return early if userId is not available
 
@@ -54,22 +69,22 @@ const ProductDetail = () => {
       if (userId) {
         fetchWishlist(userId); // Call fetchWishlist after fetching book
       }
+      await fetchCollections(id);
     };
-
     fetchData();
-  }, [id, userId]); 
-    // Theo dõi sự thay đổi của `book` để cập nhật trạng thái `heart`
-    useEffect(() => {
-      if (book.id && userId) {
-        fetchWishlist(userId); // Kiểm tra wishlist mỗi khi book hoặc userId thay đổi
-      }
-    }, [book, userId]);
-  
+  }, [id, userId]);
+  // Theo dõi sự thay đổi của `book` để cập nhật trạng thái `heart`
+  useEffect(() => {
+    if (book.id && userId) {
+      fetchWishlist(userId); // Kiểm tra wishlist mỗi khi book hoặc userId thay đổi
+    }
+  }, [book, userId]);
+
 
   // Handle adding/removing from wishlist
   const toggleHeart = () => {
     if (!userId) {
-     navigate('/login');
+      navigate('/login');
       return;
     }
 
@@ -131,7 +146,14 @@ const ProductDetail = () => {
                   -{book.discount * 100}%
                 </div>
               )}
-              <Carousel ref={carouselRef}>
+              <Carousel
+                ref={carouselRef}
+                autoplay
+                autoplaySpeed={10000} // Tốc độ tự động chuyển (ms)
+                speed={1000} // Thời gian chuyển đổi giữa các slide (ms)
+                dots={true} // Hiển thị chấm ở dưới cùng
+                effect="fade" // Hiệu ứng mờ dần thay vì cuộn
+              >
                 {book_images.map((image, index) => (
                   <div key={index}>
                     <Image
@@ -141,10 +163,15 @@ const ProductDetail = () => {
                       alt={`Image ${index + 1}`}
                       className="rounded-lg shadow-lg"
                       preview={{ src: image.link }}
+                      style={{
+                        transition: 'opacity 0.5s ease-in-out', // Mượt mà hơn khi ảnh xuất hiện
+                        opacity: 1
+                      }}
                     />
                   </div>
                 ))}
               </Carousel>
+
               <div className="absolute top-1/2 left-0 transform -translate-y-1/2">
                 <Button
                   shape="circle"
@@ -209,8 +236,9 @@ const ProductDetail = () => {
                   ))}
                 </Col>
                 <Col span={12}>
-                  <strong>Nhà xuất bản:</strong> <span>{book.publisher?.name}</span>
+                  <strong>Nhà xuất bản:</strong> <span>{publisher ? publisher.name : 'N/A'}</span>
                 </Col>
+
               </Row>
 
               <Row gutter={16} className="mt-2">
@@ -273,61 +301,28 @@ const ProductDetail = () => {
 
             <div className="mt-4">
               <p>
-                Danh mục:{' '}
-                <span className="text-blue-600 hover:underline">
-                  <a href="/collections/sach-moi">Sách Mới</a>
-                </span>
-                ,{' '}
-                <span className="text-blue-600 hover:underline">
-                  <a href="/collections/light-novel">Light Novel</a>
-                </span>
+                Danh mục:
+                {collections.length > 0 ? (
+                  <>
+                    {collections.map((collectionItem, index) => (
+                      <span key={collectionItem.collectionId} className="text-blue-600 hover:underline">
+                        {index === 0 && ' '} {/* Thêm một dấu cách cho item đầu tiên */}
+                        <a href={`/collections/${collectionItem.collection.id}`}>
+                          {collectionItem.collection.name}
+                        </a>
+                        {index < collections.length - 1 && ', '}
+                      </span>
+                    ))}
+                  </>
+                ) : (
+                  <span>Không có danh mục nào.</span>
+                )}
               </p>
             </div>
-            <Modal
-              title="Thông tin giỏ hàng"
-              visible={isModalVisible}
-              onCancel={handleCancel}
-              footer={null}
-              width={1000}
-              style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
-            >
-              <div style={{ flex: 1 }}>
-                <Row gutter={[16, 16]}>
-                  <Col xs={24} sm={12}>
-                    <Col xs={24}>
-                      <h1 className="font-bold text-lg my-3">Giỏ hàng của bạn đã được cập nhật</h1>
-                    </Col>
-                    <div className="flex">
-                      <div className="flex-shrink-0">
-                        <Image
-                          src={selectedImage}
-                          alt="Book Image"
-                          width={150}
-                          style={{ objectFit: 'cover', borderRadius: 4 }}
-                        />
-                      </div>
-                      <div className="ml-2" style={{ marginLeft: '10px' }}>
-                        <Title level={4} className="mt-2">{book.title}</Title>
-                        <Text className="text-lg block">{book.salePrice?.toLocaleString()}₫</Text>
-                        <Text className="block"><strong>Số lượng:</strong> {quantity}</Text>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col xs={24} sm={12}>
-                    <h1 className="font-bold text-lg my-3">Giỏ hàng của bạn hiện có {cartItems} sản phẩm</h1>
-                    <Divider />
-                    <Text className="block mt-2"><strong>Tổng cộng:</strong> {totalPrice.toLocaleString()}₫</Text>
-                  </Col>
-                </Row>
-              </div>
-              <div className="flex justify-end mt-9">
-                <Button type="primary" onClick={handleOk} style={{ marginRight: '8px' }}>Tiếp tục đặt hàng</Button>
-                <Button type="primary" danger onClick={handleOk}>Thanh toán</Button>
-              </div>
-            </Modal>
           </Col>
         </Row>
         <Divider />
+        <TabSwitchProductDetail description={book.description}/>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ const getCollections = () => {
 }
 
 const getCollectionById = (id) => { 
-    return axios.get(COLLECTION_API + '/get' + id)
+    return axios.get(COLLECTION_API + '/' + id)
 }
 
 export {getCollections, getCollectionById}

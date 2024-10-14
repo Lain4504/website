@@ -31,7 +31,7 @@ const Register = () => {
     };
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
-        { title: 'Register' }
+        { title: 'Đăng ký' }
     ];
 
     return (

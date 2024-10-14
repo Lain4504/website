@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
@@ -6,11 +6,13 @@ import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
 import useAuth from "./context/useAuth";
 import useCart from "./context/useCart";
 import AppRoutes from "./context/AppRoutes";
+import { AuthContext } from "./context/AuthContext";
 
 const App = () => {
-  const { currentUser } = useAuth(); // Use currentUser instead of cookies
-  const { cart, setCart, cartChange, setCartChange } = useCart(currentUser ? currentUser.userId : null); // Pass userId directly
-  const is404Page = window.location.pathname === '/404'; // Use window.location for global context
+  const { currentUser } = useContext(AuthContext); 
+  const userId = currentUser ? currentUser.userId : null; 
+  const { cart, setCart, cartChange, setCartChange } = useCart(userId);
+  const is404Page = window.location.pathname === '/404'; 
 
   return (
     <>
