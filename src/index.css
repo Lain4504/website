@@ -15,6 +15,9 @@ a.active hr{
     font-style: normal;
 
 }
+.ant-typography {
+    font-family: inherit !important; /* Kế thừa từ body */
+}
 ::-webkit-scrollbar{
     display: none;
 }

@@ -18,7 +18,9 @@ const BooksByCollection = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [booksPerPage] = useState(12);
     const [sortBy, setSortBy] = useState('manual');
-
+    useEffect(() => {
+        setHoveredBookTitle("");
+    }, [books]);
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);

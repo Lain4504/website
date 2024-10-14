@@ -19,21 +19,32 @@ import Cart from '../pages/Cart';
 import Checkout from '../pages/Checkout';
 import Page404 from '../components/Page404';
 import PrivateRoute from './PrivateRoute';
-import PrivacyPolicy from '../pages/information-page/PrivacyPolicy';
-import Contact from '../pages/information-page/Contact';
-import About from '../pages/information-page/About';
+import ShippingPolicy from '../pages/InformationPage/ShippingPolicy';
+import Contact from '../pages/InformationPage/Contact';
+import About from '../pages/InformationPage/About';
+import PaymentPolicy from '../pages/informationPage/PaymentPolicy';
+import PrivacyPolicy from '../pages/informationPage/PrivacyPolicy';
+import ReturnPolicy from '../pages/InformationPage/ReturnPolicy';
+import TermsOfService from '../pages/InformationPage/TermsOfService';
+import FAQ from '../pages/InformationPage/FAQ';
 
 const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    // Cuộn trang lên đầu với hiệu ứng mượt mà khi location thay đổi
+    window.scroll({ top: 0, behavior: 'smooth' });
+  }, [location]);
   // Redirect to 404 if the route is invalid
   useEffect(() => {
     const validRoutes = [
       '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', 
       '/login', '/register', '/search/:name', '/activation/:token', 
       '/forgot-password', '/reset-password/:token', '/products/:id', 
-      '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',"/change-password", "/checkout","/privacypolicy"
+      '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',
+      "/change-password", "/checkout","/privacypolicy",
+      '/paymentpolicy','/shippingpolicy', '/termsofservice',
+      '/faq'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -50,9 +61,7 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
   return (
     <Routes>
       <Route path='/' element={<Home />} />
-      <Route path='/about' element={<About />} />
       <Route path='/collections/:id' element={<Collection />} />
-      <Route path='/contact' element={<Contact />} />
       <Route path='/postcategory/:id' element={<PostList />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
@@ -74,7 +83,15 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
 
 
       {/*Information Page */}
-      <Route path='/privacypolicy' element={<PrivacyPolicy/>}></Route>
+      <Route path='/privacypolicy' element={<PrivacyPolicy/>}/>
+      <Route path='/paymentpolicy' element={<PaymentPolicy/>}/>
+      <Route path='/shippingpolicy' element={<ShippingPolicy/>}/>
+      <Route path='/about' element={<About />} />
+      <Route path='/contact' element={<Contact />} />
+      <Route path='/returnpolicy' element={<ReturnPolicy/>} />
+      <Route path='/termsofservice' element={<TermsOfService/>}/>
+      <Route path='/faq' element={<FAQ/>}/>
+
     </Routes>
   );
 };

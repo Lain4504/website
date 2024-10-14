@@ -3,7 +3,6 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
-import useAuth from "./context/useAuth";
 import useCart from "./context/useCart";
 import AppRoutes from "./context/AppRoutes";
 import { AuthContext } from "./context/AuthContext";
