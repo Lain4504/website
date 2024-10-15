@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
 import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getBookById, getCollectionByBookId } from '../services/BookService';
+import { getAuthorByBookId, getBookById, getCollectionByBookId } from '../services/BookService';
 import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
 import parser from 'html-react-parser';
 import Breadcrumb from '../components/Breadcrumb';
 import { AuthContext } from '../context/AuthContext';
 import { getPublisherById } from '../services/PublisherService';
 import TabSwitchProductDetail from '../components/TabSwitchProductDetail';
+import RelevantByAuthor from '../components/RelevantByAuthor';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -25,6 +26,7 @@ const ProductDetail = () => {
   const userId = currentUser ? currentUser.userId : null;
   const [collections, setCollections] = useState([]);
   const [publisher, setPublisher] = useState(null);
+  const [authors, setAuthors] = useState([]);
   const navigate = useNavigate();
   const fetchBook = async () => {
     try {
@@ -46,6 +48,14 @@ const ProductDetail = () => {
       console.log("Book's Collection:", collections)
     } catch (error) {
       console.error("Error fetching collections:", error);
+    }
+  };
+  const fetchAuthors = async (id) =>{
+    try{
+      const response = await getAuthorByBookId(id);
+      setAuthors(response.data);
+    } catch(error) {
+      console.error("Error fetching authors data", error);
     }
   };
   const fetchWishlist = async (userId) => {
@@ -70,6 +80,7 @@ const ProductDetail = () => {
         fetchWishlist(userId); // Call fetchWishlist after fetching book
       }
       await fetchCollections(id);
+      await fetchAuthors(id);
     };
     fetchData();
   }, [id, userId]);
@@ -127,6 +138,8 @@ const ProductDetail = () => {
   const book_authors = book.author ? book.author : [];
   const totalPrice = book.salePrice ? book.salePrice * quantity : 0;
   const selectedImage = book_images.length > 0 ? book_images[0].link : '';
+  const publicationYear = new Date(book.publicationDate).getFullYear();
+
   const breadcrumbs = [
     { title: 'Trang chủ', href: '/' },
     { title: book.title }
@@ -229,11 +242,21 @@ const ProductDetail = () => {
               <Row gutter={16}>
                 <Col span={12}>
                   <strong>Tác giả:</strong>
-                  {book_authors.map((author, index) => (
-                    <span key={index} className="text-blue-600 hover:underline">
-                      {author.name}&nbsp;
-                    </span>
-                  ))}
+                {authors.length > 0 ? (
+                  <>
+                    {authors.map((authorItem, index) => (
+                      <span key={authorItem.collectionId} className="text-blue-600">
+                        {index === 0 && ' '} {/* Thêm một dấu cách cho item đầu tiên */}
+                        <a>
+                          {authorItem.author.name}
+                        </a>
+                        {index < authors.length - 1 && ', '}
+                      </span>
+                    ))}
+                  </>
+                ) : (
+                  <span>Không có tác giả nào.</span>
+                )}
                 </Col>
                 <Col span={12}>
                   <strong>Nhà xuất bản:</strong> <span>{publisher ? publisher.name : 'N/A'}</span>
@@ -243,7 +266,7 @@ const ProductDetail = () => {
 
               <Row gutter={16} className="mt-2">
                 <Col span={12}>
-                  <strong>Năm xuất bản:</strong> <span>{book.publicationYear}</span>
+                  <strong>Năm xuất bản:</strong> <span>{publicationYear}</span>
                 </Col>
                 <Col span={12}>
                   <strong>Hình thức:</strong> <span>{book.cover}</span>
@@ -322,7 +345,9 @@ const ProductDetail = () => {
           </Col>
         </Row>
         <Divider />
-        <TabSwitchProductDetail description={book.description}/>
+        <TabSwitchProductDetail description={book.description} />
+         <RelevantByAuthor authors={authors}/>
+        
       </div>
     </div>
   );

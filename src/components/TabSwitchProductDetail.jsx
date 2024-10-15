@@ -6,7 +6,7 @@ import parser from 'html-react-parser';
 const { TabPane } = Tabs;
 
 const TabSwitchProductDetail = ({description}) => {
-  const [activeTab, setActiveTab] = useState("new");
+  const [activeTab, setActiveTab] = useState("content");
 
   const handleTabClick = (key) => {
     setActiveTab(key);
@@ -27,23 +27,23 @@ const TabSwitchProductDetail = ({description}) => {
     >
       <TabPane
         tab={
-          <span className={`flex items-center space-x-1 ${activeTab === "new" ? "text-blue-600 font-bold" : "text-gray-600"}`}>
+          <span className={`flex items-center space-x-1 ${activeTab === "content" ? "text-blue-600 font-bold" : "text-gray-600"}`}>
             <FileTextOutlined />
             <span>Nội dung</span>
           </span>
         }
-        key="new"
+        key="content"
       >
         {typeof description === 'string' ? parser(description) : 'Nội dung không có sẵn'}
       </TabPane>
       <TabPane
         tab={
-          <span className={`flex items-center space-x-1 ${activeTab === "bestseller" ? "text-blue-600 font-bold" : "text-gray-600"}`}>
+          <span className={`flex items-center space-x-1 ${activeTab === "comment" ? "text-blue-600 font-bold" : "text-gray-600"}`}>
             <CommentOutlined />
             <span>Bình luận</span>
           </span>
         }
-        key="bestseller"
+        key="comment"
       >
         {/* Nội dung cho tab Bình luận */}
       </TabPane>

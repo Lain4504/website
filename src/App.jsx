@@ -6,6 +6,8 @@ import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
 import useCart from "./context/useCart";
 import AppRoutes from "./context/AppRoutes";
 import { AuthContext } from "./context/AuthContext";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const App = () => {
   const { currentUser } = useContext(AuthContext); 

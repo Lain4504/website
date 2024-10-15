@@ -12,6 +12,9 @@ const getBookById = (id) => {
 const getCollectionByBookId = (bookId) => {
     return axios.get(`${BOOK_URL}/get-collections/${bookId}`);
 };
+const getAuthorByBookId = (bookId) => {
+    return axios.get(`${BOOK_URL}/get-authors/${bookId}`);
+};
 
 const getBooksByCollectionId = (id) => {
     if(id === 'all')
@@ -50,8 +53,10 @@ export {
     getBook, 
     getBookByQuery, 
     getBooksByCollectionId, 
-    getBooksByQuery, getBookById, 
+    getBooksByQuery, 
+    getBookById, 
     getBooksBySearchValue, 
     getCollectionByBookId,
-    getBookByAuthorId
+    getBookByAuthorId,
+    getAuthorByBookId
 }
