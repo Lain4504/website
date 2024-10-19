@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
-import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled, ShoppingCartOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAuthorByBookId, getBookById, getCollectionByBookId } from '../services/BookService';
 import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
@@ -10,8 +10,9 @@ import { AuthContext } from '../context/AuthContext';
 import { getPublisherById } from '../services/PublisherService';
 import TabSwitchProductDetail from '../components/TabSwitchProductDetail';
 import RelevantByAuthor from '../components/RelevantByAuthor';
+import { Form} from 'antd';
 
-const { Title, Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const ProductDetail = () => {
   const [book, setBook] = useState({});
@@ -290,37 +291,37 @@ const ProductDetail = () => {
               </Paragraph>
             </div>
 
-            <form className="mt-4">
-              <div className="flex items-center">
-                <label className="mr-2 text-black">Số lượng:</label>
-                <Button
-                  type="default"
-                  onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
-                  className="border border-black rounded-md px-1 text-black"
-                  icon={<MinusOutlined style={{ color: 'white' }} />}
-                  style={{ backgroundColor: 'black', color: 'white' }}
-                />
-                <Input
-                  value={quantity}
-                  readOnly
-                  className="border border-black rounded-md w-16 text-center mx-2"
-                  style={{ color: 'black', backgroundColor: 'white' }}
-                />
-                <Button
-                  type="default"
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="border border-black rounded-md px-1 text-black"
-                  icon={<PlusOutlined style={{ color: 'white' }} />}
-                  style={{ backgroundColor: 'black', color: 'white' }}
-                />
-                <Button
-                  className="ml-4 bg-black text-white hover:bg-gray-800"
-                  onClick={handleAddToCart}
-                >
-                  Thêm vào giỏ hàng
-                </Button>
-              </div>
-            </form>
+            <Form className="mt-4">
+      <Form.Item label="Số lượng:" className="flex items-center">
+        <Button
+          type="default"
+          onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+          className="border border-black rounded-md px-1 text-black"
+          icon={<MinusOutlined style={{ color: 'white' }} />}
+          style={{ backgroundColor: 'black', color: 'white' }}
+        />
+        <Input
+          value={quantity}
+          readOnly
+          className="border border-black rounded-md w-16 text-center mx-2"
+          style={{ color: 'black', backgroundColor: 'white' }}
+        />
+        <Button
+          type="default"
+          onClick={() => setQuantity(quantity + 1)}
+          className="border border-black rounded-md px-1 text-black"
+          icon={<PlusOutlined style={{ color: 'white' }} />}
+          style={{ backgroundColor: 'black', color: 'white' }}
+        />
+        <Button
+          className="ml-4 bg-black text-white hover:bg-gray-800"
+          onClick={handleAddToCart}
+        >
+          <ShoppingCartOutlined />
+          Thêm vào giỏ hàng
+        </Button>
+      </Form.Item>
+    </Form>
 
             <div className="mt-4">
               <p>
@@ -345,9 +346,9 @@ const ProductDetail = () => {
           </Col>
         </Row>
         <Divider />
-        <TabSwitchProductDetail description={book.description} />
+        <TabSwitchProductDetail book={book} userId={userId}/>
          <RelevantByAuthor authors={authors}/>
-        
+       
       </div>
     </div>
   );

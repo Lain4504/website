@@ -2,12 +2,13 @@ import { Tabs } from 'antd';
 import { CommentOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import parser from 'html-react-parser';
+import FeedBack from '../pages/FeedBack';
 
 const { TabPane } = Tabs;
 
-const TabSwitchProductDetail = ({description}) => {
+const TabSwitchProductDetail = ({book, userId}) => {
   const [activeTab, setActiveTab] = useState("content");
-
+  const description = book.description;
   const handleTabClick = (key) => {
     setActiveTab(key);
   };
@@ -46,6 +47,7 @@ const TabSwitchProductDetail = ({description}) => {
         key="comment"
       >
         {/* Nội dung cho tab Bình luận */}
+        <FeedBack bookId={book.id} userId={userId}/>
       </TabPane>
     </Tabs>
   );

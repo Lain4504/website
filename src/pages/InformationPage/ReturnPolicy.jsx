@@ -1,18 +1,25 @@
 import React from 'react';
 import { Typography, Divider } from 'antd'; // Ant Design component
 import Title from '../../components/Title';
+import Breadcrumb from '../../components/Breadcrumb';
 
 const { Paragraph } = Typography;
 
 const ReturnPolicy = () => {
+  const breadcrumbs = [
+    { title: 'Trang chủ', href: '/' },
+    { title: 'Chính sách đổi trả' },
+];
   return (
+    <> 
+    <Breadcrumb items={breadcrumbs}/>
     <div className="p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-center mb-6 text-2xl">  <Title text1={'Chính sách'} text2={'đổi trả'}/></h2>
 
       <Divider />
 
       <Paragraph className="text-gray-700">
-        Để việc mua sắm của quý khách tại ipm.vn được thuận lợi, quý khách vui lòng kiểm tra hàng ngay khi nhận được sản phẩm, bao gồm:
+        Để việc mua sắm của quý khách tại Forever.vn được thuận lợi, quý khách vui lòng kiểm tra hàng ngay khi nhận được sản phẩm, bao gồm:
       </Paragraph>
       <ul className="list-disc pl-6 text-gray-700">
         <li>Số lượng.</li>
@@ -43,14 +50,14 @@ const ReturnPolicy = () => {
       </Paragraph>
       <ul className="list-disc pl-6 text-gray-700">
         <li>Đơn hàng chưa được chuyển đi.</li>
-        <li>Sản phẩm bị lỗi nhưng IPM không còn sản phẩm khác để thay thế.</li>
+        <li>Sản phẩm bị lỗi nhưng Forever không còn sản phẩm khác để thay thế.</li>
       </ul>
 
       <Divider />
 
       <Paragraph className="text-lg font-bold text-gray-900">3. Quy trình đổi trả hàng:</Paragraph>
       <Paragraph className="text-gray-700">
-        Quý khách vui lòng gửi mail đến địa chỉ <span className="font-semibold">online.ipmvn@gmail.com</span> với tiêu đề
+        Quý khách vui lòng gửi mail đến địa chỉ <span className="font-semibold">online.Forevervn@gmail.com</span> với tiêu đề
         “Đổi trả đơn hàng #mã đơn hàng”.
       </Paragraph>
       <Paragraph className="text-gray-700">
@@ -72,6 +79,7 @@ const ReturnPolicy = () => {
         <span className="font-semibold text-blue-600">03 3319 3979</span> để được hỗ trợ nhanh chóng.
       </Paragraph>
     </div>
+    </>
   );
 };
 

@@ -54,10 +54,10 @@ const Footer = () => {
                     <div>
                         <p className="text-xl font-medium mb-5">Hỗ trợ khách hàng</p>
                         <ul className="flex flex-col gap-1 text-gray-600">
-                            <Link to={'/termsofservice'}>
+                           <Link to={'/faq'}>
                                 <li className="hover:text-blue-500 cursor-pointer">Câu hỏi thường gặp</li>
                             </Link>
-                            <Link to={'/faq'}>
+                            <Link to={'/termsofservice'}>
                             <li className="hover:text-blue-500 cursor-pointer">Điều khoản dịch vụ</li>
                             </Link>
                         </ul>
@@ -76,7 +76,7 @@ const Footer = () => {
                             <Link to={'/shippingpolicy'}>
                                 <li className="hover:text-blue-500 cursor-pointer">Chính sách vận chuyển</li>
                             </Link>
-                            <Link to={'/privacypolicy'}>
+                            <Link to={'/returnpolicy'}>
                                 <li className="hover:text-blue-500 cursor-pointer">Chính sách đổi trả</li>
                             </Link>
                         </ul>

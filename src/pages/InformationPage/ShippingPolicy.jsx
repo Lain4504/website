@@ -1,14 +1,21 @@
 import React from 'react'
 import { Typography, Card, Divider } from 'antd'
+import Breadcrumb from '../../components/Breadcrumb'
 
 const { Title, Paragraph, Text } = Typography
 
 const ShippingPolicy = () => {
+    const breadcrumbs = [
+      { title: 'Trang chủ', href: '/' },
+      { title: 'Chính sách vận chuyển' },
+  ];
   return (
+    <> 
+    <Breadcrumb items={breadcrumbs}/>
     <div className="p-6 bg-white rounded-lg shadow-lg">
         <Title level={2} className="text-center">Chính sách vận chuyển</Title>
         <Paragraph>
-          Chào mừng Quý khách đến với website <Text strong>ipm.vn</Text>
+          Chào mừng Quý khách đến với website <Text strong>Forever.vn</Text>
         </Paragraph>
 
         <Paragraph>
@@ -47,6 +54,7 @@ const ShippingPolicy = () => {
           Thời gian ưu đãi từ <Text strong>12/4/2021</Text> đến <Text strong>12/5/2021</Text>. Mọi thắc mắc, vui lòng gọi <Text underline>03 3319 3979</Text>.
         </Paragraph>
     </div>
+    </>
   )
 }
 

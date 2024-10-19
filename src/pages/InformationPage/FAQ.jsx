@@ -1,13 +1,20 @@
 import React from 'react';
 import { Collapse, Typography, Divider } from 'antd'; // Ant Design components
 import Title from '../../components/Title';
-
+import Breadcrumb from '../../components/Breadcrumb';
 const { Panel } = Collapse;
 const { Paragraph } = Typography;
 
 const FAQ = () => {
+  const breadcrumbs = [
+    { title: 'Trang chủ', href: '/' },
+    { title: 'FAQ' },
+];
+
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg">
+    <> 
+      <Breadcrumb items={breadcrumbs} className="my-10" />
+      <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-center mb-6 text-2xl">  
         <Title text1={'Câu hỏi'} text2={'thường gặp'}/>
         </h2>
@@ -46,6 +53,7 @@ const FAQ = () => {
         </Panel>
       </Collapse>
     </div>
+    </>
   );
 };
 

@@ -27,8 +27,9 @@ import PrivacyPolicy from '../pages/informationPage/PrivacyPolicy';
 import ReturnPolicy from '../pages/InformationPage/ReturnPolicy';
 import TermsOfService from '../pages/InformationPage/TermsOfService';
 import FAQ from '../pages/InformationPage/FAQ';
+import OrderDetail from '../pages/OrderDetail';
 
-const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
+const AppRoutes = () => {
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
@@ -43,8 +44,8 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
       '/forgot-password', '/reset-password/:token', '/products/:id', 
       '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',
       "/change-password", "/checkout","/privacypolicy",
-      '/paymentpolicy','/shippingpolicy', '/termsofservice',
-      '/faq'
+      '/paymentpolicy','/shippingpolicy', '/termsofservice', 
+      '/faq', '/order-detail/:id','/returnpolicy'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -69,9 +70,9 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
       <Route path='/activation/:token' element={<Activate />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route path='/reset-password/:token' element={<ResetPassword />} />
-      <Route path='/products/:id' element={<ProductDetail setCart={setCart} setCartChange={setCartChange} />} />
+      <Route path='/products/:id' element={<ProductDetail/>} />
       <Route path='/posts/:id' element={<PostDetail />} />
-      <Route path="/cart" element={<Cart cart={cart} setCart={setCart} setCartChange={setCartChange} cartChange={cartChange} />} />
+      <Route path="/cart" element={<Cart/>} />
       <Route path='/404' element={<Page404 />} />
 
       {/* Private routes that require authentication */}
@@ -80,7 +81,7 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
       <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
       <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
       <Route path='/profile' element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-
+      <Route path='/order-detail/:id' element={<PrivateRoute><OrderDetail/></PrivateRoute>}/>
 
       {/*Information Page */}
       <Route path='/privacypolicy' element={<PrivacyPolicy/>}/>
@@ -91,7 +92,6 @@ const AppRoutes = ({cart, setCart, cartChange, setCartChange }) => {
       <Route path='/returnpolicy' element={<ReturnPolicy/>} />
       <Route path='/termsofservice' element={<TermsOfService/>}/>
       <Route path='/faq' element={<FAQ/>}/>
-
     </Routes>
   );
 };
