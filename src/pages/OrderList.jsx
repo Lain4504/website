@@ -1,29 +1,38 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, Button, Layout, message } from 'antd';
-import { cancelOrder, getOrderByUserId } from '../services/OrderService';
+import { cancelOrder, getOrderByUserId, getOrderDetailByOrderId } from '../services/OrderService';
 import UserNavBar from './UserNavBar';
 import Breadcrumb from '../components/Breadcrumb';
 import { AuthContext } from '../context/AuthContext';
+import { Modal } from 'antd';
 
+const { confirm } = Modal;
 const { Content } = Layout;
 
-const handleCancel = (id) => {
-    const confirm = window.confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');
-    if (!confirm) return;
-    
-    cancelOrder(id).then(res => {
-        // Update the orders state after cancellation
-        setOrders(prevOrders => 
-            prevOrders.map(order => 
-                order.id === id ? { ...order, state: 'CANCELED' } : order
-            )
-        );
-        message.success('Đơn hàng đã được hủy thành công');
-    }).catch(error => {
-        message.error('Hủy đơn hàng thất bại');
+const handleCancel = (id, setOrders) => {
+    confirm({
+        title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+        content: 'Hành động này không thể hoàn tác.',
+        okText: 'Đồng ý',
+        okType: 'danger',
+        cancelText: 'Hủy',
+        onOk() {
+            cancelOrder(id).then(res => {
+                setOrders(prevOrders =>
+                    prevOrders.map(order =>
+                        order.id === id ? { ...order, state: 'Canceled' } : order
+                    )
+                );
+                message.success('Đơn hàng đã được hủy thành công');
+            }).catch(error => {
+                message.error('Hủy đơn hàng thất bại');
+            });
+        },
+        onCancel() {
+            console.log('Hủy hành động');
+        },
     });
 };
-
 
 const formatDate = (inputDate) => {
     const date = new Date(inputDate);
@@ -38,29 +47,42 @@ const formatDate = (inputDate) => {
     return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
 
-const OrderList = ({ cookies }) => {
+const OrderList = () => {
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState([]);
-    const { currentUser } = useContext(AuthContext); // Lấy currentUser từ AuthContext
+    const [totals, setTotals] = useState({}); // To store total for each order
+    const { currentUser } = useContext(AuthContext);
     const userId = currentUser ? currentUser.userId : null;
+
     useEffect(() => {
+        const fetchOrderDetails = async () => {
             try {
-                const fetchUserInfo = async () => {
-                    try {
-                        const res = await getOrderByUserId(userId);
-                        setOrders(res?.data);
-                        console.log("User profile data:", res?.data);
-                        setTimeout(() => setLoading(false), 1000);
-                    } catch (error) {
-                        message.error('Failed to fetch user profile');
-                        setLoading(false);
-                    }
-                };
-                fetchUserInfo();
+                const res = await getOrderByUserId(userId);
+                const ordersData = res?.data || [];
+                setOrders(ordersData);
+                console.log('Orders:', ordersData);
+
+                // Fetch details for each order and calculate totals
+                const totalsMap = {};
+                await Promise.all(ordersData.map(async (order) => {
+                    const orderDetails = await getOrderDetailByOrderId(order.id);
+                    const total = orderDetails.data.reduce(
+                        (sum, item) => sum + item.amount * item.salePrice,
+                        0
+                    );
+                    totalsMap[order.id] = total; // Store total for each order
+                }));
+                setTotals(totalsMap);
+                setLoading(false);
             } catch (error) {
-                message.error('Invalid token');
+                message.error('Failed to fetch orders');
                 setLoading(false);
             }
+        };
+
+        if (userId) {
+            fetchOrderDetails();
+        }
     }, [userId]);
 
     const columns = [
@@ -97,12 +119,11 @@ const OrderList = ({ cookies }) => {
         },
         {
             title: 'Tổng',
-            dataIndex: 'orderDetails',
             key: 'total',
             align: 'center',
-            render: (orderDetails) => {
-                const total = orderDetails?.reduce((sum, item) => sum + item.amount * item.salePrice, 0);
-                return `${total?.toLocaleString()}₫`;
+            render: (order) => {
+                // Render total from totals state
+                return totals[order.id] ? `${totals[order.id].toLocaleString()}₫` : 'Loading...';
             },
         },
         {
@@ -114,9 +135,9 @@ const OrderList = ({ cookies }) => {
                     <a href={`/order-detail/${order.id}`}>
                         <Button type="primary" className="text-xs bg-green-500">Chi tiết</Button>
                     </a>
-                    {order.shippingState === 'NOTSHIPPING' && order.state !== 'CANCELED' && (
+                    {order.shippingState === 'NOTSHIPPING' && order.state !== 'Canceled' && (
                         <Button
-                            onClick={() => handleCancel(order.id)}
+                            onClick={() => handleCancel(order.id, setOrders)}
                             danger
                             className="text-xs"
                         >
@@ -125,18 +146,20 @@ const OrderList = ({ cookies }) => {
                     )}
                 </div>
             ),
-        },
+        }
     ];
+
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
-        { title: 'Lịch sử đơn hàng' }
+        { title: 'Lịch sử đơn hàng' },
     ];
+
     return (
         <>
             <Breadcrumb items={breadcrumbs} className="my-10" />
             <UserNavBar />
             <div className="flex h-a my-10">
-                <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto"> 
+                <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto">
                     <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
                         <Table
                             dataSource={loading ? [] : orders}

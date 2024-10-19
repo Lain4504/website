@@ -36,7 +36,7 @@ const Footer = () => {
                                 <MailFilled className="text-gray-600" />
                             </div>
                             <p className="ml-3 w-full md:w-2/3 text-gray-600">
-                                Email: BookStore@gmail.com
+                                Email: ForeverBookStore@gmail.com
                             </p>
                         </div>
                         {/* Policy */}
@@ -54,8 +54,12 @@ const Footer = () => {
                     <div>
                         <p className="text-xl font-medium mb-5">Hỗ trợ khách hàng</p>
                         <ul className="flex flex-col gap-1 text-gray-600">
-                            <li>Câu hỏi thường gặp</li>
-                            <li>Điều khoản dịch vụ</li>
+                           <Link to={'/faq'}>
+                                <li className="hover:text-blue-500 cursor-pointer">Câu hỏi thường gặp</li>
+                            </Link>
+                            <Link to={'/termsofservice'}>
+                            <li className="hover:text-blue-500 cursor-pointer">Điều khoản dịch vụ</li>
+                            </Link>
                         </ul>
                     </div>
 
@@ -63,28 +67,37 @@ const Footer = () => {
                     <div>
                         <p className="text-xl font-medium mb-5">Chính sách</p>
                         <ul className="flex flex-col gap-1 text-gray-600">
-                            <Link to={'/privacypolicy'}><li>Chính sách bảo mật</li></Link>
-                            <Link to={'/privacypolicy'}><li>Chính sách thanh toán</li></Link>
-                            <Link to={'/privacypolicy'}><li>Chính sách vận chuyển</li></Link> 
-                            <Link to={'/privacypolicy'}><li>Chính sách đổi trả</li></Link>
+                            <Link to={'/privacypolicy'}>
+                                <li className="hover:text-blue-500 cursor-pointer">Chính sách bảo mật</li>
+                            </Link>
+                            <Link to={'/paymentpolicy'}>
+                                <li className="hover:text-blue-500 cursor-pointer">Chính sách thanh toán</li>
+                            </Link>
+                            <Link to={'/shippingpolicy'}>
+                                <li className="hover:text-blue-500 cursor-pointer">Chính sách vận chuyển</li>
+                            </Link>
+                            <Link to={'/returnpolicy'}>
+                                <li className="hover:text-blue-500 cursor-pointer">Chính sách đổi trả</li>
+                            </Link>
                         </ul>
                     </div>
+
 
                     {/* Section 4 */}
                     <div>
                         <p className="text-xl font-medium mb-5">Kết nối mạng xã hội</p>
                         <div className="flex space-x-4 ">
                             <Link to={`https://www.facebook.com/`} target='_blank'>
-                                <FacebookFilled />
+                                <FacebookFilled style={{ fontSize: '24px' }} />
                             </Link>
-                            <Link to={`https://www.youtube.com/`} target='_blank'>
-                                <YoutubeFilled />
+                            <Link to={`https://www.youtube.com/@lain_4504`} target='_blank'>
+                                <YoutubeFilled style={{ fontSize: '24px' }} />
                             </Link>
                             <Link to={`https://www.instagram.com/?hl=en`} target='_blank'>
-                                <InstagramFilled />
+                                <InstagramFilled style={{ fontSize: '24px' }} />
                             </Link>
                             <Link to={`https://www.x.com/?hl=en`} target='_blank'>
-                                <CloseOutlined />
+                                <CloseOutlined style={{ fontSize: '24px' }} />
                             </Link>
                         </div>
                     </div>

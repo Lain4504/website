@@ -7,7 +7,9 @@ const ListProduct = (props) => {
     const [books, setBooks] = useState([]);
     const [hoveredBookTitle, setHoveredBookTitle] = useState("");
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
+    useEffect(() => {
+        setHoveredBookTitle("");
+    }, [books]);
     const fetchData = () => {
         getBookByQuery(props.query)
             .then(res => {

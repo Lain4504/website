@@ -10,6 +10,9 @@ export default {
         'xxs': '360px',
         'xs': '480px',
       },
+      height: {
+        88: '22rem', // Thay đổi giá trị này nếu bạn muốn chiều cao khác
+      },
     },
   },
   plugins: [ //remove plugin require('@tailwindcss/forms'),
