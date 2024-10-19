@@ -28,6 +28,7 @@ import ReturnPolicy from '../pages/InformationPage/ReturnPolicy';
 import TermsOfService from '../pages/InformationPage/TermsOfService';
 import FAQ from '../pages/InformationPage/FAQ';
 import OrderDetail from '../pages/OrderDetail';
+import Payment from '../pages/Payment';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -43,9 +44,9 @@ const AppRoutes = () => {
       '/login', '/register', '/search/:name', '/activation/:token', 
       '/forgot-password', '/reset-password/:token', '/products/:id', 
       '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',
-      "/change-password", "/checkout","/privacypolicy",
+      '/change-password', '/checkout','/privacypolicy',
       '/paymentpolicy','/shippingpolicy', '/termsofservice', 
-      '/faq', '/order-detail/:id','/returnpolicy'
+      '/faq', '/order-detail/:id','/returnpolicy','/payment'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -78,8 +79,9 @@ const AppRoutes = () => {
       {/* Private routes that require authentication */}
       <Route path='/wishlist' element={<PrivateRoute> <Wishlist /></PrivateRoute>} />
       <Route path='/orderlist' element={<PrivateRoute> <OrderList /></PrivateRoute>} />
-      <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-      <Route path="/change-password" element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
+      {/* <Route path='/checkout' element={<PrivateRoute><Checkout/> </PrivateRoute>}></Route>
+      <Route path='/payment' element={<PrivateRoute><Payment/></PrivateRoute>}></Route> */}
+      <Route path='/change-password' element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
       <Route path='/profile' element={<PrivateRoute><UserProfile /></PrivateRoute>} />
       <Route path='/order-detail/:id' element={<PrivateRoute><OrderDetail/></PrivateRoute>}/>
 

@@ -1,14 +1,14 @@
 import React from 'react';
+import Sidebar from './Sidebar';
 import { Row, Col, Breadcrumb } from 'antd';
-import CheckoutInfo from '../components/Checkout/CheckoutInfo';
-import Sidebar from '../components/Checkout/Sidebar';
+import CheckoutInfo from './CheckoutInfo';
 
 const Checkout = () => {
     return (
-        <div>
+        <div className='content'>
             {!cookies.authToken && (window.location.href = '/login')}
             {cart?.orderDetails?.length === 0 && (window.location.href = '/cart')}
-            <div className='container mx-auto my-5'>
+            <div className='mx-auto my-5'>
                 <div className='bg-white p-5 rounded shadow-md'>
                     <Breadcrumb>
                         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>

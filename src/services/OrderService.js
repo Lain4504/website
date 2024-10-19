@@ -11,7 +11,11 @@ const getOrderByUserId = (userId) => {
 const getOrderDetailByOrderId = (orderId) => {
     return axios.get(ORDER_BASE_URL + "/orderdetail/" + orderId);
 }
+
+const addOrder = (order) => {
+    return axios.post(ORDER_BASE_URL + '/process', order);
+}
 const getOrderById = (orderId) => {
     return axios.get(ORDER_BASE_URL + "/" + orderId);
 }
-export {cancelOrder, getOrderByUserId, getOrderDetailByOrderId, getOrderById}
+export {cancelOrder, getOrderByUserId, getOrderDetailByOrderId, getOrderById, addOrder}
