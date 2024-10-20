@@ -95,17 +95,25 @@ const ProductDetail = () => {
       quantity: quantity,
       price: book.salePrice * quantity,
     };
-    try{
+  
+    // Log ra từng dòng dữ liệu
+    console.log("User ID:", userId);
+    console.log("Book ID:", book.id);
+    console.log("Quantity:", quantity);
+    console.log("Calculated Price:", cartItem.price);
+    console.log("Cart Item:", cartItem);
+  
+    try {
       await addToCart(cartItem);
       setIsModalVisible(true);
       setCartItems(prev => prev + quantity);
       setTotalPrice(prev => prev + cartItem.price);
-    }
-    catch(error){
+      console.log("Added to cart successfully.");
+    } catch (error) {
       console.error("Error adding to cart", error);
     }
-   
   };
+  
 
   const handleModalOk = () => {
     console.log("Proceeding to checkout");

@@ -1,19 +1,22 @@
 import React from 'react';
-import { Image } from 'antd'; 
+import { Image } from 'antd';
+
 const Sidebar = ({ cart }) => {
   return (
-    <div className='w-64 p-4 bg-gray-100'>
+    <div className='w-96 p-6 bg-gray-100'> 
       <div className="space-y-4">
         <div>
           {cart.orderDetails?.map(item => (
-            <div className="flex items-center border-b py-2" key={item.id}>
+            <div className="flex items-center border-b py-3" key={item.id}> 
               <div className="relative">
-                <Image
-                  className="w-16 h-16 object-cover rounded-md"
-                  src={item.book.images[0].link}
-                  alt={item.book.title}
-                  preview={false}
-                />
+                <div className="w-20 h-20 bg-gray-200 overflow-hidden rounded-md"> 
+                  <Image
+                    className="w-full h-full object-cover"
+                    src={item.book.images[0].link}
+                    alt={item.book.title}
+                    preview={false}
+                  />
+                </div>
                 <span className="absolute bottom-0 right-0 bg-black text-white text-xs rounded-full px-2 py-0.5">
                   {item.amount}
                 </span>

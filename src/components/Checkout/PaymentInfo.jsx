@@ -1,18 +1,18 @@
 import React from 'react';
 import { Breadcrumb, Radio, Button } from 'antd';
-import { Link } from 'react-router-dom'; // Ensure to use Link from react-router for routing
+import { Link, useNavigate } from 'react-router-dom'; 
 import { addOrder } from '../../services/OrderService';
 
-const PaymentInfo = () => {
+const PaymentInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     const [paymentMethod, setPaymentMethod] = React.useState('cod');
-
+    const navigate = useNavigate();
     const handleOrder = () => {
-        if (paymentMethod === 'paypal') {
-            window.location.href = '/checkout/payment/paypal';
+        if (paymentMethod === 'bank') {
+            paymentMethod('/payment/bank');
         } else if (paymentMethod === 'cod') {
             addOrder(cart)
                 .then((res) => {
-                    window.location.href = '/account';
+                    navigate('/orderlist');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -30,17 +30,6 @@ const PaymentInfo = () => {
                 <Link to="/">
                     <h4 className="text-xl font-bold">Nhà xuất bản sách mới</h4>
                 </Link>
-                <Breadcrumb>
-                    <Breadcrumb.Item>
-                        <Link to="/cart">Giỏ hàng</Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>
-                        <Link to="/checkout">Thông tin vận chuyển</Link>
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item>
-                        Phương thức thanh toán
-                    </Breadcrumb.Item>
-                </Breadcrumb>
             </div>
             <div className="mt-3">
                 <h5 className="text-lg font-semibold">Phương thức thanh toán</h5>
@@ -56,8 +45,8 @@ const PaymentInfo = () => {
                 </div>
 
                 <div className="mb-2 flex justify-between mt-6">
-                    <Link to="/cart" className="text-blue-500">
-                        Giỏ hàng
+                    <Link to="/checkout" className="text-blue-500">
+                        Trang trước
                     </Link>
                     <Button type="primary" onClick={handleOrder}>
                         Đặt hàng

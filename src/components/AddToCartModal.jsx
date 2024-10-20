@@ -8,7 +8,7 @@ const AddToCartModal = ({ isModalVisible, handleOk, handleCancel, book, quantity
   return (
     <Modal
       title="Thông tin giỏ hàng"
-      open={isModalVisible} // Use 'open' instead of 'visible'
+      open={isModalVisible} 
       onCancel={handleCancel}
       footer={null}
       width={1000}

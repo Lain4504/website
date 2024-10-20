@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Breadcrumb, Form, Input, Button, Select } from 'antd';
 import { getProvince, getDistrict, getWard } from '../../services/AddressService';
 import { updateCartItem } from '../../services/CartService';
-
-const CheckoutInfo = () => {
+import SelectAddress from '../SelectAddress';
+const CheckoutInfo = ({cart, setCart, cartChange, setCartChange }) => {
     const [provinces, setProvices] = useState([]);
     const [province, setProvince] = useState();
     const [province_name, setProvinceName] = useState();
@@ -54,7 +54,7 @@ const CheckoutInfo = () => {
         updateCartItem(cart).then(res => {
             setCartChange(!cartChange);
         });
-        window.location.href = '/checkout/payment';
+        window.location.href = '/payment';
     };
 
     useEffect(() => {
@@ -91,14 +91,6 @@ const CheckoutInfo = () => {
 
     return (
         <div className="p-6">
-            <div className="mb-4">
-                <a href="/"><h4>Nhà xuất bản sách mới</h4></a>
-                <Breadcrumb>
-                    <Breadcrumb.Item href="/cart">Giỏ hàng</Breadcrumb.Item>
-                    <Breadcrumb.Item>Thông tin vận chuyển</Breadcrumb.Item>
-                    <Breadcrumb.Item>Phương thức thanh toán</Breadcrumb.Item>
-                </Breadcrumb>
-            </div>
             <div className="main-content">
                 <h5 className="mb-4">Thông tin thanh toán</h5>
                 <Form layout="vertical">
