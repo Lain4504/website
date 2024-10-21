@@ -226,7 +226,7 @@ const ProductDetail = () => {
       </div>
       {/* AddToCartModal integration */}
       <AddToCartModal
-        isModalVisible={isModalVisible} // This prop should match the state
+        isModalVisible={isModalVisible}
         handleOk={handleModalOk}
         handleCancel={handleModalCancel}
         book={book}
