@@ -1,10 +1,15 @@
 import React from 'react'
-import Title from '../components/Title'
+import Breadcrumb from '../../components/Breadcrumb';
+import Title from '../../components/Title';
 
 const About = () => {
+  const breadcrumbs = [
+    { title: 'Trang chủ', href: '/' },
+    { title: 'Về Forever' }
+  ];
   return (
     <div>
-
+      <Breadcrumb items={breadcrumbs} className="my-10" />
       <div className='text-2xl pt-8 border-t'>
         <Title text1={'Giới thiệu về'} text2={'Forever'} />
       </div>

@@ -1,38 +1,51 @@
 import axios from "axios";
 
-const ACCOUNT_BASE_URL = "http://localhost:8081/api/v1/auth/";
+const ACCOUNT_URL = "http://localhost:5146/api/user/";
 
 const createAccount = (account) => {
-    return axios.post(ACCOUNT_BASE_URL + 'register', account);
-}
+    return axios.post(ACCOUNT_URL + 'register', account);
+};
 
 const login = (account) => {
-    return axios.post(ACCOUNT_BASE_URL + 'authenticate', account);
-}
-
-const getUserInfoByEmail = (email) => {
-    return axios.get(`http://localhost:8081/api/v1/user/by-email/${email}`);
-}
-
-const updateUser = (profile) => {
-    return axios.put("http://localhost:8081/api/v1/user", profile);
-}
-
-const forgetPassword = (email) => {
-    return axios.post(ACCOUNT_BASE_URL + 'forgot-password', email);
-}
-
-const resetPassword = (resetData) => {
-    return axios.post(ACCOUNT_BASE_URL + 'reset-password', resetData);
-}
+    return axios.post(ACCOUNT_URL + 'login', account);
+};
 
 const activateAccount = (token) => {
-    return axios.post("http://localhost:8081/api/v1/auth/activation", token)
+    return axios.post(ACCOUNT_URL + 'activate', token, {
+        headers: {
+            'Authorization': `Bearer ${token}` // Truyền token vào header
+        }
+    });
+};
+
+const forgetPassword = (email) => {
+    return axios.post(ACCOUNT_URL + 'forgot-password', {
+        Email: email 
+    });
+};
+
+const resetPassword = (token) => {
+    return axios.post(ACCOUNT_URL + 'reset-password', token, {
+        headers: {
+            'Authorization': `Bearer ${token}` // Truyền token vào header
+        }
+    });
+};
+
+const getUserProfile = async (userId) => {
+    return await axios.get(`${ACCOUNT_URL}get-profile/${userId}`);
+};
+
+const changePassword = (token) => {
+    return axios.post(ACCOUNT_URL + 'change-password', token, {
+        headers: {
+            'Authorization': `Bearer ${token}` // Truyền token vào header
+        }
+    });
+};
+
+const updateProfile = (id, profileData) => {
+    return axios.put(`${ACCOUNT_URL}update-profile/${id}`, profileData);
 }
 
-const changePassword = (data) => {
-    return axios.post("http://localhost:8081/api/v1/auth/change-password", data)
-
-}
-
-export {createAccount, login, getUserInfoByEmail, updateUser, forgetPassword, resetPassword, activateAccount, changePassword}
+export { createAccount, login, activateAccount, forgetPassword, resetPassword, getUserProfile, changePassword, updateProfile };

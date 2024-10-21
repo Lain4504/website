@@ -11,10 +11,7 @@ export default {
         'xs': '480px',
       },
       height: {
-        '377.58': '377.58px',
-      },
-      width: {
-        '235.99': '235.99px',
+        88: '22rem', // Thay đổi giá trị này nếu bạn muốn chiều cao khác
       },
     },
   },

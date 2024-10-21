@@ -1,45 +1,40 @@
-import React from "react"
-import { Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import Contact from "./pages/Contact"
-import About from "./pages/About"
-import Footer from "./components/Footer"
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/ReactToastify.css'
-import Navbar from "./components/Navbar"
-import Page404 from "./components/Page404";
-import Login from "./pages/Login"
-import { useCookies } from 'react-cookie';
-import { useEffect, useState } from 'react';
-import Register from "./pages/Register"
-import Collection from "./pages/Collection"
-import Post from "./pages/Post"
-import BooksBySearch from "./pages/BookBySearch"
-import SearchPage from "./pages/SearchPage"
+import React, { useContext } from "react";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import ScrollToTop from "./components/ScrollToTop";
+import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
+import useCart from "./context/useCart";
+import AppRoutes from "./context/AppRoutes";
+import { AuthContext } from "./context/AuthContext";
+
 
 const App = () => {
-  const [cookies, setCookies, removeCookies] = useCookies([]);
-  useEffect(() => {
-  }, [cookies]);
+  const { currentUser } = useContext(AuthContext); 
+  const userId = currentUser ? currentUser.userId : null; 
+  const is404Page = window.location.pathname === '/404'; 
 
-  return(
-    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-    <ToastContainer/>
-    <Navbar cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>
-    <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/collections/:id' Component={Collection}/>
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/post' element={<Post/>}/>
-        <Route path='/login' element={<Login cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
-        <Route path='/register' element={<Register cookies={cookies} setCookies={setCookies} removeCookies={removeCookies}/>} />
-        <Route path='*' Component={Page404}/>
-        <Route path="/search" element={<SearchPage />} />
+  return (
+    <>
+      <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+        {!is404Page && (
+          <Navbar 
+          />
+        )}
+        <AppRoutes 
+        />
+        <ScrollToTop />
+        <FloatingPhoneIcon />
+        {!is404Page && <Footer />}
+      </div>
 
-    </Routes>
-    <Footer/>
-   </div>
-  )
-}
+      {!is404Page && (
+        <div className="bg-black">
+          <hr />
+          <p className="py-5 text-sm text-center text-white"> Copyright 2024@ Book Store - All Right Reserved </p>
+        </div>
+      )}
+    </>
+  );
+};
+
 export default App;

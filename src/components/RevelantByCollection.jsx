@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Post = () => {
+const RevelantByCollection = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Post = () => {
   )
 }
 
-export default Post
+export default RevelantByCollection
