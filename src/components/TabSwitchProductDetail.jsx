@@ -2,7 +2,7 @@ import { Tabs } from 'antd';
 import { CommentOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import parser from 'html-react-parser';
-import FeedBack from '../pages/FeedBack';
+import FeedBack from './FeedBack';
 
 const { TabPane } = Tabs;
 

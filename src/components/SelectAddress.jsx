@@ -15,7 +15,7 @@ const SelectAddress = ({ label, options = null, name, setValue, setName }) => {
                 name={name} 
                 placeholder={`--${label}--`} 
                 onChange={handleSelectChange} 
-                className="w-full" // Optional: Tailwind CSS for width
+                className="w-full"
             >
                 {options?.map(option => (
                     <Option key={option?.codename} data-name={option.name} value={option.code}>

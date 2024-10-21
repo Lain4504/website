@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie'; // Import useCookies
 import Home from '../pages/Home';
 import Collection from '../pages/BookByCollection';
 import SearchResult from '../pages/SearchResult';
@@ -33,11 +34,11 @@ import Payment from '../pages/Payment';
 const AppRoutes = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   useEffect(() => {
-    // Cuộn trang lên đầu với hiệu ứng mượt mà khi location thay đổi
     window.scroll({ top: 0, behavior: 'smooth' });
   }, [location]);
-  // Redirect to 404 if the route is invalid
+
   useEffect(() => {
     const validRoutes = [
       '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', 
@@ -71,29 +72,33 @@ const AppRoutes = () => {
       <Route path='/activation/:token' element={<Activate />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route path='/reset-password/:token' element={<ResetPassword />} />
-      <Route path='/products/:id' element={<ProductDetail/>} />
+      <Route path='/products/:id' element={<ProductDetail />} />
       <Route path='/posts/:id' element={<PostDetail />} />
-      <Route path="/cart" element={<Cart/>} />
+     
       <Route path='/404' element={<Page404 />} />
 
+      {/*Cookie page */}
+      <Route path="/cart" element={<Cart />} />
+      <Route path='/products/:id' element={<ProductDetail/>} />
+      <Route path='/checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
+      <Route path='/payment' element={<PrivateRoute><Payment/></PrivateRoute>} /> 
+      
       {/* Private routes that require authentication */}
-      <Route path='/wishlist' element={<PrivateRoute> <Wishlist /></PrivateRoute>} />
-      <Route path='/orderlist' element={<PrivateRoute> <OrderList /></PrivateRoute>} />
-      {/* <Route path='/checkout' element={<PrivateRoute><Checkout/> </PrivateRoute>}></Route>
-      <Route path='/payment' element={<PrivateRoute><Payment/></PrivateRoute>}></Route> */}
+      <Route path='/wishlist' element={<PrivateRoute><Wishlist /></PrivateRoute>} />
+      <Route path='/orderlist' element={<PrivateRoute><OrderList /></PrivateRoute>} />
       <Route path='/change-password' element={<PrivateRoute><ChangePassword /></PrivateRoute>} />
       <Route path='/profile' element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-      <Route path='/order-detail/:id' element={<PrivateRoute><OrderDetail/></PrivateRoute>}/>
+      <Route path='/order-detail/:id' element={<PrivateRoute><OrderDetail /></PrivateRoute>} />
 
-      {/*Information Page */}
-      <Route path='/privacypolicy' element={<PrivacyPolicy/>}/>
-      <Route path='/paymentpolicy' element={<PaymentPolicy/>}/>
-      <Route path='/shippingpolicy' element={<ShippingPolicy/>}/>
+      {/* Information Page */}
+      <Route path='/privacypolicy' element={<PrivacyPolicy />} />
+      <Route path='/paymentpolicy' element={<PaymentPolicy />} />
+      <Route path='/shippingpolicy' element={<ShippingPolicy />} />
       <Route path='/about' element={<About />} />
       <Route path='/contact' element={<Contact />} />
-      <Route path='/returnpolicy' element={<ReturnPolicy/>} />
-      <Route path='/termsofservice' element={<TermsOfService/>}/>
-      <Route path='/faq' element={<FAQ/>}/>
+      <Route path='/returnpolicy' element={<ReturnPolicy />} />
+      <Route path='/termsofservice' element={<TermsOfService />} />
+      <Route path='/faq' element={<FAQ />} />
     </Routes>
   );
 };
