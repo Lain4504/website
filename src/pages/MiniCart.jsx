@@ -20,9 +20,9 @@ const MiniCart = () => {
   if (miniCart.length === 0) {
     return <div className="p-4 text-center text-gray-500">Giỏ hàng trống</div>;
   }
-
+  // change positon
   return (
-    <div className="mini-cart p-4 bg-white shadow-lg rounded-md w-64 z-50 relative">
+    <div className="mini-cart p-4 bg-white shadow-lg rounded-md w-64 z-50 relative"> 
       {miniCart.map(item => (
         <div key={item.id} className="flex items-center mb-2">
           <img src={item.book.images[0]?.link} alt={item.book.title} className="w-12 h-auto" />
