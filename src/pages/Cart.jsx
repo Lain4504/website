@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Table, InputNumber, Button, Row, Col } from 'antd';
+import { Table, InputNumber, Button, Row, Col, message, Popover } from 'antd';
 import { updateCartItem, getAllCartByUserId } from '../services/CartService';
 import Breadcrumb from '../components/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { ArrowRightOutlined } from '@ant-design/icons';
 
 const Cart = () => {
   const [tempCart, setTempCart] = useState({ orderDetails: [] });
@@ -35,35 +36,41 @@ const Cart = () => {
 
   const deleteCartItemHandler = (order_id) => {
     setTempCart(cart => {
-        const newCart = { ...cart };
-        newCart.orderDetails = newCart.orderDetails.filter(item => item.id !== order_id);
-        return newCart;
+      const newCart = { ...cart };
+      newCart.orderDetails = newCart.orderDetails.filter(item => item.id !== order_id);
+      return newCart;
     });
 
     // Log tempCart before sending the delete request
     console.log("Deleting cart item. Updated cart data:", tempCart);
 
     updateCartItem(tempCart).then(res => {
-        console.log("Cart item deleted:", res);
+      console.log("Cart item deleted:", res);
     }).catch(error => {
-        console.error("Error deleting cart item:", error);
+      console.error("Error deleting cart item:", error);
     });
-};
+  };
 
-const updateCart = () => {
+  const updateCart = () => {
     // Log tempCart before sending the update request
     console.log("Updating cart with data:", tempCart);
-    
+
     updateCartItem(tempCart).then(res => {
-        console.log("Cart updated successfully:", res);
+      console.log("Cart updated successfully:", res);
     }).catch(error => {
-        console.error("Error updating cart:", error);
+      console.error("Error updating cart:", error);
     });
-};
+  };
+  const [visible, setVisible] = useState(false);
 
   const checkout = () => {
-    navigate('/checkout');
+    if (!tempCart || tempCart.orderDetails.length === 0) {
+      setVisible(true); // Hiển thị thông báo nếu giỏ hàng rỗng
+    } else {
+      navigate('/checkout'); // Điều hướng sang trang thanh toán nếu giỏ hàng có sản phẩm
+    }
   };
+  
 
   const columns = [
     {
@@ -119,6 +126,7 @@ const updateCart = () => {
     { title: 'Trang chủ', href: '/' },
     { title: 'Giỏ hàng' }
   ];
+  const content = <p>Giỏ hàng của bạn trống, không thể thanh toán.</p>;
 
   return (
     <>
@@ -155,12 +163,31 @@ const updateCart = () => {
                   {tempCart.orderDetails.reduce((total, item) => total + item.amount * item.salePrice, 0)?.toLocaleString()}₫
                 </span>
               </p>
-              <Button type="primary" className="mr-4" onClick={updateCart}>
-                Cập nhật
-              </Button>
-              <Button type="danger" onClick={checkout}>
-                Thanh toán
-              </Button>
+              <div className="flex justify-end gap-4"> {/* Flex container with space between buttons */}
+                <Button
+                  type="default"
+                  className="bg-gray-300 hover:bg-gray-600 text-black hover:text-white"
+                  onClick={updateCart}
+                >
+                  Cập nhật
+                </Button>
+                <Popover
+      content={content}
+      title="Thông báo"
+      visible={visible}
+      onVisibleChange={setVisible}
+      trigger="click"
+    >
+      <Button
+        type="primary"
+        className="hover:bg-blue-600 flex items-center"
+        onClick={checkout}
+      >
+        Thanh toán
+        <ArrowRightOutlined className="ml-2" />
+      </Button>
+    </Popover>
+              </div>
             </Col>
           </Row>
         </div>

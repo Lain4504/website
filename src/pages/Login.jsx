@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { login } from '../services/UserService';
-import { Form, Input, Button, notification } from 'antd';
+import { Form, Input, notification } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
 import Breadcrumb from '../components/Breadcrumb';
@@ -22,12 +22,10 @@ const Login = () => {
             const res = await login({ email, password });
             const token = res.data.token;
             const decodedToken = jwtDecode(token);
-            console.log("Decode:", decodedToken)
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
-            console.log("userId:", userId)
             dispatch({ type: "LOGIN", payload: { token, userId } });
             localStorage.setItem("user", JSON.stringify({ token, userId }));
-            console.log("Current User in Login:", res)
+
             notification.success({
                 message: 'Đăng nhập thành công',
                 description: 'Chào mừng bạn trở lại!',
@@ -62,11 +60,11 @@ const Login = () => {
         <>
             <Breadcrumb items={breadcrumbs} />
             <section className="bg-white dark:bg-gray-900">
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-auto my-8 lg:py-0">
+                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto my-8 lg:py-0">
                     <a className="mb-6 text-2xl font-semibold">
                         <Title text1={'Forever'} text2={'Book Store'} />
                     </a>
-                    <div className="w-full bg-white rounded-lg border-1 border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
+                    <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
                         <div className="p-6 space-y-4 lg:space-y-6 sm:p-8">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Đăng nhập vào tài khoản của bạn
@@ -93,7 +91,7 @@ const Login = () => {
                                 >
                                     <Input
                                         type="email"
-                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
                                         placeholder="Nhập địa chỉ email"
                                     />
                                 </Form.Item>
@@ -113,7 +111,7 @@ const Login = () => {
                                     ]}
                                 >
                                     <Input.Password
-                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        className="w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
                                         placeholder="Nhập mật khẩu"
                                         iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                                     />
@@ -127,7 +125,7 @@ const Login = () => {
                                                     id="remember"
                                                     aria-describedby="remember"
                                                     type="checkbox"
-                                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300 dark:bg-gray-700 dark:border-gray-600"
                                                 />
                                             </div>
                                             <div className="ml-3 text-sm">
@@ -136,32 +134,31 @@ const Login = () => {
                                                 </label>
                                             </div>
                                         </div>
-                                        <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                                        <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-500">
                                             Quên mật khẩu?
                                         </Link>
                                     </div>
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <Button
-                                        type="primary"
-                                        htmlType="submit"
-                                        className="w-full"
-                                        loading={loading}
+                                    <button
+                                        type="submit"
+                                        className={`w-full rounded-md bg-indigo-600 text-white py-2 px-4 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        disabled={loading}
                                     >
-                                        Đăng nhập
-                                    </Button>
+                                        {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+                                    </button>
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <Button
-                                        type="default"
-                                        className="w-full flex items-center justify-center mt-4"
+                                    <button
+                                        type="button"
+                                        className="w-full flex items-center justify-center mt-4 bg-gray-200 rounded-md py-2 text-gray-700 hover:bg-gray-300 focus:outline-none"
                                         onClick={handleGoogleLogin}
                                     >
                                         <GoogleOutlined style={{ marginRight: 8, color: '#4285F4' }} />
                                         Đăng nhập bằng Google
-                                    </Button>
+                                    </button>
                                 </Form.Item>
                             </Form>
 

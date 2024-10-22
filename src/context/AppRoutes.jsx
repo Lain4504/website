@@ -29,7 +29,6 @@ import ReturnPolicy from '../pages/InformationPage/ReturnPolicy';
 import TermsOfService from '../pages/InformationPage/TermsOfService';
 import FAQ from '../pages/InformationPage/FAQ';
 import OrderDetail from '../pages/OrderDetail';
-import Payment from '../pages/Payment';
 
 const AppRoutes = () => {
   const location = useLocation();
@@ -47,7 +46,7 @@ const AppRoutes = () => {
       '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',
       '/change-password', '/checkout','/privacypolicy',
       '/paymentpolicy','/shippingpolicy', '/termsofservice', 
-      '/faq', '/order-detail/:id','/returnpolicy','/payment'
+      '/faq', '/order-detail/:id','/returnpolicy','/payment/bank'
     ];
 
     const pathExists = validRoutes.some(route => {
@@ -81,7 +80,6 @@ const AppRoutes = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path='/products/:id' element={<ProductDetail/>} />
       <Route path='/checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
-      <Route path='/payment' element={<PrivateRoute><Payment/></PrivateRoute>} /> 
       
       {/* Private routes that require authentication */}
       <Route path='/wishlist' element={<PrivateRoute><Wishlist /></PrivateRoute>} />

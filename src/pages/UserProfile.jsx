@@ -1,48 +1,73 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getUserProfile, updateProfile } from '../services/UserService';
-import { message, Spin, Row, Col, Input, Button, Form } from 'antd';
+import { getProvinceById, getDistrictById, getWardById } from '../services/AddressService'; // Cập nhật đường dẫn đúng
+import { Button, message } from 'antd';
 import Breadcrumb from '../components/Breadcrumb';
 import UserNavBar from './UserNavBar';
 import { AuthContext } from '../context/AuthContext';
-import EditProfileModal from '../components/EditProfileModal'; // Import modal for editing profile
+import EditProfileModal from '../components/EditProfileModal';
+import moment from 'moment';
 
 const UserProfile = () => {
-    const [loading, setLoading] = useState(true); // Loading state
-    const [profileData, setProfileData] = useState(null); // User profile data
-    const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
-    const { currentUser } = useContext(AuthContext); 
-    const userId = currentUser ? currentUser.userId : null; // Extract user ID from context
+    const [loading, setLoading] = useState(true);
+    const [profileData, setProfileData] = useState(null);
+    const [addressName, setAddressName] = useState(''); // State để lưu tên địa chỉ
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const { currentUser } = useContext(AuthContext);
+    const userId = currentUser ? currentUser.userId : null;
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: 'Tài khoản' }
     ];
 
-    // Fetch user profile data
+    const addressParts = profileData?.address ? profileData.address.split(',') : [];
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
                 const res = await getUserProfile(userId);
                 setProfileData(res?.data);
+                await fetchAddressNames(res?.data?.address); // Gọi hàm lấy tên địa chỉ
             } catch (error) {
                 message.error('Failed to fetch user profile');
             } finally {
-                setLoading(false); // Set loading to false after fetch
+                setLoading(false);
             }
         };
-        if (userId) fetchUserInfo(); // Fetch user info only if userId is available
+        if (userId) fetchUserInfo();
     }, [userId]);
 
+    const fetchAddressNames = async (address) => {
+        if (!address) return;
+
+        const addressParts = address.split(',');
+        const wardId = addressParts[0];
+        const districtId = addressParts[1];
+        const provinceId = addressParts[2];
+
+        try {
+            const [wardRes, districtRes, provinceRes] = await Promise.all([
+                getWardById(wardId),
+                getDistrictById(districtId),
+                getProvinceById(provinceId)
+            ]);
+            setAddressName(`${wardRes}, ${districtRes}, ${provinceRes}`);
+        } catch (error) {
+            console.error('Error fetching address names:', error);
+            setAddressName('Không tìm thấy địa chỉ');
+        }
+    };
     const showModal = () => {
-        setIsModalVisible(true); // Show edit modal
+        setIsModalVisible(true);
     };
 
     const handleOk = async (values) => {
         try {
-            await updateProfile(userId, values); // Update profile with new values
+            await updateProfile(userId, values);
             message.success('Profile updated successfully');
             setIsModalVisible(false);
-            const res = await getUserProfile(userId); // Refetch updated profile data
+            const res = await getUserProfile(userId);
             setProfileData(res?.data);
+            await fetchAddressNames(res?.data?.address); // Cập nhật tên địa chỉ sau khi cập nhật profile
         } catch (error) {
             message.error('Failed to update profile');
             console.error('Error updating profile:', error);
@@ -50,72 +75,104 @@ const UserProfile = () => {
     };
 
     const handleCancel = () => {
-        setIsModalVisible(false); // Hide edit modal
+        setIsModalVisible(false);
     };
 
     return (
         <>
             <Breadcrumb items={breadcrumbs} className="my-10" />
             <UserNavBar />
-            <div className="flex h-auto my-10">
-                <div className="flex-1 p-6 bg-white shadow-md rounded-lg ml-4">
+            <div className="flex flex-col items-center my-10">
+                <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-10">
                     {loading ? (
                         <div className="flex justify-center items-center h-full">
-                            <Spin size="large" tip="Đang tải thông tin người dùng..." />
+                            <div className="text-lg text-gray-600">Đang tải thông tin người dùng...</div>
                         </div>
                     ) : (
                         <>
                             {profileData ? (
                                 <>
-                                    <h2 className="text-2xl font-bold my-5">Hồ sơ</h2>
-                                    <Row gutter={16}>
-                                        <Col xs={24} sm={12}>
-                                            <Form layout="vertical">
-                                                <Form.Item label="Họ và Tên">
-                                                    <Input value={profileData?.fullName || ''} disabled placeholder="Chưa có thông tin" />
-                                                </Form.Item>
-                                                <Form.Item label="Giới tính" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-                                                    <Input value={profileData?.gender || ''} disabled placeholder="Chưa có thông tin" />
-                                                </Form.Item>
-                                            </Form>
-                                            <Form.Item label="Email" style={{ marginTop: '16px' }}>
-                                                <Input value={profileData?.email || ''} disabled placeholder="Chưa có thông tin" />
-                                            </Form.Item>
-                                        </Col>
-                                        <Col xs={24} sm={12}>
-                                            <Form layout="vertical">
-                                                <Form.Item label="Số điện thoại">
-                                                    <Input value={profileData?.phone || ''} disabled placeholder="Chưa có thông tin" />
-                                                </Form.Item>
-                                                <Form.Item label="Ngày sinh">
-                                                    <Input value={profileData?.dob ? new Date(profileData.dob).toLocaleDateString() : ''} disabled placeholder="Chưa có thông tin" />
-                                                </Form.Item>
-                                            </Form>
-                                        </Col>
-                                    </Row>
-                                    <hr className="my-4" />
-                                    <Form layout="vertical">
-                                        <Form.Item label={<strong>Địa chỉ:</strong>}>
-                                            <Input
-                                                className="w-3/4"
-                                                disabled
-                                                value={profileData?.address || 'Chưa có thông tin'}
-                                            />
-                                        </Form.Item>
-                                    </Form>
-                                    <Button type="primary" onClick={showModal} className="mt-4">
+                                    <h2 className="text-3xl font-bold mb-6">Hồ sơ</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700">Họ và Tên</label>
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.fullName || ''}
+                                                    disabled
+                                                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-900"
+                                                    placeholder="Chưa có thông tin"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700">Giới tính</label>
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.gender || ''}
+                                                    disabled
+                                                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-900"
+                                                    placeholder="Chưa có thông tin"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700">Email</label>
+                                                <input
+                                                    type="email"
+                                                    value={profileData?.email || ''}
+                                                    disabled
+                                                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-900"
+                                                    placeholder="Chưa có thông tin"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.phone || ''}
+                                                    disabled
+                                                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-900"
+                                                    placeholder="Chưa có thông tin"
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <label className="block text-sm font-medium text-gray-700">Ngày sinh</label>
+                                                <input
+                                                    type="text"
+                                                    value={profileData?.dob ? new Date(profileData.dob).toLocaleDateString() : ''}
+                                                    disabled
+                                                    className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-900"
+                                                    placeholder="Chưa có thông tin"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium text-gray-700">Địa chỉ</label>
+                                        <input
+                                            type="text"
+                                            value={addressName || 'Chưa có thông tin'}
+                                            disabled
+                                            className="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-900"
+                                            placeholder="Chưa có thông tin"
+                                        />
+                                    </div>
+                                    <Button
+                                        onClick={showModal}
+                                        className="px-6 py-2 mt-4 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600"
+                                    >
                                         Chỉnh sửa thông tin
                                     </Button>
                                 </>
                             ) : (
-                                <div>Không tìm thấy thông tin người dùng</div>
+                                <div className="text-center text-gray-500">Không tìm thấy thông tin người dùng</div>
                             )}
                         </>
                     )}
                 </div>
             </div>
-
-            {/* EditProfileModal for editing user details */}
             <EditProfileModal
                 visible={isModalVisible}
                 onCancel={handleCancel}
@@ -125,8 +182,11 @@ const UserProfile = () => {
                     gender: profileData?.gender,
                     email: profileData?.email,
                     phone: profileData?.phone,
-                    dob: profileData?.dob ? new Date(profileData.dob).toISOString().split('T')[0] : '',
+                    dob: profileData?.dob ? moment(profileData.dob).format('YYYY-MM-DD') : '',
                     address: profileData?.address,
+                    province: addressParts.length > 0 ? addressParts[2]?.trim() : '',  // Tỉnh
+                    district: addressParts.length > 1 ? addressParts[1]?.trim() : '',  // Huyện
+                    ward: addressParts.length > 2 ? addressParts[0]?.trim() : '',
                 }}
             />
         </>

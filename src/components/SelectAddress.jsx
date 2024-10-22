@@ -1,28 +1,22 @@
 import React from 'react';
-import { Select } from 'antd';
 
-const { Option } = Select;
-
-const SelectAddress = ({ label, options = null, name, setValue, setName }) => {
-    const handleSelectChange = (value, option) => {
-        setName(option.props['data-name']);
-        setValue(value);
-    };
-
+const SelectAddress = ({ label, options = null, name, setValue, initialValue }) => {
     return (
         <div>
-            <Select 
+            <label>{label}</label>
+            <select 
                 name={name} 
-                placeholder={`--${label}--`} 
-                onChange={handleSelectChange} 
-                className="w-full"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                value={initialValue} // Sử dụng value thay vì defaultValue để cập nhật theo state
+                onChange={(e) => setValue(e.target.value)}
             >
+                <option value="">--{label}--</option>
                 {options?.map(option => (
-                    <Option key={option?.codename} data-name={option.name} value={option.code}>
-                        {option?.name}
-                    </Option>
+                    <option key={option.code} value={option.code}>
+                        {option.name}
+                    </option>
                 ))}
-            </Select>
+            </select>
         </div>
     );
 };
