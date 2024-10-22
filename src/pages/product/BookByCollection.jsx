@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getBooksByQuery, getBookByQuery } from "../services/BookService";
+import { getBooksByQuery, getBookByQuery } from "../../services/BookService";
 import { useParams, Link } from 'react-router-dom';
-import { getCollections, getCollectionById } from '../services/CollectionService';
-import Breadcrumb from '../components/Breadcrumb';
+import { getCollections, getCollectionById } from '../../services/CollectionService';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { Menu, Select, Pagination } from 'antd';
-import Title from '../components/Title';
+import Title from '../../components/shared/Title';
 
 const BooksByCollection = () => {
     const [books, setBooks] = useState([]);

@@ -5,7 +5,7 @@ import Sidebar from '../../components/checkout/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { getAllCartByUserId } from '../../services/CartService';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 const Checkout = () => {
     const { currentUser } = useContext(AuthContext);
     const userId = currentUser?.userId || null;

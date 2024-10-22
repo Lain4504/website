@@ -1,35 +1,33 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie'; // Import useCookies
-import Home from '../pages/Home';
-import Collection from '../pages/BookByCollection';
-import SearchResult from '../pages/SearchResult';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Activate from '../components/Activate';
-import ForgotPassword from '../components/ForgotPassword';
-import ResetPassword from '../components/ResetPasswordForgot';
-import ProductDetail from '../pages/ProductDetail';
-import PostList from '../pages/PostList';
-import UserProfile from '../pages/UserProfile';
-import OrderList from '../pages/OrderList';
-import ChangePassword from '../components/ChangePassword';
-import Wishlist from '../pages/WishList';
-import PostDetail from '../pages/PostDetail';
-import Cart from '../pages/Cart';
-import Checkout from '../pages/Checkout';
-import Page404 from '../components/Page404';
 import PrivateRoute from './PrivateRoute';
-import ShippingPolicy from '../pages/InformationPage/ShippingPolicy';
-import Contact from '../pages/InformationPage/Contact';
-import About from '../pages/InformationPage/About';
-import PaymentPolicy from '../pages/informationPage/PaymentPolicy';
-import PrivacyPolicy from '../pages/informationPage/PrivacyPolicy';
-import ReturnPolicy from '../pages/InformationPage/ReturnPolicy';
-import TermsOfService from '../pages/InformationPage/TermsOfService';
-import FAQ from '../pages/InformationPage/FAQ';
-import OrderDetail from '../pages/OrderDetail';
-
+import PrivacyPolicy from '../pages/InformationPage/PrivacyPolicy';
+import PaymentPolicy from '../pages/informationpage/PaymentPolicy';
+import ShippingPolicy from '../pages/informationpage/ShippingPolicy';
+import About from '../pages/informationpage/About';
+import Contact from '../pages/informationpage/Contact';
+import ReturnPolicy from '../pages/informationpage/ReturnPolicy';
+import TermsOfService from '../pages/informationpage/TermsOfService';
+import FAQ from '../pages/informationpage/FAQ';
+import Home from '../pages/Home';
+import Login from '../pages/account/Login';
+import SearchResult from '../pages/product/SearchResult';
+import Activate from '../components/account/Activate';
+import ProductDetail from '../pages/product/ProductDetail';
+import PostDetail from '../pages/post/PostDetail';
+import Cart from '../pages/order/Cart';
+import Wishlist from '../pages/account/WishList';
+import UserProfile from '../pages/account/UserProfile';
+import OrderDetail from '../pages/order/OrderDetail';
+import BooksByCollection from '../pages/product/BookByCollection';
+import PostList from '../pages/post/PostList';
+import Register from '../pages/account/Register';
+import ForgotPassword from '../components/account/ForgotPassword'
+import ResetPassword from '../components/account/ResetPasswordForgot';
+import Page404 from '../components/shared/Page404';
+import Checkout from '../pages/order/Checkout';
+import OrderList from '../pages/order/OrderList';
+import ChangePassword from '../components/account/ChangePassword';
 const AppRoutes = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,7 +61,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path='/' element={<Home />} />
-      <Route path='/collections/:id' element={<Collection />} />
+      <Route path='/collections/:id' element={<BooksByCollection />} />
       <Route path='/postcategory/:id' element={<PostList />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Button, Input, Layout, message, Modal } from 'antd'; // Import Ant Design components
 import { changePassword } from '../../services/UserService';
-import UserNavBar from './UserNavBar';
-import Breadcrumb from './Breadcrumb';
+import UserNavBar from '../account/UserNavBar';
+import Breadcrumb from '../shared/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 

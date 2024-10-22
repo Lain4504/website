@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, InputNumber, Button, Row, Col, message, Popover } from 'antd';
 import { updateCartItem, getAllCartByUserId } from '../../services/CartService';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ArrowRightOutlined } from '@ant-design/icons';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Breadcrumb from './Breadcrumb';
+import Breadcrumb from '../shared/Breadcrumb';
 import { Input, Button, Form, message } from 'antd';
 import { forgetPassword } from '../../services/UserService';
 

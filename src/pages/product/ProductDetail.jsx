@@ -2,17 +2,17 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
 import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled, ShoppingCartOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getAuthorByBookId, getBookById, getCollectionByBookId } from '../services/BookService';
-import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
+import { getAuthorByBookId, getBookById, getCollectionByBookId } from '../../services/BookService';
+import { addWishList, deleteWishList, getWishlistByUserId } from '../../services/WishlistService';
 import parser from 'html-react-parser';
-import Breadcrumb from '../components/shared/Breadcrumb';
-import { AuthContext } from '../context/AuthContext';
-import { getPublisherById } from '../services/PublisherService';
-import TabSwitchProductDetail from '../components/productpage/TabSwitchProductDetail';
-import RelevantByAuthor from '../components/productpage/RelevantByAuthor';
+import Breadcrumb from '../../components/shared/Breadcrumb';
+import { AuthContext } from '../../context/AuthContext';
+import { getPublisherById } from '../../services/PublisherService';
+import TabSwitchProductDetail from '../../components/productpage/TabSwitchProductDetail';
+import RelevantByAuthor from '../../components/productpage/RelevantByAuthor';
 import { Form } from 'antd';
-import AddToCartModal from '../components/modal/AddToCartModal';
-import { addToCart, getAllCartByUserId } from '../services/CartService';
+import AddToCartModal from '../../components/modal/AddToCartModal';
+import { addToCart, getAllCartByUserId } from '../../services/CartService';
 
 const { Paragraph } = Typography;
 

@@ -3,8 +3,8 @@ import { login } from '../../services/UserService';
 import { Form, Input, notification } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
-import Breadcrumb from '../components/Breadcrumb';
-import Title from '../components/Title';
+import Breadcrumb from '../../components/shared/Breadcrumb';
+import Title from '../../components/shared/Title';
 import { AuthContext } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
 

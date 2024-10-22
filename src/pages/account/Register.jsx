@@ -3,8 +3,8 @@ import { Form, Input, Button, Alert, Typography, Modal, notification } from 'ant
 import { createAccount } from '../../services/UserService';
 import { Link } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
-import Breadcrumb from '../components/Breadcrumb';
-import Title from '../components/Title';
+import Breadcrumb from '../../components/shared/Breadcrumb';
+import Title from '../../components/shared/Title';
 
 const Register = () => {
     const [form] = Form.useForm();

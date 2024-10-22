@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, Button, Layout, message, Pagination } from 'antd';
 import { cancelOrder, getOrderByUserId, getOrderDetailByOrderId } from '../../services/OrderService';
-import UserNavBar from './UserNavBar';
-import Breadcrumb from '../components/Breadcrumb';
+import UserNavBar from '../../components/account/UserNavBar';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { AuthContext } from '../../context/AuthContext';
 import { Modal } from 'antd';
 import { Link } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getCollections } from "../services/CollectionService";
+import { getCollections } from "../../services/CollectionService";
 import { Link } from "react-router-dom";
 
 const CollectionList = ({ onSelectCollection, closeMenu }) => {

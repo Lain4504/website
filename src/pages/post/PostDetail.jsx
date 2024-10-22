@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { getPostById, getAllPostCategories } from '../../services/PostService'; // Import service methods
 import { Col, Row } from 'antd'; // Ant Design components
 import parser from 'html-react-parser'; // Import html-react-parser
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 
 const PostDetail = () => {
   const [post, setPost] = useState({});

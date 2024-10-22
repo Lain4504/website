@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getBooksBySearchValue } from '../services/BookService'
+import { getBooksBySearchValue } from '../../services/BookService'
 import { Link } from "react-router-dom";
 import { Pagination } from 'antd'; // Thêm import Pagination từ Ant Design
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 
 const SearchResult = () => {
     const { name } = useParams()

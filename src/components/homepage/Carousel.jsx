@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Carousel } from "antd";
-import { getSlider } from "../services/CarouselService";
+import { getSlider } from "../../services/CarouselService";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'; // Import Ant Design icons
 import { Link } from "react-router-dom";
 

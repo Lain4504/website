@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getUserProfile, updateProfile } from '../../services/UserService';
-import { getProvinceById, getDistrictById, getWardById } from '../../services/AddressService'; // Cập nhật đường dẫn đúng
+import { getProvinceById, getDistrictById, getWardById } from '../../services/AddressService'; 
 import { Button, message } from 'antd';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import UserNavBar from '../../components/account/UserNavBar';
 import { AuthContext } from '../../context/AuthContext';
-import EditProfileModal from '../components/EditProfileModal';
+import EditProfileModal from '../../components/modal/EditProfileModal';
 import moment from 'moment';
 
 const UserProfile = () => {

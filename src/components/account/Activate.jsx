@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Breadcrumb from './Breadcrumb'
+import Breadcrumb from '../shared/Breadcrumb'
 import { useNavigate, useParams } from 'react-router-dom'
 import { activateAccount } from '../../services/UserService'
 import { Button, message } from 'antd'

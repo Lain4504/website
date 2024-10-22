@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { deleteWishList, getWishlistByUserId } from '../services/WishlistService';
-import { getBookById } from '../services/BookService';
-import Breadcrumb from '../components/shared/Breadcrumb';
+import { deleteWishList, getWishlistByUserId } from '../../services/WishlistService';
+import { getBookById } from '../../services/BookService';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { Link } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
 import { message, Pagination } from 'antd';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);

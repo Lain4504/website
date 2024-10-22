@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Table, Typography, Divider, Button, Row, Col } from 'antd';
 import { getOrderDetailByOrderId, getOrderById } from '../../services/OrderService';
 import { getBookById } from '../../services/BookService';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { getDistrictById, getProvinceById, getWardById } from '../../services/AddressService';
-import Title from '../components/Title'
+import Title from '../../components/shared/Title'
 const { Text } = Typography;
 
 const OrderDetail = () => {

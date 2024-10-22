@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'antd';
-import { getAllPost } from '../services/PostService';
+import { getAllPost } from '../../services/PostService';
 import { Link } from 'react-router-dom';
 
 const ListPost = () => {
