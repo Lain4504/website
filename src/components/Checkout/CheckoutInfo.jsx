@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Radio } from 'antd'; // Imported Radio and Button from Ant Design
+import { Button, message, Radio } from 'antd'; // Imported Radio and Button from Ant Design
 import { Link, useNavigate } from 'react-router-dom'; // Added missing useNavigate and Link imports
 import { getProvince, getDistrict, getWard, getWardById, getDistrictById, getProvinceById } from '../../services/AddressService';
 import { updateCartItem } from '../../services/CartService';
-import SelectAddress from '../SelectAddress';
+import SelectAddress from '../shared/SelectAddress';
 import { addOrder, updateOrder } from '../../services/OrderService';
 
 const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
@@ -85,7 +85,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
         updateCartItem(cart)
             .then(() => {
                 setCartChange(!cartChange);
-                window.location.href = '/payment';
+                navigate('/payment');
             })
             .catch((err) => {
                 console.error('Error updating cart item:', err);
@@ -166,11 +166,11 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
                     await addOrder(cart);
                     navigate('/orderlist');
                 } else {
-                    alert("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
+                    message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
                 }
             } catch (err) {
                 console.error("Error updating order or adding order:", err);
-                alert("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
+                message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
             }
         }
     };

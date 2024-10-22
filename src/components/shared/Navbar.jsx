@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
-import { assets } from '../assets/assets';
+import { assets } from '../../assets/assets';
 import Header from './Header';
-import SearchBar from './SearchBar';
-import CollectionList from './CollectionList';
+import SearchBar from '../SearchBar';
+import CollectionList from '../CollectionList';
 import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
-import { AuthContext } from '../context/AuthContext';
-import MiniCart from '../pages/MiniCart';
+import { AuthContext } from '../../context/AuthContext';
+import MiniCart from '../homepage/MiniCart';
 
 const Navbar = () => {
     const [showSearch, setShowSearch] = useState(false);

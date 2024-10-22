@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Typography, Button, Modal, Row, Col, Carousel, Input, Image, Divider } from 'antd';
 import { MinusOutlined, PlusOutlined, LeftOutlined, RightOutlined, HeartOutlined, HeartFilled, ShoppingCartOutlined } from '@ant-design/icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getAuthorByBookId, getBookById, getCollectionByBookId } from '../services/BookService';
 import { addWishList, deleteWishList, getWishlistByUserId } from '../services/WishlistService';
 import parser from 'html-react-parser';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../components/shared/Breadcrumb';
 import { AuthContext } from '../context/AuthContext';
 import { getPublisherById } from '../services/PublisherService';
-import TabSwitchProductDetail from '../components/TabSwitchProductDetail';
-import RelevantByAuthor from '../components/RelevantByAuthor';
+import TabSwitchProductDetail from '../components/productpage/TabSwitchProductDetail';
+import RelevantByAuthor from '../components/productpage/RelevantByAuthor';
 import { Form } from 'antd';
-import AddToCartModal from '../components/AddToCartModal';
+import AddToCartModal from '../components/modal/AddToCartModal';
 import { addToCart, getAllCartByUserId } from '../services/CartService';
 
 const { Paragraph } = Typography;
@@ -213,7 +213,7 @@ const ProductDetail = () => {
               <p>
                 Danh mục:
                 {collections.length > 0 ? collections.map((collectionItem, index) => (
-                  <span key={collectionItem.collectionId} className="text-blue-600 hover:underline">{index > 0 && ', '}<a href={`/collections/${collectionItem.collection.id}`}>{collectionItem.collection.name}</a></span>
+                  <span key={collectionItem.collectionId} className="text-blue-600 hover:underline">{index > 0 && ', '}<Link to={`/collections/${collectionItem.collection.id}`}>{collectionItem.collection.name}</Link></span>
                 )) : <span>Không có danh mục nào.</span>}
               </p>
             </div>

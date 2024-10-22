@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Table, Button, Layout, message } from 'antd';
-import { cancelOrder, getOrderByUserId, getOrderDetailByOrderId } from '../services/OrderService';
+import { Table, Button, Layout, message, Pagination } from 'antd';
+import { cancelOrder, getOrderByUserId, getOrderDetailByOrderId } from '../../services/OrderService';
 import UserNavBar from './UserNavBar';
 import Breadcrumb from '../components/Breadcrumb';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import { Modal } from 'antd';
+import { Link } from 'react-router-dom';
 
 const { confirm } = Modal;
 const { Content } = Layout;
@@ -50,7 +51,9 @@ const formatDate = (inputDate) => {
 const OrderList = () => {
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState([]);
-    const [totals, setTotals] = useState({}); // To store total for each order
+    const [totals, setTotals] = useState({});
+    const [currentPage, setCurrentPage] = useState(1); // trạng thái số trang hiện tại
+    const [pageSize, setPageSize] = useState(5); // trạng thái số phần tử mỗi trang
     const { currentUser } = useContext(AuthContext);
     const userId = currentUser ? currentUser.userId : null;
 
@@ -62,7 +65,6 @@ const OrderList = () => {
                 setOrders(ordersData);
                 console.log('Orders:', ordersData);
 
-                // Fetch details for each order and calculate totals
                 const totalsMap = {};
                 await Promise.all(ordersData.map(async (order) => {
                     const orderDetails = await getOrderDetailByOrderId(order.id);
@@ -70,7 +72,7 @@ const OrderList = () => {
                         (sum, item) => sum + item.amount * item.salePrice,
                         0
                     );
-                    totalsMap[order.id] = total; // Store total for each order
+                    totalsMap[order.id] = total;
                 }));
                 setTotals(totalsMap);
                 setLoading(false);
@@ -122,7 +124,6 @@ const OrderList = () => {
             key: 'total',
             align: 'center',
             render: (order) => {
-                // Render total from totals state
                 return totals[order.id] ? `${totals[order.id].toLocaleString()}₫` : 'Loading...';
             },
         },
@@ -132,9 +133,9 @@ const OrderList = () => {
             align: 'center',
             render: (_, order) => (
                 <div className="flex justify-center space-x-2">
-                    <a href={`/order-detail/${order.id}`}>
+                    <Link to={`/order-detail/${order.id}`}>
                         <Button type="primary" className="text-xs bg-green-500">Chi tiết</Button>
-                    </a>
+                    </Link>
                     {order.shippingState === 'NOTSHIPPING' && order.state !== 'Canceled' && (
                         <Button
                             onClick={() => handleCancel(order.id, setOrders)}
@@ -149,6 +150,12 @@ const OrderList = () => {
         }
     ];
 
+    // Thêm phân trang vào bảng
+    const onChangePage = (page, pageSize) => {
+        setCurrentPage(page);
+        setPageSize(pageSize);
+    };
+
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: 'Lịch sử đơn hàng' },
@@ -162,12 +169,21 @@ const OrderList = () => {
                 <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto">
                     <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
                         <Table
-                            dataSource={loading ? [] : orders}
+                            dataSource={loading ? [] : orders.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
                             columns={columns}
                             rowKey="id"
                             pagination={false}
                             className="w-full bg-white shadow-md rounded-lg"
                             loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
+                        />
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={orders.length}
+                            onChange={onChangePage}
+                            showSizeChanger
+                            pageSizeOptions={[5, 10, 20]}
+                            className="mt-4 text-center"
                         />
                     </Content>
                 </div>

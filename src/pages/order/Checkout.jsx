@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Row, Col } from 'antd';
-import CheckoutInfo from '../components/Checkout/CheckoutInfo';
-import Sidebar from '../components/Checkout/Sidebar';
+import CheckoutInfo from '../../components/checkout/CheckoutInfo';
+import Sidebar from '../../components/checkout/Sidebar';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { getAllCartByUserId } from '../services/CartService';
+import { AuthContext } from '../../context/AuthContext';
+import { getAllCartByUserId } from '../../services/CartService';
 import Breadcrumb from '../components/Breadcrumb';
 const Checkout = () => {
     const { currentUser } = useContext(AuthContext);

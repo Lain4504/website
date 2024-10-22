@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Button, Input, Layout, message, Modal } from 'antd'; // Import Ant Design components
-import { changePassword } from '../services/UserService';
-import UserNavBar from '../pages/UserNavBar';
+import { changePassword } from '../../services/UserService';
+import UserNavBar from './UserNavBar';
 import Breadcrumb from './Breadcrumb';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const ChangePassword = ({ cookies }) => {
     const [oldPassword, setOldPassword] = useState('');

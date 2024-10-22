@@ -1,7 +1,8 @@
 import React from 'react';
 import { Typography, Divider } from 'antd'; // Ant Design component
-import Title from '../../components/Title';
-import Breadcrumb from '../../components/Breadcrumb';
+import Title from '../../components/shared/Title';
+import Breadcrumb from '../../components/shared/Breadcrumb';
+import { Link } from 'react-router-dom';
 
 const { Paragraph } = Typography;
 
@@ -73,7 +74,7 @@ const PrivacyPolicy = () => {
         <Paragraph>
           Trong bất kỳ trường hợp có thắc mắc, góp ý nào liên quan đến chính sách bảo mật của Forever, vui lòng liên hệ:
           <br />
-          Fanpage: <a href="https://www.facebook.com/Forevervn">https://www.facebook.com/Forever</a>
+          Fanpage: <Link to="https://www.facebook.com/Forevervn">https://www.facebook.com/Forever</Link>
           <br />
           Email: ForeverBookStore@gmail.com
           <br />

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { deleteWishList, getWishlistByUserId } from '../services/WishlistService';
 import { getBookById } from '../services/BookService';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../components/shared/Breadcrumb';
 import { Link } from 'react-router-dom';
 import { DeleteOutlined } from '@ant-design/icons';
-import { jwtDecode } from 'jwt-decode';
-import { message } from 'antd';
+import { message, Pagination } from 'antd';
 import { AuthContext } from '../context/AuthContext';
 
 const Wishlist = () => {
@@ -14,6 +13,10 @@ const Wishlist = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { currentUser } = useContext(AuthContext); // Lấy currentUser từ AuthContext
   const userId = currentUser ? currentUser.userId : null;
+
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const [itemsPerPage] = useState(5); // Number of items per page
+
   const fetchBookDetails = async (bookId) => {
     try {
       const res = await getBookById(bookId);
@@ -38,32 +41,39 @@ const Wishlist = () => {
       console.error('Failed to fetch wishlist', error);
     }
   };
+
   useEffect(() => {
-        fetchWishlist(userId);
+    if (userId) {
+      fetchWishlist(userId);
+    }
   }, [userId]);
 
   const deleteWishlist = async (wishlistId) => {
-
     if (!userId) return;
     try {
       await deleteWishList(wishlistId);
       const newWishlist = wishlist.filter(item => item.id !== wishlistId);
       setWishlist(newWishlist);
-
-      // Kiểm tra nếu sản phẩm đang hover bị xóa thì reset hoveredBookTitle
-      const deletedItem = wishlist.find(item => item.id === wishlistId);
-      if (deletedItem && deletedItem.book.title === hoveredBookTitle) {
+  
+      // Tính toán số trang hiện có sau khi xóa
+      const totalPages = Math.ceil(newWishlist.length / itemsPerPage);
+  
+      // Nếu trang hiện tại lớn hơn số trang hiện có thì giảm currentPage
+      if (currentPage > totalPages) {
+        setCurrentPage(totalPages);
+      }
+  
+      if (hoveredBookTitle && wishlist.some(item => item.id === wishlistId && item.book.title === hoveredBookTitle)) {
         setHoveredBookTitle('');
       }
-
+  
       message.success('Đã xóa sách ra khỏi bộ sưu tập');
     } catch (error) {
       message.error('Failed to remove book from wishlist');
       console.error('Delete error', error);
     }
   };
-
-
+  
 
   const handleMouseMove = (e) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
@@ -78,29 +88,37 @@ const Wishlist = () => {
 
   const breadcrumbs = [
     { title: 'Trang chủ', href: '/' },
-    { title: 'Wishlist' }
+    { title: 'Bộ sưu tập' }
   ];
+
+  // Handle pagination change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Get the current page items
+const paginatedWishlist = wishlist.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
       <Breadcrumb items={breadcrumbs} />
       <h2 className="text-lg font-semibold text-start my-4">Bộ sưu tập yêu thích của bạn</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {wishlist.length > 0 ? (
-          wishlist.map((item) => (
+        {paginatedWishlist.length > 0 ? (
+          paginatedWishlist.map((item) => (
             <div
               key={item.id}
               className="product-card bg-white shadow-lg rounded-lg overflow-hidden relative group animate-move-from-center transition-transform duration-300 ease-in-out"
               onMouseEnter={() => setHoveredBookTitle(item.book.title)}
-              onMouseLeave={() => setHoveredBookTitle("")}
+              onMouseLeave={() => setHoveredBookTitle('')}
               onMouseMove={handleMouseMove}
             >
-              <div className="relative h-48 xs:h-80 sm:h-96 md:h-96 lg:h-80 xl:h-80 transition-all duration-300 ease-in-out"> {/* Chiều cao dynamic và có hiệu ứng */}
+              <div className="relative h-48 xs:h-80 sm:h-96 md:h-96 lg:h-80 xl:h-80 transition-all duration-300 ease-in-out">
                 <Link to={`/products/${item.book.id}`}>
                   <img
                     src={item.book.images[0]?.link}
                     alt={item.book.title}
-                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105" /* Zoom in hiệu ứng khi hover */
+                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105"
                   />
                 </Link>
                 <button
@@ -128,6 +146,17 @@ const Wishlist = () => {
           <p className="text-center">Bạn không lưu sách nào vào bộ sưu tập.</p>
         )}
       </div>
+
+      {/* Pagination Component */}
+      <div className="flex justify-center mt-6">
+        <Pagination
+          current={currentPage}
+          total={wishlist.length}
+          pageSize={itemsPerPage}
+          onChange={handlePageChange}
+        />
+      </div>
+
       {hoveredBookTitle && (
         <div
           className="fixed bg-gray-800 text-xs text-white p-2 rounded-md"

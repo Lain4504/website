@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getAllCartByUserId } from '../services/CartService';
-import { AuthContext } from '../context/AuthContext';
+import { getAllCartByUserId } from '../../services/CartService';
+import { AuthContext } from '../../context/AuthContext';
 
 const MiniCart = () => {
   const [miniCart, setMiniCart] = useState([]);

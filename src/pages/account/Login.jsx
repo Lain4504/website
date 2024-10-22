@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { login } from '../services/UserService';
+import { login } from '../../services/UserService';
 import { Form, Input, notification } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
 import Breadcrumb from '../components/Breadcrumb';
 import Title from '../components/Title';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {

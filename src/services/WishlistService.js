@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const WISHLIST_BASE_URL = 'http://localhost:5146/api/wishlist';
+const WISHLIST_API = `${import.meta.env.VITE_API_URL}/wishlist`;
 
 const getWishlistByUserId = (userId) => {
-    return axios.get(WISHLIST_BASE_URL + '/user/' + userId);
+    return axios.get(`${WISHLIST_API}/user/${userId}`);
 };
 
 const addWishList = (userId, bookId) => {
@@ -11,12 +11,11 @@ const addWishList = (userId, bookId) => {
         userId: userId,
         bookId: bookId
     };
-    return axios.post(WISHLIST_BASE_URL, data);
+    return axios.post(WISHLIST_API, data);
 };
 
-
 const deleteWishList = (wishlistId) => {
-    return axios.delete(`${WISHLIST_BASE_URL}/${wishlistId}`);
+    return axios.delete(`${WISHLIST_API}/${wishlistId}`);
 };
 
 export { getWishlistByUserId, addWishList, deleteWishList };

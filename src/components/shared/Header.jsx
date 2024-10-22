@@ -1,5 +1,6 @@
 import React from "react";
 import { FacebookFilled, InstagramFilled, YoutubeFilled, MailFilled, PhoneFilled } from '@ant-design/icons';
+import { Link } from "react-router-dom";
 
 const Header = () => {
     return (
@@ -9,15 +10,15 @@ const Header = () => {
                     {/* Social Network */}
                     <div className="w-full lg:w-2/12 mb-4 lg:mb-0">
                         <div className="flex space-x-4">
-                            <a href="https://www.facebook.com/" className="text-white hover:text-gray-300">
+                            <Link to="https://www.facebook.com/" className="text-white hover:text-gray-300">
                                 <FacebookFilled />
-                            </a>
-                            <a href="https://www.instagram.com/?hl=en" className="text-white hover:text-gray-300">
+                            </Link>
+                            <Link to="https://www.instagram.com/?hl=en" className="text-white hover:text-gray-300">
                                 <InstagramFilled />
-                            </a>
-                            <a href="https://www.youtube.com/" className="text-white hover:text-gray-300">
+                            </Link>
+                            <Link to="https://www.youtube.com/" className="text-white hover:text-gray-300">
                                 <YoutubeFilled />
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
@@ -33,12 +34,12 @@ const Header = () => {
                     {/* Contact */}
                     <div className="w-full lg:w-5/12 text-right">
                         <div className="space-x-4">
-                            <a href="tel:(+84) 1900561595" className="text-white hover:text-gray-300">
+                            <Link to="tel:(+84) 1900561595" className="text-white hover:text-gray-300">
                                 <PhoneFilled /> (+84) 915234798
-                            </a>
-                            <a href="mailto:cskh_online@sachtructuyen.com.vn" className="text-white hover:text-gray-300">
+                            </Link>
+                            <Link to="mailto:cskh_online@sachtructuyen.com.vn" className="text-white hover:text-gray-300">
                                 <MailFilled /> ForeverBookStore@gmail.com
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

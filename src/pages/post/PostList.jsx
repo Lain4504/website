@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Dropdown, Menu, Pagination } from 'antd';
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 import { ArrowRightOutlined, DownOutlined } from '@ant-design/icons';
-import { getAllPostCategories, getPostByCategoryId } from '../services/PostService';
+import { getAllPostCategories, getPostByCategoryId } from '../../services/PostService';
 import { Link } from 'react-router-dom';
 
 const PostList = () => {
@@ -104,9 +104,9 @@ const PostList = () => {
                         {currentPosts.map(post => (
                             <div key={post.id} className="mb-4 flex animate-move-from-center" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
                                 <div style={{ width: isMobile ? '100%' : '40%' }}>
-                                    <a href={post.link}>
+                                    <Link to={post.link}>
                                         <img src={post.thumbnail} alt="Post Thumbnail" style={{ width: '100%', borderRadius: '8px' }} />
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div style={{ width: isMobile ? '100%' : '60%', paddingLeft: isMobile ? '0' : '16px' }}>
                                     <h2>
@@ -118,14 +118,14 @@ const PostList = () => {
                                         <span className='mr-3'>{post.createdAt}</span>
                                         <span className='font-thin mr-3'>|</span>
                                         <span>
-                                            <a href="#">{post.category}</a>
+                                            <Link to="#">{post.category}</Link>
                                         </span>
                                     </div>
                                     <p className='mt-2'>
                                         {post.brief}
-                                        <a href={post.link} className='text-blue-500'>
+                                        <Link to={post.link} className='text-blue-500'>
                                             Xem thêm <ArrowRightOutlined style={{ fontSize: '12px' }} />
-                                        </a>
+                                        </Link>
                                     </p>
                                 </div>
                             </div>

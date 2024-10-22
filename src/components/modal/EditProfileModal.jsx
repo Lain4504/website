@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, Row, Col, notification, message } from 'antd';
-import SelectAddress from './SelectAddress'; 
-import { getProvince, getDistrict, getWard } from '../services/AddressService'; 
+import SelectAddress from '../shared/SelectAddress'; 
+import { getProvince, getDistrict, getWard } from '../../services/AddressService'; 
 
 const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
     const [provinces, setProvinces] = useState([]);

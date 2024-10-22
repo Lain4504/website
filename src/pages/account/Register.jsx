@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Alert, Typography, Modal, notification } from 'antd';
-import { createAccount } from '../services/UserService';
+import { createAccount } from '../../services/UserService';
 import { Link } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
 import Breadcrumb from '../components/Breadcrumb';

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Carousel } from "antd";
 import { getSlider } from "../services/CarouselService";
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import { Link } from "react-router-dom";
 
 const CarouselComponent = () => {
   const [sliders, setSliders] = useState([]);
@@ -42,13 +43,13 @@ const CarouselComponent = () => {
       <Carousel autoplay dots={{ className: 'custom-dots' }} className="-z-60" ref={carouselRef}>
         {sliders.map((slider) => (
           <div key={slider.id} className="w-full">
-            <a href={slider.backLink}>
+            <Link to={slider.backLink}>
               <img 
                 src={slider.imageUrl} 
                 className="w-full h-auto object-contain"
                 alt={`Slide ${slider.id}`} 
               />
-            </a>
+            </Link>
           </div>
         ))}
       </Carousel>

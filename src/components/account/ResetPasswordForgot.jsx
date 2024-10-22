@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Breadcrumb from './Breadcrumb';
 import { useNavigate, useParams } from 'react-router-dom'; // Để lấy token từ URL
 import { Input, Button, Form, message } from 'antd';
-import { resetPassword } from '../services/UserService'; // Hàm gọi API
+import { resetPassword } from '../../services/UserService'; // Hàm gọi API
 
 const ResetPassword = () => {
     const [loading, setLoading] = useState(false);

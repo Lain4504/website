@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getBookByAuthorId } from '../services/BookService';
-import Title from './Title';
+import { getBookByAuthorId } from '../../services/BookService';
+import Title from '../shared/Title';
 import { Link } from 'react-router-dom';
 import { Button, Divider } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';

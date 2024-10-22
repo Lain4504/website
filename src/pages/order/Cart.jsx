@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, InputNumber, Button, Row, Col, message, Popover } from 'antd';
-import { updateCartItem, getAllCartByUserId } from '../services/CartService';
+import { updateCartItem, getAllCartByUserId } from '../../services/CartService';
 import Breadcrumb from '../components/Breadcrumb';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
 const Cart = () => {
@@ -79,13 +79,13 @@ const Cart = () => {
       key: 'book',
       render: (text, item) => (
         <div className="flex items-center">
-          <a href={`/products/${item.book.id}`}>
+          <Link to={`/products/${item.book.id}`}>
             <img src={item.book.images[0]?.link} alt={item.book.title} className="w-24 h-auto" />
-          </a>
+          </Link>
           <div className="ml-4">
-            <a href={`/products/${item.book.id}`} className="text-red-600 font-bold no-underline">
+            <Link to={`/products/${item.book.id}`} className="text-red-600 font-bold no-underline">
               {item.book.title}
-            </a>
+            </Link>
             <div className='text-gray-500 cursor-pointer mt-2' onClick={() => deleteCartItemHandler(item.id)}>
               <i></i> Xóa
             </div>

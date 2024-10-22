@@ -1,6 +1,6 @@
 import React from "react";
 import { PhoneFilled, EnvironmentFilled, MailFilled, FacebookFilled, YoutubeFilled, InstagramFilled, FileAddFilled, CloseOutlined } from '@ant-design/icons';
-import { assets } from "../assets/assets";
+import { assets } from "../../assets/assets";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
