@@ -7,13 +7,14 @@ import CollectionList from './CollectionList';
 import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Menu } from 'antd';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 const Navbar = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
     const authContext = useContext(AuthContext); 
-
+    const { dispatch } = useContext(AuthContext); 
     // Ghi log current user cho debugging
     useEffect(() => {
         console.log("Current user in Navbar:", authContext.currentUser);
@@ -30,9 +31,27 @@ const Navbar = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const logout = () => {
-        authContext.dispatch({ type: "LOGOUT", isSessionExpired: false }); // Logout bình thường
-    };
+    const logout = async () => {
+        const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
+      
+        if (user) {
+          try {
+            // Gọi API logout và gửi refresh token
+            await axios.post('http://localhost:5146/api/user/logout', { RefreshToken: user.refreshToken });
+            console.log("Đăng xuất thành công");
+          } catch (error) {
+            console.error("Lỗi khi gọi API logout:", error);
+            // Bạn có thể xử lý thêm ở đây nếu cần
+          }
+        }
+      
+        // Xóa toàn bộ dữ liệu trong store và localStorage
+        dispatch({ type: "LOGOUT", isSessionExpired: true }); // Logout bình thường
+        localStorage.removeItem("user"); // Xóa user trong localStorage
+      
+        navigate('/login'); // Chuyển hướng đến trang đăng nhập
+      };
+      
 
     const menu = (
         <Menu style={{ width: '120px', fontSize: '16px' }}>

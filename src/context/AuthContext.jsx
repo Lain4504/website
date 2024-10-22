@@ -14,14 +14,100 @@ export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
   const navigate = useNavigate();
 
+  const checkAndRefreshToken = async () => {
+    const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
+
+    if (!user) {
+      console.error("Không tìm thấy thông tin người dùng.");
+      return null;
+    }
+
+    const token = user.token;
+    const refreshToken = user.refreshToken; // Lấy refresh token
+    const expirationDate = new Date(user.expirationTime);
+
+    // Kiểm tra xem token đã hết hạn chưa
+    if (new Date() >= expirationDate) {
+      // Kiểm tra xem refresh token có tồn tại không
+      if (!refreshToken) {
+        console.error("Refresh token không hợp lệ.");
+        return null;
+      }
+
+      try {
+        const response = await axios.post('http://localhost:5146/api/user/refresh-token', { RefreshToken : refreshToken });
+        const newToken = response.data.token;
+        const newExpirationTime = response.data.expirationTime; // Thời gian hết hạn mới
+
+        // Cập nhật state và localStorage
+        dispatch({
+          type: "LOGIN",
+          payload: {
+            token: newToken,
+            userId: user.userId,
+            expirationTime: newExpirationTime,
+            refreshToken: refreshToken // Giữ nguyên refresh token
+          }
+        });
+
+        localStorage.setItem("user", JSON.stringify({
+          token: newToken,
+          userId: user.userId,
+          expirationTime: newExpirationTime,
+          refreshToken: refreshToken
+        }));
+
+        return newToken; // Trả về token mới
+      } catch (error) {
+        if (error.response) {
+          console.error('Lỗi từ server:', error.response.data);
+          console.error('Mã trạng thái:', error.response.status);
+        } else {
+          console.error('Lỗi không xác định:', error.message);
+        }
+
+        // Gọi hàm logout để xóa refresh token trên server
+        await logout(refreshToken);
+
+        // Xóa user khỏi store và localStorage
+        dispatch({ type: "LOGOUT", isSessionExpired: true });
+        navigate('/login');
+        return null;
+      }
+    }
+
+    return token;
+  };
+
+  const logout = async () => {
+    const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
+    const refreshToken = user?.refreshToken;
+
+    if (refreshToken) {
+      try {
+        await axios.post('http://localhost:5146/api/user/logout', { refreshToken });
+        console.log("Đăng xuất thành công");
+      } catch (error) {
+        console.error("Lỗi khi gọi API logout:", error);
+      }
+    }
+
+    // Xóa dữ liệu trong store và localStorage
+    dispatch({ type: "LOGOUT", isSessionExpired: true });
+    localStorage.removeItem("user");
+
+    navigate('/login'); // Chuyển hướng đến trang đăng nhập
+  };
+
+
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
-      error => {
+      async (error) => {
         if (error.response && error.response.status === 401) {
-          console.log("Nhận mã lỗi 401 - Thoát phiên...");
-          dispatch({ type: "LOGOUT", isSessionExpired: true });
-          navigate('/login');
+          console.log("Nhận mã lỗi 401 - Thử làm mới token...");
+          await checkAndRefreshToken();
+          return Promise.reject(error);
         }
         return Promise.reject(error);
       }
@@ -37,17 +123,15 @@ export const AuthContextProvider = ({ children }) => {
   }, [state.currentUser]);
 
   useEffect(() => {
-    // Kiểm tra tính hợp lệ của token
     const checkTokenExpiration = () => {
-      const token = state.currentUser?.token; 
+      const token = state.currentUser?.token;
       if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1])); 
-        const expirationDate = new Date(payload.exp * 1000); 
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expirationDate = new Date(payload.exp * 1000);
 
         if (expirationDate < new Date()) {
-          console.log("Token đã hết hạn - Thoát phiên...");
-          dispatch({ type: "LOGOUT", isSessionExpired: true });
-          navigate('/'); 
+          console.log("Token đã hết hạn - Thử làm mới token...");
+          checkAndRefreshToken(); // Gọi hàm làm mới token
         }
       }
     };
@@ -56,11 +140,11 @@ export const AuthContextProvider = ({ children }) => {
   }, [state.currentUser, dispatch, navigate]);
 
   return (
-    <AuthContext.Provider value={{ 
-      currentUser: state.currentUser, 
+    <AuthContext.Provider value={{
+      currentUser: state.currentUser,
       userId: state.currentUser?.userId,
-      isSessionExpired: state.isSessionExpired, 
-      dispatch 
+      isSessionExpired: state.isSessionExpired,
+      dispatch
     }}>
       {children}
     </AuthContext.Provider>
