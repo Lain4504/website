@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
-import ScrollToTop from "./components/ScrollToTop";
-import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
+import Footer from "./components/shared/Footer";
+import Navbar from "./components/shared/Navbar";
+import ScrollToTop from "./components/shared/ScrollToTop";
+import FloatingPhoneIcon from "./components/shared/FloatingPhoneIcon";
 import AppRoutes from "./context/AppRoutes";
 import useAuth from './context/useAuth';
 import { AuthContext } from "./context/AuthContext";
@@ -12,7 +12,7 @@ const App = () => {
   const { currentUser } = useContext(AuthContext);
   const { user }  = useAuth();
   const userId = currentUser?.userId || null;
-  console.log("DDDD", userId)
+  console.log("User:", userId)
 
   return (
     <>

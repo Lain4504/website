@@ -1,8 +1,9 @@
 import React from 'react'
 import { Typography, Card, Divider } from 'antd'
-import Breadcrumb from '../../components/Breadcrumb'
+import Breadcrumb from '../../components/shared/Breadcrumb'
+import Title from '../../components/shared/Title'
 
-const { Title, Paragraph, Text } = Typography
+const { Paragraph, Text } = Typography
 
 const ShippingPolicy = () => {
     const breadcrumbs = [
@@ -13,7 +14,7 @@ const ShippingPolicy = () => {
     <> 
     <Breadcrumb items={breadcrumbs}/>
     <div className="p-6 bg-white rounded-lg shadow-lg">
-        <Title level={2} className="text-center">Chính sách vận chuyển</Title>
+        <Title text1={'Chính sách'} text2={'vận chuyển'}/>
         <Paragraph>
           Chào mừng Quý khách đến với website <Text strong>Forever.vn</Text>
         </Paragraph>
