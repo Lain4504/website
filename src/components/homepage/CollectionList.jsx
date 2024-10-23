@@ -10,10 +10,17 @@ const CollectionList = ({ onSelectCollection, closeMenu }) => {
   const fetchData = () => {
     getCollections()
       .then((response) => {
-        setCollections(response.data);
+        // Check if the response data is an array
+        if (Array.isArray(response.data)) {
+          setCollections(response.data);
+        } else {
+          console.error("Unexpected data format: collections is not an array");
+          setCollections([]);  
+        }
       })
       .catch((error) => {
         console.error("Error fetching collections data: ", error);
+        setCollections([]);  
       });
   };
 

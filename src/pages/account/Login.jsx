@@ -17,24 +17,31 @@ const Login = () => {
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
-
+    
         try {
             const res = await login({ email, password });
-            const token = res.data.token;
+            const token = res.data.token; // Access Token
+            const refreshToken = res.data.refreshToken; // Refresh Token
+    
+            // Giải mã token để lấy thông tin và thời gian hết hạn
             const decodedToken = jwtDecode(token);
+            const expirationTime = new Date(decodedToken.exp * 1000); // Chuyển đổi giây sang milliseconds
+    
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
-            dispatch({ type: "LOGIN", payload: { token, userId } });
-            localStorage.setItem("user", JSON.stringify({ token, userId }));
-
+    
+            // Lưu thông tin vào state và local storage
+            dispatch({ type: "LOGIN", payload: { token, refreshToken, userId, expirationTime } });
+            localStorage.setItem("user", JSON.stringify({ token, refreshToken, userId, expirationTime }));
+    
+            console.log("Current User in Login:", res);
             notification.success({
                 message: 'Đăng nhập thành công',
                 description: 'Chào mừng bạn trở lại!',
             });
-
+    
             navigate('/');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
-
             notification.error({
                 message: 'Đăng nhập không thành công',
                 description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
@@ -43,7 +50,7 @@ const Login = () => {
             setLoading(false);
         }
     };
-
+    
     const handleGoogleLogin = () => {
         notification.info({
             message: 'Google Login',
