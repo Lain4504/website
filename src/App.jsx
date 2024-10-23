@@ -1,27 +1,26 @@
 import React, { useContext } from "react";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
-import ScrollToTop from "./components/ScrollToTop";
-import FloatingPhoneIcon from "./components/FloatingPhoneIcon";
-import useCart from "./context/useCart";
+import Footer from "./components/shared/Footer";
+import Navbar from "./components/shared/Navbar";
+import ScrollToTop from "./components/shared/ScrollToTop";
+import FloatingPhoneIcon from "./components/shared/FloatingPhoneIcon";
 import AppRoutes from "./context/AppRoutes";
+import useAuth from './context/useAuth';
 import { AuthContext } from "./context/AuthContext";
 
-
 const App = () => {
-  const { currentUser } = useContext(AuthContext); 
-  const userId = currentUser ? currentUser.userId : null; 
   const is404Page = window.location.pathname === '/404'; 
+  const { currentUser } = useContext(AuthContext);
+  const { user }  = useAuth();
+  const userId = currentUser?.userId || null;
+  console.log("User:", userId)
 
   return (
     <>
       <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
         {!is404Page && (
-          <Navbar 
-          />
+          <Navbar />
         )}
-        <AppRoutes 
-        />
+        <AppRoutes />
         <ScrollToTop />
         <FloatingPhoneIcon />
         {!is404Page && <Footer />}

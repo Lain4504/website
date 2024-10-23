@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import OurPolicy from "../components/OurPolicy";
-import ListProduct from "../components/ListProduct";
-import Carousel from "../components/Carousel";
-import ListPost from "../components/ListPost";
-import Title from "../components/Title";
+import OurPolicy from "../components/homepage/OurPolicy";
+import ListProduct from "../components/homepage/ListProduct";
+import Carousel from "../components/homepage/Carousel";
+import ListPost from "../components/homepage/ListPost";
+import Title from "../components/shared/Title";
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState("new"); // Default tab: "new"

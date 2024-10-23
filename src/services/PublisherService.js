@@ -1,9 +1,8 @@
 import axios from "axios";
-
-const PUBLISHER_BASE_URL = "http://localhost:5146/api/publisher";
+const PUBLISHER_API = import.meta.env.VITE_API_URL + "/publisher";
 
 const getPublisherById = (id) => {
-    return axios.get(PUBLISHER_BASE_URL + '/' + id);
+    return axios.get(`${PUBLISHER_API}/${id}`);
 }
 
 export {getPublisherById}

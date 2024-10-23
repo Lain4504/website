@@ -1,10 +1,11 @@
 import axios from "axios"
 
-const AUTHOR_URL = "http://localhost:5146/api/author"
+const AUTHOR_API = import.meta.env.VITE_API_URL + "/author"
 
 const getAuthorById = (id) => {
-    return axios.get(AUTHOR_URL + '/' + id)
+    return axios.get(`${AUTHOR_API}/${id}`) 
 }
+
 export {
     getAuthorById
 }

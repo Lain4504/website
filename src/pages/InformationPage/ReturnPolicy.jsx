@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Divider } from 'antd'; // Ant Design component
-import Title from '../../components/Title';
-import Breadcrumb from '../../components/Breadcrumb';
+import Title from '../../components/shared/Title';
+import Breadcrumb from '../../components/shared/Breadcrumb';
 
 const { Paragraph } = Typography;
 
