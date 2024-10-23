@@ -1,47 +1,59 @@
 import axios from "axios";
 
-const PROVINCE_API_BASE_URL = "https://provinces.open-api.vn/api/";
+const ADDRESS_API = "https://provinces.open-api.vn/api";
 
 const getProvince = () => {
-    return axios.get(PROVINCE_API_BASE_URL + "p/");
+    return axios.get(`${ADDRESS_API}/p/`);
 }
+
 const getDistrict = (id) => {
-    if(id === null || id === undefined)
-        return;
-    return axios.get(PROVINCE_API_BASE_URL + `p/${id}/?depth=2`);
+    if (!id) return Promise.reject(new Error("District ID is required"));
+    return axios.get(`${ADDRESS_API}/p/${id}/?depth=2`);
 }
 
 const getWard = (id) => {
-    if(id === null || id === undefined)
-        return;
-    return axios.get(PROVINCE_API_BASE_URL + `d/${id}/?depth=2`);
+    if (!id) return Promise.reject(new Error("Ward ID is required"));
+    return axios.get(`${ADDRESS_API}/d/${id}/?depth=2`);
 }
 
-const getDistrictById = (id) => {
-    if(id === null || id === undefined)
-        return
-    return axios.get(PROVINCE_API_BASE_URL + `d/${id}`)
-    .then(response => {
+const getDistrictById = async (id) => {
+    if (!id) return Promise.reject(new Error("District ID is required"));
+    try {
+        const response = await axios.get(`${ADDRESS_API}/d/${id}`);
         return response.data.name;
-    })
+    } catch (error) {
+        console.error("Error fetching district by ID:", error);
+        throw error;
+    }
 }
 
-const getWardById = (id) => {
-    if(id === null || id === undefined)
-        return
-    return axios.get(PROVINCE_API_BASE_URL + `w/${id}`)
-    .then(response => {
+const getWardById = async (id) => {
+    if (!id) return Promise.reject(new Error("Ward ID is required"));
+    try {
+        const response = await axios.get(`${ADDRESS_API}/w/${id}`);
         return response.data.name;
-    })
+    } catch (error) {
+        console.error("Error fetching ward by ID:", error);
+        throw error;
+    }
 }
 
-const getProvinceById = (id) => {
-    if(id === null || id === undefined)
-        return
-    return axios.get(PROVINCE_API_BASE_URL + `p/${id}`)
-    .then(response => {
+const getProvinceById = async (id) => {
+    if (!id) return Promise.reject(new Error("Province ID is required"));
+    try {
+        const response = await axios.get(`${ADDRESS_API}/p/${id}`);
         return response.data.name;
-    })
+    } catch (error) {
+        console.error("Error fetching province by ID:", error);
+        throw error;
+    }
 }
 
-export {getProvince, getDistrict, getWard, getDistrictById, getWardById, getProvinceById}
+export {
+    getProvince,
+    getDistrict,
+    getWard,
+    getDistrictById,
+    getWardById,
+    getProvinceById
+};

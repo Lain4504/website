@@ -8,6 +8,7 @@ import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } fro
 import { Dropdown, Menu } from 'antd';
 import { AuthContext } from '../../context/AuthContext';
 import MiniCart from '../modal/MiniCart';
+import { logout } from '../../services/UserService';
 
 const Navbar = () => {
     const [showSearch, setShowSearch] = useState(false);
@@ -15,7 +16,7 @@ const Navbar = () => {
     const [showMiniCart, setShowMiniCart] = useState(false);
     const { currentUser, dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
-    const location = useLocation(); // Get the current location (URL)
+    const location = useLocation(); 
     const [selectedItem, setSelectedItem] = useState('');
 
     // Update selected item based on current URL
@@ -36,8 +37,19 @@ const Navbar = () => {
         }
     }, [location.pathname]); // Re-run effect when location changes
 
-    const handleLogout = () => {
-        dispatch({ type: "LOGOUT", isSessionExpired: false });
+    const handleLogout = async () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user){
+            try{
+                await logout({ RefreshToken: user.refreshToken });
+                console.log("Logout successfully.");
+            }
+            catch (error){
+                console.error("Error when call api logout:", error);
+            }
+        }
+        dispatch({type: "LOGOUT", isSessionExpired: true});
+        localStorage.removeItem("user");
     };
 
     const userMenu = (

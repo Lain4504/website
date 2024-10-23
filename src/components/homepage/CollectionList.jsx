@@ -10,10 +10,17 @@ const CollectionList = ({ onSelectCollection, closeMenu }) => {
   const fetchData = () => {
     getCollections()
       .then((response) => {
-        setCollections(response.data);
+        // Check if the response data is an array
+        if (Array.isArray(response.data)) {
+          setCollections(response.data);
+        } else {
+          console.error("Unexpected data format: collections is not an array");
+          setCollections([]);  // Set collections as empty array if not valid
+        }
       })
       .catch((error) => {
         console.error("Error fetching collections data: ", error);
+        setCollections([]);  // Set collections as empty array in case of error
       });
   };
 
@@ -55,8 +62,8 @@ const CollectionList = ({ onSelectCollection, closeMenu }) => {
         <Link to={`/collections/all`} className="block px-4 py-2 text-sm text-black hover:bg-gray-100" onClick={() => closeDropdown('all')}>
           TOÀN BỘ SẢN PHẨM
         </Link>
-        {collections?.map((collection) => (
-          collection.isDisplay && (
+        {Array.isArray(collections) && collections.map((collection) => (
+          collection && collection.isDisplay && (
             <Link
               to={`/collections/${collection.id}`}
               key={collection.id}
