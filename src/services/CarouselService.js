@@ -1,9 +1,9 @@
 import axios from "axios"
 
-const CAROUSEL_URL = "http://localhost:5146/api/slider"
+const BANNER_API = import.meta.env.VITE_API_URL + "/slider"
 
 const getSlider = () => {
-    return axios.get(CAROUSEL_URL)
+    return axios.get(`${BANNER_API}`)
 }
 
 export {getSlider}

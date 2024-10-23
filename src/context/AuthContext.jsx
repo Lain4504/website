@@ -13,7 +13,6 @@ export const AuthContext = createContext(INITIAL_STATE);
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
   const navigate = useNavigate();
-
   const checkAndRefreshToken = async () => {
     const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
@@ -98,8 +97,6 @@ export const AuthContextProvider = ({ children }) => {
 
     navigate('/login'); // Chuyển hướng đến trang đăng nhập
   };
-
-
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
@@ -130,8 +127,8 @@ export const AuthContextProvider = ({ children }) => {
         const expirationDate = new Date(payload.exp * 1000);
 
         if (expirationDate < new Date()) {
-          console.log("Token đã hết hạn - Thử làm mới token...");
-          checkAndRefreshToken(); // Gọi hàm làm mới token
+          console.log("Token đã hết hạn - Thoát phiên...");
+          checkAndRefreshToken();
         }
       }
     };
