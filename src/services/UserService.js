@@ -48,6 +48,9 @@ const updateProfile = (id, profileData) => {
     return axios.put(`${ACCOUNT_API}/update-profile/${id}`, profileData);
 }
 
+const logout = (resfestToken) => {
+    return axios.post(`${ACCOUNT_API}/logout`, resfestToken);
+}
 export { 
     createAccount, 
     login, 
@@ -56,5 +59,6 @@ export {
     resetPassword, 
     getUserProfile, 
     changePassword, 
-    updateProfile 
+    updateProfile,
+    logout
 };

@@ -44,10 +44,18 @@ const BooksByCollection = () => {
                 book_length.current = res.data.totalElements;
             })
             .catch(error => console.error(error));
-
         getCollections()
-            .then(res => setCollections(res.data))
-            .catch(error => console.error(error));
+        .then((response) => {
+            if (Array.isArray(response.data)){
+                setCollections(response.data);
+            } else {
+                setCollections([]);
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching collections data: ", error);
+            setCollections([]);  
+          });
     };
 
     const indexOfLastBook = currentPage * booksPerPage;

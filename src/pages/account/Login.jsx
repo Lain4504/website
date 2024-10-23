@@ -20,11 +20,15 @@ const Login = () => {
 
         try {
             const res = await login({ email, password });
-            const token = res.data.token;
+            const token = res.data.token; // Access Token
+            const refreshToken = res.data.refreshToken; // Refresh Token
             const decodedToken = jwtDecode(token);
+            const expirationTime = new Date(decodedToken.exp * 1000); // Chuyển đổi giây sang milliseconds
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
-            dispatch({ type: "LOGIN", payload: { token, userId } });
-            localStorage.setItem("user", JSON.stringify({ token, userId }));
+             dispatch({ type: "LOGIN", payload: { token, refreshToken, userId, expirationTime } });
+             localStorage.setItem("user", JSON.stringify({ token, refreshToken, userId, expirationTime }));
+ 
+             console.log("Current User in Login:", res);
 
             notification.success({
                 message: 'Đăng nhập thành công',
@@ -37,7 +41,7 @@ const Login = () => {
 
             notification.error({
                 message: 'Đăng nhập không thành công',
-                description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
+                description: errorMessage,
             });
         } finally {
             setLoading(false);
