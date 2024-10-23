@@ -13,6 +13,7 @@ export const AuthContext = createContext(INITIAL_STATE);
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
   const navigate = useNavigate();
+
   const checkAndRefreshToken = async () => {
     const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
@@ -98,14 +99,15 @@ export const AuthContextProvider = ({ children }) => {
     navigate('/login'); // Chuyển hướng đến trang đăng nhập
   };
 
+
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
-      error => {
+      async (error) => {
         if (error.response && error.response.status === 401) {
-          console.log("Nhận mã lỗi 401 - Thoát phiên...");
-          dispatch({ type: "LOGOUT", isSessionExpired: true });
-          navigate('/login');
+          console.log("Nhận mã lỗi 401 - Thử làm mới token...");
+          await checkAndRefreshToken();
+          return Promise.reject(error);
         }
         return Promise.reject(error);
       }

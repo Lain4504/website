@@ -22,7 +22,6 @@ const Login = () => {
             const res = await login({ email, password });
             const token = res.data.token; // Access Token
             const refreshToken = res.data.refreshToken; // Refresh Token
-    
             // Giải mã token để lấy thông tin và thời gian hết hạn
             const decodedToken = jwtDecode(token);
             const expirationTime = new Date(decodedToken.exp * 1000); // Chuyển đổi giây sang milliseconds
@@ -44,7 +43,7 @@ const Login = () => {
             const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
             notification.error({
                 message: 'Đăng nhập không thành công',
-                description: 'Vui lòng kiểm tra lại thông tin đăng nhập.',
+                description: errorMessage,
             });
         } finally {
             setLoading(false);

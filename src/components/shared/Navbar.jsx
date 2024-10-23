@@ -8,7 +8,6 @@ import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } fro
 import { Dropdown, Menu } from 'antd';
 import { AuthContext } from '../../context/AuthContext';
 import MiniCart from '../modal/MiniCart';
-import { logout } from '../../services/UserService';
 import axios from 'axios';
 
 const Navbar = () => {
@@ -18,7 +17,7 @@ const Navbar = () => {
     const authContext = useContext(AuthContext); 
     const { dispatch } = useContext(AuthContext); 
     const navigate = useNavigate();
-    const location = useLocation(); // Get the current location (URL)
+    const location = useLocation(); 
     const [selectedItem, setSelectedItem] = useState('');
 
     // Update selected item based on current URL
@@ -58,6 +57,7 @@ const Navbar = () => {
         localStorage.removeItem("user"); // Xóa user trong localStorage
 
       };
+
 
     const userMenu = (
         <Menu style={{ width: '120px', fontSize: '16px' }}>
