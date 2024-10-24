@@ -13,7 +13,7 @@ const FeedBack = ({ bookId, userId }) => {
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await axios.get(`http://localhost:5146/api/feedback/${bookId}`);
+                const response = await axios.get(`https://localhost:3001/api/feedback/${bookId}`);
                 setComments(response.data);
             } catch (err) {
                 setError("Error loading comments: " + err.message);

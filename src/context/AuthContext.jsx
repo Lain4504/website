@@ -35,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
       }
 
       try {
-        const response = await axios.post('http://localhost:5146/api/user/refresh-token', { RefreshToken : refreshToken });
+        const response = await axios.post('https://localhost:3001/api/user/refresh-token', { RefreshToken : refreshToken });
         const newToken = response.data.token;
         const newExpirationTime = response.data.expirationTime; // Thời gian hết hạn mới
 
@@ -85,7 +85,7 @@ export const AuthContextProvider = ({ children }) => {
 
     if (refreshToken) {
       try {
-        await axios.post('http://localhost:5146/api/user/logout', { refreshToken });
+        await axios.post('https://localhost:3001/api/user/logout', { refreshToken });
         console.log("Đăng xuất thành công");
       } catch (error) {
         console.error("Lỗi khi gọi API logout:", error);
