@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import PrivacyPolicy from '../pages/InformationPage/PrivacyPolicy';
+import PrivacyPolicy from '../pages/informationpage/PrivacyPolicy'
 import PaymentPolicy from '../pages/informationpage/PaymentPolicy';
 import ShippingPolicy from '../pages/informationpage/ShippingPolicy';
 import About from '../pages/informationpage/About';
