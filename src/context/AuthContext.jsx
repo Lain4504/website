@@ -13,6 +13,7 @@ export const AuthContext = createContext(INITIAL_STATE);
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
   const navigate = useNavigate();
+
   const checkAndRefreshToken = async () => {
     const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
@@ -97,6 +98,8 @@ export const AuthContextProvider = ({ children }) => {
 
     navigate('/login'); // Chuyển hướng đến trang đăng nhập
   };
+
+
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
@@ -120,16 +123,15 @@ export const AuthContextProvider = ({ children }) => {
   }, [state.currentUser]);
 
   useEffect(() => {
-    // Kiểm tra tính hợp lệ của token
     const checkTokenExpiration = () => {
-      const token = state.currentUser?.token; 
+      const token = state.currentUser?.token;
       if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1])); 
-        const expirationDate = new Date(payload.exp * 1000); 
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expirationDate = new Date(payload.exp * 1000);
 
         if (expirationDate < new Date()) {
-          console.log("Token đã hết hạn - Thoát phiên...");
-          checkAndRefreshToken();
+          console.log("Token đã hết hạn - Thử làm mới token...");
+          checkAndRefreshToken(); // Gọi hàm làm mới token
         }
       }
     };
@@ -138,11 +140,11 @@ export const AuthContextProvider = ({ children }) => {
   }, [state.currentUser, dispatch, navigate]);
 
   return (
-    <AuthContext.Provider value={{ 
-      currentUser: state.currentUser, 
+    <AuthContext.Provider value={{
+      currentUser: state.currentUser,
       userId: state.currentUser?.userId,
-      isSessionExpired: state.isSessionExpired, 
-      dispatch 
+      isSessionExpired: state.isSessionExpired,
+      dispatch
     }}>
       {children}
     </AuthContext.Provider>
