@@ -39,20 +39,24 @@ const Navbar = () => {
     }, [location.pathname]);
 
     const logout = async () => {
-        const user = JSON.parse(localStorage.getItem('user')); 
+
+        const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
         if (user) {
           try {
             // Gọi API logout và gửi refresh token
-            await axios.post('https://localhost:3001/api/user/logout', { RefreshToken: user.refreshToken });
+
+            await axios.post('http://localhost:5146/api/user/logout', { RefreshToken: user.refreshToken });
             console.log("Đăng xuất thành công");
           } catch (error) {
             console.error("Lỗi khi gọi API logout:", error);
+            // Bạn có thể xử lý thêm ở đây nếu cần
           }
         }
 
-        dispatch({ type: "LOGOUT", isSessionExpired: true }); 
-        localStorage.removeItem("user"); 
+        // Xóa toàn bộ dữ liệu trong store và localStorage
+        dispatch({ type: "LOGOUT", isSessionExpired: true }); // Logout bình thường
+        localStorage.removeItem("user"); // Xóa user trong localStorage
 
       };
 

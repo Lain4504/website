@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/shared/Breadcrumb';
 import Title from '../../components/shared/Title';
 import { AuthContext } from '../../context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google'; // Thư viện Google Login
 
 const Login = () => {
     const [form] = Form.useForm();
@@ -17,28 +18,26 @@ const Login = () => {
     const onSubmitHandler = async (values) => {
         setLoading(true);
         const { email, password } = values;
-
+    
         try {
             const res = await login({ email, password });
-            const token = res.data.token; // Access Token
-            const refreshToken = res.data.refreshToken; // Refresh Token
+            const token = res.data.token;
+            const refreshToken = res.data.refreshToken;
             const decodedToken = jwtDecode(token);
-            const expirationTime = new Date(decodedToken.exp * 1000); // Chuyển đổi giây sang milliseconds
+            const expirationTime = new Date(decodedToken.exp * 1000);
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
-             dispatch({ type: "LOGIN", payload: { token, refreshToken, userId, expirationTime } });
-             localStorage.setItem("user", JSON.stringify({ token, refreshToken, userId, expirationTime }));
- 
-             console.log("Current User in Login:", res);
+
+            dispatch({ type: "LOGIN", payload: { token, refreshToken, userId, expirationTime } });
+            localStorage.setItem("user", JSON.stringify({ token, refreshToken, userId, expirationTime }));
 
             notification.success({
                 message: 'Đăng nhập thành công',
                 description: 'Chào mừng bạn trở lại!',
             });
-
+    
             navigate('/');
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Vui lòng kiểm tra lại thông tin đăng nhập.';
-
             notification.error({
                 message: 'Đăng nhập không thành công',
                 description: errorMessage,
@@ -48,11 +47,42 @@ const Login = () => {
         }
     };
 
-    const handleGoogleLogin = () => {
-        notification.info({
-            message: 'Google Login',
-            description: 'Chức năng đăng nhập bằng Google sẽ được thực hiện ở đây.',
-        });
+    const handleGoogleLogin = async (credentialResponse) => {
+        console.log("Credential response:", credentialResponse.credential); // Log để kiểm tra
+        try {
+            const res = await fetch('http://localhost:5146/api/user/google-login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token: credentialResponse.credential }),
+            });
+            try {
+                const data = await res.json();
+                const token = data.token;
+                const refreshToken = data.refreshToken;
+                console.log("refreshToken:", refreshToken);
+                const decodedToken = jwtDecode(token);
+                const expirationTime = new Date(decodedToken.exp * 1000);
+                const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
+                dispatch({ type: 'LOGIN', payload: { token, refreshToken, expirationTime, userId } });
+                localStorage.setItem("user", JSON.stringify({ token, refreshToken, expirationTime, userId }));
+
+                notification.success({
+                    message: 'Đăng nhập thành công',
+                    description: `Chào mừng bạn!`,
+                });
+
+                navigate('/');
+            } catch {
+                throw new Error(data.Error || 'Đăng nhập bằng Google thất bại.');
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Đăng nhập Google không thành công',
+                description: error.message,
+            });
+        }
     };
 
     const breadcrumbs = [
@@ -155,14 +185,27 @@ const Login = () => {
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <button
-                                        type="button"
-                                        className="w-full flex items-center justify-center mt-4 bg-gray-200 rounded-md py-2 text-gray-700 hover:bg-gray-300 focus:outline-none"
-                                        onClick={handleGoogleLogin}
-                                    >
-                                        <GoogleOutlined style={{ marginRight: 8, color: '#4285F4' }} />
-                                        Đăng nhập bằng Google
-                                    </button>
+                                    <GoogleOAuthProvider clientId={'865045586884-kgg6tff2nje4jfle2n2mr3ts463can1l.apps.googleusercontent.com'}>
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleLogin}
+                                            onError={() => {
+                                                notification.error({
+                                                    message: 'Đăng nhập Google không thành công',
+                                                    description: 'Có lỗi xảy ra trong quá trình đăng nhập Google.',
+                                                });
+                                            }}
+                                            render={(renderProps) => (
+                                                <button
+                                                    onClick={renderProps.onClick}
+                                                    disabled={renderProps.disabled}
+                                                    className="w-full flex items-center justify-center mt-4 bg-gray-200 rounded-md py-2 text-gray-700 hover:bg-gray-300 focus:outline-none"
+                                                >
+                                                    <GoogleOutlined style={{ marginRight: 8, color: '#4285F4' }} />
+                                                    Đăng nhập bằng Google
+                                                </button>
+                                            )}
+                                        />
+                                    </GoogleOAuthProvider>
                                 </Form.Item>
                             </Form>
 

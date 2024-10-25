@@ -10,7 +10,7 @@ const useAuth = () => {
   const user = currentUser ? currentUser.userId : null; // Directly retrieve userId from currentUser
 
   useEffect(() => {
-    console.log("Current user in useAuth:", currentUser); // Log the current user for debugging
+    // console.log("Current user in useAuth:", currentUser); // Log the current user for debugging
   }, [currentUser]);
 
   useEffect(() => {

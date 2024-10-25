@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, Row, Col, message } from 'antd';
 import SelectAddress from '../shared/SelectAddress'; 
-import { getProvince, getDistrict, getWard } from '../../services/AddressService'; 
+import { getProvince, getDistrict, getWard } from '../../services/AddressService';
 
-const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
+const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) => {
+    const [fullName, setFullName] = useState(initialValues.fullName || '');
+    const [gender, setGender] = useState(initialValues.gender || '');
+    const [dob, setDob] = useState(initialValues.dob || '');
+    const [phone, setPhone] = useState(initialValues.phone || '');
+
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
-    const [selectedProvince, setSelectedProvince] = useState(initialValues.province);
-    const [selectedDistrict, setSelectedDistrict] = useState(initialValues.district);
-    const [selectedWard, setSelectedWard] = useState(initialValues.ward);
-    const [fullName, setFullName] = useState(initialValues.fullName);
-    const [gender, setGender] = useState(initialValues.gender);
-    const [dob, setDob] = useState(initialValues.dob);
-    const [phone, setPhone] = useState(initialValues.phone);
+    const [selectedProvince, setSelectedProvince] = useState(initialValues.province || '');
+    const [selectedDistrict, setSelectedDistrict] = useState(initialValues.district || '');
+    const [selectedWard, setSelectedWard] = useState(initialValues.ward || '');
 
     // Fetch address data
     useEffect(() => {
         if (initialValues) {
-            setSelectedProvince(initialValues.province);
-            setSelectedDistrict(initialValues.district);
-            setSelectedWard(initialValues.ward);
-            setFullName(initialValues.fullName);
-            setGender(initialValues.gender);
-            setDob(initialValues.dob);
-            setPhone(initialValues.phone);
+            setFullName(initialValues.fullName || '');
+            setGender(initialValues.gender || '');
+            setDob(initialValues.dob || '');
+            setPhone(initialValues.phone || '');
+            setSelectedProvince(initialValues.province || '');
+            setSelectedDistrict(initialValues.district || '');
+            setSelectedWard(initialValues.ward || '');
         }
     }, [initialValues]);
 
@@ -44,9 +45,9 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
             };
             fetchDistricts();
         } else {
-            setDistricts([]); // Reset districts if no province is selected
-            setSelectedDistrict(''); // Reset selected district
-            setSelectedWard(''); // Reset selected ward
+            setDistricts([]);
+            setSelectedDistrict('');
+            setSelectedWard('');
         }
     }, [selectedProvince]);
 
@@ -58,8 +59,8 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
             };
             fetchWards();
         } else {
-            setWards([]); // Reset wards if no district is selected
-            setSelectedWard(''); // Reset selected ward
+            setWards([]);
+            setSelectedWard('');
         }
     }, [selectedDistrict]);
 
@@ -69,22 +70,22 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
     };
 
     const handleFinish = () => {
-        // Check if all required fields are selected
+        // Kiểm tra xem tất cả các trường đã được chọn chưa
         if (!selectedProvince || !selectedDistrict || !selectedWard) {
-            message.error("Vui lòng chọn đủ Tỉnh, Huyện và Xã."); // Use message from Ant Design
-            return; // Stop execution if not enough
+            message.error("Vui lòng chọn đủ Tỉnh, Huyện và Xã.");
+            return;
         }
 
         const updatedValues = {
-            fullName,
-            gender,
-            dob,
-            phone,
+            fullName: fullName || '', // Nếu người dùng không nhập, đặt chuỗi rỗng
+            gender: gender || '',     // Tương tự cho giới tính
+            dob: dob || '',           // Ngày sinh
+            phone: phone || '',       // Số điện thoại
             address: (selectedProvince !== initialValues.province || selectedDistrict !== initialValues.district || selectedWard !== initialValues.ward)
                 ? handleAddressChange()
                 : initialValues.address,
         };
-        console.log(updatedValues);
+
         onSubmit(updatedValues);
     };
 
@@ -100,10 +101,12 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
             <div className="space-y-4">
                 <div>
                     <label className="font-bold">Họ và Tên</label>
-                    <Input 
-                        value={fullName} 
-                        onChange={(e) => setFullName(e.target.value)} 
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
+
+                    <Input
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="Nhập họ và tên"
                     />
                 </div>
 
@@ -112,9 +115,9 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
                         <div>
                             <label className="font-bold">Giới tính</label>
                             <select
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 value={gender}
-                                onChange={(e) => setGender(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                onChange={(e) => setGender(e.target.value)}>
                                 <option value="" disabled>Chọn giới tính</option>
                                 <option value="Nam">Nam</option>
                                 <option value="Nữ">Nữ</option>
@@ -127,9 +130,11 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
                             <label className="font-bold">Ngày sinh</label>
                             <Input
                                 type="date"
+
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 value={dob}
                                 onChange={(e) => setDob(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                                placeholder="YYYY-MM-DD"
                             />
                         </div>
                     </Col>
@@ -137,10 +142,11 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
 
                 <div>
                     <label className="font-bold">Số điện thoại</label>
-                    <Input 
-                        value={phone} 
-                        onChange={(e) => setPhone(e.target.value)} 
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" 
+                    <Input
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="Nhập số điện thoại"
                     />
                 </div>
 
@@ -154,10 +160,11 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
                                 name="province" 
                                 setValue={(value) => {
                                     setSelectedProvince(value);
-                                    setSelectedDistrict(''); // Reset district when province changes
-                                    setSelectedWard(''); // Reset ward when province changes
+                                    setSelectedDistrict('');
+                                    setSelectedWard('');
                                 }}
-                                initialValue={selectedProvince} // Only pass code
+
+                                initialValue={selectedProvince}
                             />
                         </Col>
                         <Col span={8}>
@@ -167,9 +174,10 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
                                 name="district" 
                                 setValue={(value) => {
                                     setSelectedDistrict(value);
-                                    setSelectedWard(''); // Reset ward when district changes
+                                    setSelectedWard('');
                                 }}
-                                initialValue={selectedDistrict} // Only pass code
+
+                                initialValue={selectedDistrict}
                             />
                         </Col>
                         <Col span={8}>
@@ -178,7 +186,8 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues }) => {
                                 options={wards} 
                                 name="ward" 
                                 setValue={setSelectedWard}
-                                initialValue={selectedWard} // Only pass code
+
+                                initialValue={selectedWard}
                             />
                         </Col>
                     </Row>

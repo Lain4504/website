@@ -1,7 +1,7 @@
 const AuthReducer = (state, action) => {
     switch (action.type) {
         case "LOGIN": {
-            console.log("LOGIN action payload:", action.payload);
+            // console.log("LOGIN action payload:", action.payload);
             return {
                 currentUser: action.payload, // Store the entire payload
                 isSessionExpired: false,
