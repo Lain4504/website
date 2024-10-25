@@ -8,13 +8,14 @@ import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } fro
 import { Dropdown, Menu } from 'antd';
 import { AuthContext } from '../../context/AuthContext';
 import MiniCart from '../modal/MiniCart';
-import { logout } from '../../services/UserService';
+import axios from 'axios';
 
 const Navbar = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
     const [showMiniCart, setShowMiniCart] = useState(false);
-    const { currentUser, dispatch } = useContext(AuthContext);
+    const authContext = useContext(AuthContext); 
+    const { dispatch } = useContext(AuthContext); 
     const navigate = useNavigate();
     const location = useLocation(); 
     const [selectedItem, setSelectedItem] = useState('');
@@ -37,24 +38,30 @@ const Navbar = () => {
         }
     }, [location.pathname]); // Re-run effect when location changes
 
-    const handleLogout = async () => {
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user){
-            try{
-                await logout({ RefreshToken: user.refreshToken });
-                console.log("Logout successfully.");
-            }
-            catch (error){
-                console.error("Error when call api logout:", error);
-            }
+    const logout = async () => {
+        const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
+
+        if (user) {
+          try {
+            // Gọi API logout và gửi refresh token
+            await axios.post('http://localhost:5146/api/user/logout', { RefreshToken: user.refreshToken });
+            console.log("Đăng xuất thành công");
+          } catch (error) {
+            console.error("Lỗi khi gọi API logout:", error);
+            // Bạn có thể xử lý thêm ở đây nếu cần
+          }
         }
-        dispatch({type: "LOGOUT", isSessionExpired: true});
-        localStorage.removeItem("user");
-    };
+
+        // Xóa toàn bộ dữ liệu trong store và localStorage
+        dispatch({ type: "LOGOUT", isSessionExpired: true }); // Logout bình thường
+        localStorage.removeItem("user"); // Xóa user trong localStorage
+
+      };
+
 
     const userMenu = (
         <Menu style={{ width: '120px', fontSize: '16px' }}>
-            {currentUser ? (
+             {authContext.currentUser ?  (
                 <>
                     <Menu.Item key="1">
                         <Link to={`/profile`}>Tài khoản</Link>
@@ -62,7 +69,7 @@ const Navbar = () => {
                     <Menu.Item key="2">
                         <Link to='/orderlist'>Đơn hàng</Link>
                     </Menu.Item>
-                    <Menu.Item key="3" onClick={handleLogout}>
+                    <Menu.Item key="3" onClick={logout}>
                         Đăng xuất
                     </Menu.Item>
                 </>

@@ -15,6 +15,7 @@ const CollectionList = ({ onSelectCollection, closeMenu }) => {
           setCollections(response.data);
         } else {
           console.error("Unexpected data format: collections is not an array");
+
           setCollections([]);  // Set collections as empty array if not valid
         }
       })

@@ -13,6 +13,7 @@ export const AuthContext = createContext(INITIAL_STATE);
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
   const navigate = useNavigate();
+
   const checkAndRefreshToken = async () => {
     const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
@@ -102,6 +103,8 @@ export const AuthContextProvider = ({ children }) => {
 
     navigate('/login'); // Chuyển hướng đến trang đăng nhập
   };
+
+
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
@@ -156,6 +159,7 @@ export const AuthContextProvider = ({ children }) => {
               dispatch({ type: "LOGIN", payload: user }); 
             }
           }
+
         }
   
         // Cập nhật thông tin người dùng trong localStorage
