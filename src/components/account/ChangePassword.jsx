@@ -1,34 +1,32 @@
 import React, { useContext, useState } from 'react';
-import { Button, Input, Layout, message, Modal } from 'antd'; // Import Ant Design components
+import { Button, Input, Layout, message, Modal } from 'antd';
 import { changePassword } from '../../services/UserService';
 import UserNavBar from '../account/UserNavBar';
 import Breadcrumb from '../shared/Breadcrumb';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; // Import eye icons
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 
 const ChangePassword = ({ cookies }) => {
     const [oldPassword, setOldPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
-    const [showOldPassword, setShowOldPassword] = useState(false); // State to toggle old password visibility
-    const [showNewPassword, setShowNewPassword] = useState(false); // State to toggle new password visibility
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State to toggle confirm password visibility
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [showOldPassword, setShowOldPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
     const { currentUser } = useContext(AuthContext);
 
     const handleSave = () => {
         if (newPassword !== confirmPassword) {
-            message.error('Mật khẩu không khớp'); // Use Ant Design message for errors
+            message.error('Mật khẩu không khớp');
             return;
         }
         if (newPassword.length < 6 || newPassword.length > 20) {
-            message.error('Mật khẩu phải có ít nhất 6 ký tự và nhiều nhất 20 ký tự'); // Use Ant Design message for errors
+            message.error('Mật khẩu phải có ít nhất 6 ký tự và nhiều nhất 20 ký tự');
             return;
         }
-
-        // Show confirmation modal
         setIsModalVisible(true);
     };
 
@@ -36,7 +34,7 @@ const ChangePassword = ({ cookies }) => {
         const data = {
             oldPassword,
             newPassword,
-            token: currentUser.token, // Use the token from localStorage
+            token: currentUser.token,
         };
 
         try {
@@ -48,11 +46,11 @@ const ChangePassword = ({ cookies }) => {
         } catch (err) {
             message.error('Mật khẩu cũ không chính xác');
         }
-        setIsModalVisible(false); // Close modal
+        setIsModalVisible(false);
     };
 
     const handleCancel = () => {
-        setIsModalVisible(false); // Close modal
+        setIsModalVisible(false);
     };
 
     const breadcrumbs = [
@@ -64,74 +62,49 @@ const ChangePassword = ({ cookies }) => {
         <>
             <Breadcrumb items={breadcrumbs} className="my-10" />
             <UserNavBar />
-            <div className="flex h-a my-10">
-                <div className="flex-1 p-6 bg-white border-none rounded-lg ml-4">
+            <div className="flex h-full my-10">
+                <div className="flex-1 p-6 bg-white border-none rounded-lg shadow-md mx-4">
                     <div className="p-4">
                         <div id="PageContainer">
-                            <div className="password-form mb-5 mt-3" style={{ maxWidth: '400px', margin: 'auto' }}>
+                            <div className="password-form mb-5 mt-3 max-w-md mx-auto">
                                 <h5 className="text-lg font-semibold mb-4">Đổi mật khẩu</h5>
 
-                                <div className="mb-4">
-                                    <label className="block mb-1 text-sm font-medium">Mật khẩu cũ</label>
-                                    <Input
-                                        required
-                                        placeholder="Mật khẩu cũ"
-                                        value={oldPassword}
-                                        onChange={(e) => setOldPassword(e.target.value)}
-                                        type={showOldPassword ? 'text' : 'password'}
-                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        style={{ height: '35px' }} // Adjust height
-                                        suffix={
-                                            showOldPassword ? (
-                                                <EyeOutlined onClick={() => setShowOldPassword(!showOldPassword)} />
-                                            ) : (
-                                                <EyeInvisibleOutlined onClick={() => setShowOldPassword(!showOldPassword)} />
-                                            )
-                                        }
-                                    />
+                                {/* Note section */}
+                                <div className="border border-red-500 rounded-md p-3 mb-4">
+                                    <p className="text-red-600 font-bold mb-2">Lưu ý:</p>
+                                    <p className="text-red-600">
+                                        Nếu bạn là tài khoản được tạo từ tài khoản Gmail, vui lòng đăng xuất và chọn quên mật khẩu ở trang đăng nhập và nhập Gmail hiện tại bạn đang dùng để đặt mật khẩu.
+                                    </p>
                                 </div>
 
-                                <div className="mb-4">
-                                    <label className="block mb-1 text-sm font-medium">Mật khẩu mới</label>
-                                    <Input
-                                        required
-                                        placeholder="Mật khẩu mới"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                        type={showNewPassword ? 'text' : 'password'}
-                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        style={{ height: '35px' }} // Adjust height
-                                        suffix={
-                                            showNewPassword ? (
-                                                <EyeOutlined onClick={() => setShowNewPassword(!showNewPassword)} />
-                                            ) : (
-                                                <EyeInvisibleOutlined onClick={() => setShowNewPassword(!showNewPassword)} />
-                                            )
-                                        }
-                                    />
-                                </div>
+                                {/* Password Fields */}
+                                {[
+                                    { label: 'Mật khẩu cũ', value: oldPassword, setValue: setOldPassword, show: showOldPassword, setShow: setShowOldPassword },
+                                    { label: 'Mật khẩu mới', value: newPassword, setValue: setNewPassword, show: showNewPassword, setShow: setShowNewPassword },
+                                    { label: 'Xác nhận mật khẩu', value: confirmPassword, setValue: setConfirmPassword, show: showConfirmPassword, setShow: setShowConfirmPassword }
+                                ].map((field, index) => (
+                                    <div className="mb-4" key={index}>
+                                        <label className="block mb-1 text-sm font-medium">{field.label}</label>
+                                        <Input
+                                            required
+                                            placeholder={field.label}
+                                            value={field.value}
+                                            onChange={(e) => field.setValue(e.target.value)}
+                                            type={field.show ? 'text' : 'password'}
+                                            className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            style={{ height: '35px' }}
+                                            suffix={
+                                                field.show ? (
+                                                    <EyeOutlined onClick={() => field.setShow(!field.show)} />
+                                                ) : (
+                                                    <EyeInvisibleOutlined onClick={() => field.setShow(!field.show)} />
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                ))}
 
-                                <div className="mb-4">
-                                    <label className="block mb-1 text-sm font-medium">Xác nhận mật khẩu</label>
-                                    <Input
-                                        required
-                                        placeholder="Xác nhận mật khẩu"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        style={{ height: '35px' }} // Adjust height
-                                        suffix={
-                                            showConfirmPassword ? (
-                                                <EyeOutlined onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
-                                            ) : (
-                                                <EyeInvisibleOutlined onClick={() => setShowConfirmPassword(!showConfirmPassword)} />
-                                            )
-                                        }
-                                    />
-                                </div>
-
-                                <Button onClick={handleSave} type="primary" className="mt-3" style={{ width: '100%' }}>Lưu</Button>
+                                <Button onClick={handleSave} type="primary" className="mt-3 w-full">Lưu</Button>
                             </div>
                         </div>
                     </div>

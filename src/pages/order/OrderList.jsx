@@ -64,14 +64,14 @@ const OrderList = () => {
                 const ordersData = res?.data || [];
                 setOrders(ordersData);
                 console.log('Orders:', ordersData);
-
+    
                 const totalsMap = {};
                 await Promise.all(ordersData.map(async (order) => {
                     const orderDetails = await getOrderDetailByOrderId(order.id);
                     const total = orderDetails.data.reduce(
                         (sum, item) => sum + item.amount * item.salePrice,
                         0
-                    );
+                    ) + (order.shippingPrice || 0); // Add shipping fee
                     totalsMap[order.id] = total;
                 }));
                 setTotals(totalsMap);
@@ -81,11 +81,12 @@ const OrderList = () => {
                 setLoading(false);
             }
         };
-
+    
         if (userId) {
             fetchOrderDetails();
         }
     }, [userId]);
+    
 
     const columns = [
         {

@@ -33,7 +33,7 @@ if (user) {
     const token = user.token;
     const refreshToken = user.refreshToken;
     const refreshExpirationDate = new Date(user.refreshExpirationTime); // Chuyển đổi từ chuỗi ISO thành Date
-    console.log("Before arsed refreshExpirationTime:", user.refreshExpirationTime);
+    console.log("Before refreshExpirationTime:", user.refreshExpirationTime);
     console.log("Parsed refreshExpirationTime:", refreshExpirationDate);
     // Kiểm tra xem refresh token đã hết hạn chưa
     if (new Date() >= refreshExpirationDate) {

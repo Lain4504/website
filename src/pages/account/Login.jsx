@@ -80,23 +80,22 @@ const Login = () => {
             // Log the tokens and expiration time
             console.log("Access Token:", token);
             console.log("Refresh Token:", refreshToken);
-            console.log("Refresh Expiration Time:", new Date(expirationDate));
+            console.log("Refresh Expiration Time:", expirationDate);
     
             // Decode the JWT token
             const decodedToken = jwtDecode(token);
             const expirationTime = new Date(decodedToken.exp * 1000);
             const userId = decodedToken[Object.keys(decodedToken).find(key => key.includes("nameidentifier"))];
-    
+            const refreshExpirationTime = new Date(expirationDate).toISOString();
             // Log the decoded information
             console.log("Decoded Token:", decodedToken);
             console.log("Expiration Time:", expirationTime);
-            console.log("User ID:", userId);
     
             // Dispatch login action
-            dispatch({ type: 'LOGIN', payload: { token, refreshToken, expirationTime, userId } });
+            dispatch({ type: 'LOGIN', payload: { token, refreshToken, expirationTime, userId, refreshExpirationTime } });
     
             // Store user data in local storage
-            localStorage.setItem("user", JSON.stringify({ token, refreshToken, expirationTime, userId, refreshExpirationTime: new Date(expirationDate).toISOString() }));
+            localStorage.setItem("user", JSON.stringify({ token, refreshToken, expirationTime, userId, refreshExpirationTime}));
     
             // Show success notification
             notification.success({

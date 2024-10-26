@@ -19,6 +19,7 @@ const Checkout = () => {
             if (userId) {
                 try {
                     const cartData = await getAllCartByUserId(userId);
+                    console.log(userId)
                     setCart(cartData?.data || []); // Ensure cart is set to an empty array if no data
                 } catch (error) {
                     console.error(error);

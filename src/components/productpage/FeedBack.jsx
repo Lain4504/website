@@ -22,7 +22,7 @@ const FeedBack = ({ bookId, userId }) => {
 
         const connectToSignalR = async () => {
             const connect = new signalR.HubConnectionBuilder()
-                .withUrl("http://localhost:5146/commentHub")
+                .withUrl("https://localhost:3001/commentHub")
                 .configureLogging(signalR.LogLevel.Information)
                 .build();
 

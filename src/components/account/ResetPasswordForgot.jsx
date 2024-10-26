@@ -43,7 +43,7 @@ const ResetPassword = () => {
             <div className="flex justify-center items-center min-h-80 my-6">
                 <Form
                     name="resetPassword"
-                    className="w-full max-w-md p-4 shadow-lg"
+                    className="w-full max-w-md p-4 shadow-lg gap-y-2"
                     onFinish={handleSubmit}
                 >
                     <h3 className="text-2xl font-semibold text-center mb-4">Đặt lại mật khẩu</h3>
@@ -55,7 +55,10 @@ const ResetPassword = () => {
                             { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự' },
                         ]}
                     >
-                        <Input.Password placeholder="Nhập mật khẩu mới" />
+                        <Input.Password
+                            placeholder="Nhập mật khẩu mới"
+                            className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -72,13 +75,17 @@ const ResetPassword = () => {
                             }),
                         ]}
                     >
-                        <Input.Password placeholder="Xác nhận mật khẩu mới" />
+                        <Input.Password
+                            placeholder="Xác nhận mật khẩu mới"
+                            className="flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
                     </Form.Item>
 
+
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="w-full" loading={loading}>
+                        <button type="primary" htmlType="submit" className="w-full rounded-md bg-indigo-600 text-white py-2 px-4 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" loading={loading}>
                             Đặt lại mật khẩu
-                        </Button>
+                        </button>
                     </Form.Item>
                 </Form>
             </div>
