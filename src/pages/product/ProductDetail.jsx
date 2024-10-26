@@ -213,7 +213,7 @@ const ProductDetail = () => {
               <p>
                 Danh mục:
                 {collections.length > 0 ? collections.map((collectionItem, index) => (
-                  <span key={collectionItem.collectionId} className="text-blue-600 hover:underline">{index > 0 && ', '}<Link to={`/collections/${collectionItem.collection.id}`}>{collectionItem.collection.name}</Link></span>
+                  <span key={collectionItem.collectionId} className="text-blue-600 hover:underline">{index > 0 && ', '}<Link to={`/collections/${collectionItem.collection.id}`}> {collectionItem.collection.name}</Link></span>
                 )) : <span>Không có danh mục nào.</span>}
               </p>
             </div>

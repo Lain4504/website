@@ -36,15 +36,17 @@ const Navbar = () => {
         } else {
             setSelectedItem('');
         }
-    }, [location.pathname]); // Re-run effect when location changes
+    }, [location.pathname]);
 
     const logout = async () => {
+
         const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
         if (user) {
           try {
             // Gọi API logout và gửi refresh token
-            await axios.post('http://localhost:5146/api/user/logout', { RefreshToken: user.refreshToken });
+
+            await axios.post('https://localhost:3001/api/user/logout', { RefreshToken: user.refreshToken });
             console.log("Đăng xuất thành công");
           } catch (error) {
             console.error("Lỗi khi gọi API logout:", error);

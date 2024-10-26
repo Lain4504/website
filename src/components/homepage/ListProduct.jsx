@@ -65,12 +65,14 @@ const ListProduct = (props) => {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center">Không có sản phẩm nào phù hợp.</p>
-                        )
+                            <div className="flex flex-col items-center justify-center h-full">
+                                <p className="text-center">Không có sản phẩm nào phù hợp.</p>
+                            </div>
+                            )
                     }
                     <div className="col-span-full text-right mt-4">
                         <Button className="text-blue-500 hover:underline">
-                           <Link to={`collections/all`}> Xem thêm &gt;&gt;</Link> 
+                            <Link to={`collections/all`}> Xem thêm &gt;&gt;</Link>
                         </Button>
                     </div>
                 </div>
