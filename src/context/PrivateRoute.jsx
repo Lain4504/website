@@ -5,7 +5,7 @@ import { AuthContext } from './AuthContext';
 const PrivateRoute = ({ children }) => {
   const { currentUser } = useContext(AuthContext); // Assuming this gives the current user info
   useEffect(() => {
-    console.log("Current user in PrivateRoute:", currentUser); // Log the current user for debugging
+    // console.log("Current user in PrivateRoute:", currentUser); // Log the current user for debugging
 }, [currentUser]);
   return currentUser ? children : <Navigate to="/login" />;
 };
