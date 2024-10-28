@@ -2,6 +2,19 @@ import axios from "axios";
 
 const ACCOUNT_API = import.meta.env.VITE_API_URL + "/user";
 
+const googleLogin = (credential) => {
+    return axios.post(`${ACCOUNT_API}/google-login`, 
+        { token: credential }, 
+        {
+            headers: {
+                'Content-Type': 'application/json', 
+            }
+        }
+    );
+};
+const logout = (refreshToken) => {
+    return axios.post(`${ACCOUNT_API}/logout`, { RefreshToken: refreshToken });
+};
 const createAccount = (account) => {
     return axios.post(`${ACCOUNT_API}/register`, account);
 };
@@ -56,4 +69,6 @@ export {
     getUserProfile, 
     changePassword, 
     updateProfile,
+    googleLogin,
+    logout,
 };

@@ -52,8 +52,8 @@ const OrderList = () => {
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState([]);
     const [totals, setTotals] = useState({});
-    const [currentPage, setCurrentPage] = useState(1); // trạng thái số trang hiện tại
-    const [pageSize, setPageSize] = useState(5); // trạng thái số phần tử mỗi trang
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
     const { currentUser } = useContext(AuthContext);
     const userId = currentUser ? currentUser.userId : null;
 
@@ -64,14 +64,14 @@ const OrderList = () => {
                 const ordersData = res?.data || [];
                 setOrders(ordersData);
                 console.log('Orders:', ordersData);
-
+    
                 const totalsMap = {};
                 await Promise.all(ordersData.map(async (order) => {
                     const orderDetails = await getOrderDetailByOrderId(order.id);
                     const total = orderDetails.data.reduce(
                         (sum, item) => sum + item.amount * item.salePrice,
                         0
-                    );
+                    ) + (order.shippingPrice || 0);
                     totalsMap[order.id] = total;
                 }));
                 setTotals(totalsMap);
@@ -81,7 +81,7 @@ const OrderList = () => {
                 setLoading(false);
             }
         };
-
+    
         if (userId) {
             fetchOrderDetails();
         }
@@ -150,7 +150,6 @@ const OrderList = () => {
         }
     ];
 
-    // Thêm phân trang vào bảng
     const onChangePage = (page, pageSize) => {
         setCurrentPage(page);
         setPageSize(pageSize);
@@ -168,23 +167,26 @@ const OrderList = () => {
             <div className="flex h-a my-10">
                 <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto">
                     <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-                        <Table
-                            dataSource={loading ? [] : orders.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
-                            columns={columns}
-                            rowKey="id"
-                            pagination={false}
-                            className="w-full bg-white shadow-md rounded-lg"
-                            loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
-                        />
-                        <Pagination
-                            current={currentPage}
-                            pageSize={pageSize}
-                            total={orders.length}
-                            onChange={onChangePage}
-                            showSizeChanger
-                            pageSizeOptions={[5, 10, 20]}
-                            className="mt-4 text-center"
-                        />
+                        <div className="overflow-x-auto">
+                            <Table
+                                dataSource={loading ? [] : orders.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+                                columns={columns}
+                                rowKey="id"
+                                pagination={false}
+                                className="w-full bg-white shadow-md rounded-lg"
+                                loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
+                            />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                            <Pagination
+                                current={currentPage}
+                                pageSize={pageSize}
+                                total={orders.length}
+                                onChange={onChangePage}
+                                showSizeChanger
+                                pageSizeOptions={[5, 10, 20]}
+                            />
+                        </div>
                     </Content>
                 </div>
             </div>

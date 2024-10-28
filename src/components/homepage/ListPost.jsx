@@ -15,18 +15,24 @@ const ListPost = () => {
     const loadPosts = async () => {
         try {
             const response = await getAllPost();
-            const fetchedPosts = response.data;
+            const fetchedPosts = response.data || []; // Use an empty array if data is null
             console.log("Post data is: ", response);
+
+            // Ensure fetchedPosts is an array
+            if (!Array.isArray(fetchedPosts)) {
+                setError("Fetched data is not an array.");
+                return;
+            }
+
             // Sort posts by date
             const sortedPosts = fetchedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             // Get the latest 12 posts
             const latestPosts = sortedPosts.slice(0, maxVisible);
-
             setPosts(latestPosts);
         } catch (err) {
             setError(err.message);
-        } 
+        }
     };
 
     useEffect(() => {
@@ -70,40 +76,42 @@ const ListPost = () => {
         }
     };
 
-    if (error) return <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>;
-
     return (
         <>
             <div className={`flex flex-col items-center mt-7`}>
                 {/* List of Posts */}
                 <div className={`flex flex-wrap justify-center post-container ${isAnimating ? 'exit' : 'enter'}`}>
-                    {currentPosts.map(post => (
-                        <div key={post.id} className={`w-full sm:w-1/2 lg:w-1/3 p-2 animate-move-from-center`}>
-                            <Card
-                                hoverable
-                                className="bg-white border rounded shadow"
-                                cover={
-                                    <div className="relative">
-                                        <img className="w-full h-auto rounded-t" src={post.thumbnail} alt={post.title} />
-                                        <div className="absolute top-2 left-2 bg-white bg-opacity-75 p-1 rounded">
-                                            <p className="text-sm text-gray-500"> {new Date(post.createdAt).toLocaleDateString('en-GB', {
-                                                day: '2-digit',
-                                                month: '2-digit',
-                                                year: 'numeric',
-                                            })}</p>
+                    {Array.isArray(currentPosts) && currentPosts.length > 0 ? (
+                        currentPosts.map(post => (
+                            <div key={post.id} className={`w-full sm:w-1/2 lg:w-1/3 p-2 animate-move-from-center`}>
+                                <Card
+                                    hoverable
+                                    className="bg-white border rounded shadow"
+                                    cover={
+                                        <div className="relative">
+                                            <img className="w-full h-auto rounded-t" src={post.thumbnail} alt={post.title} />
+                                            <div className="absolute top-2 left-2 bg-white bg-opacity-75 p-1 rounded">
+                                                <p className="text-sm text-gray-500"> {new Date(post.createdAt).toLocaleDateString('en-GB', {
+                                                    day: '2-digit',
+                                                    month: '2-digit',
+                                                    year: 'numeric',
+                                                })}</p>
+                                            </div>
                                         </div>
+                                    }
+                                >
+                                    <div className="p-4">
+                                        <p className="text-lg font-semibold">
+                                            <Link to={`/posts/${post.id}`} className="hover:text-blue-600">{post.title}</Link>
+                                        </p>
+                                        <div className="text-gray-700">{post.brief}</div>
                                     </div>
-                                }
-                            >
-                                <div className="p-4">
-                                    <p className="text-lg font-semibold">
-                                        <Link to={`/posts/${post.id}`} className="hover:text-blue-600">{post.title}</Link>
-                                    </p>
-                                    <div className="text-gray-700">{post.brief}</div>
-                                </div>
-                            </Card>
-                        </div>
-                    ))}
+                                </Card>
+                            </div>
+                        ))
+                    ) : (
+                        <p style={{ textAlign: 'center', color: 'gray' }}>Không có bài viết khả dụng.</p>
+                    )}
                 </div>
 
                 {/* Custom Pagination */}

@@ -70,7 +70,7 @@ const Cart = () => {
       navigate('/checkout'); // Điều hướng sang trang thanh toán nếu giỏ hàng có sản phẩm
     }
   };
-  
+
 
   const columns = [
     {
@@ -172,21 +172,21 @@ const Cart = () => {
                   Cập nhật
                 </Button>
                 <Popover
-      content={content}
-      title="Thông báo"
-      visible={visible}
-      onVisibleChange={setVisible}
-      trigger="click"
-    >
-      <Button
-        type="primary"
-        className="hover:bg-blue-600 flex items-center"
-        onClick={checkout}
-      >
-        Thanh toán
-        <ArrowRightOutlined className="ml-2" />
-      </Button>
-    </Popover>
+                  content={content}
+                  title="Thông báo"
+                  visible={visible}
+                  onVisibleChange={setVisible}
+                  trigger="click"
+                >
+                  <Button
+                    type="primary"
+                    className="hover:bg-blue-600 flex items-center"
+                    onClick={checkout}
+                  >
+                    Thanh toán
+                    <ArrowRightOutlined className="ml-2" />
+                  </Button>
+                </Popover>
               </div>
             </Col>
           </Row>

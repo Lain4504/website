@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
-import PrivacyPolicy from '../pages/InformationPage/PrivacyPolicy';
-import PaymentPolicy from '../pages/informationpage/PaymentPolicy';
-import ShippingPolicy from '../pages/informationpage/ShippingPolicy';
-import About from '../pages/informationpage/About';
-import Contact from '../pages/informationpage/Contact';
-import ReturnPolicy from '../pages/informationpage/ReturnPolicy';
-import TermsOfService from '../pages/informationpage/TermsOfService';
-import FAQ from '../pages/informationpage/FAQ';
+import PrivacyPolicy from '../pages/Informationpage/PrivacyPolicy'
+import PaymentPolicy from '../pages/Informationpage/PaymentPolicy';
+import ShippingPolicy from '../pages/Informationpage/ShippingPolicy';
+import About from '../pages/Informationpage/About';
+import Contact from '../pages/Informationpage/Contact';
+import ReturnPolicy from '../pages/Informationpage/ReturnPolicy';
+import TermsOfService from '../pages/Informationpage/TermsOfService';
+import FAQ from '../pages/Informationpage/FAQ';
 import Home from '../pages/Home';
 import Login from '../pages/account/Login';
 import SearchResult from '../pages/product/SearchResult';

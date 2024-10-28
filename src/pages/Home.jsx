@@ -4,12 +4,13 @@ import ListProduct from "../components/homepage/ListProduct";
 import Carousel from "../components/homepage/Carousel";
 import ListPost from "../components/homepage/ListPost";
 import Title from "../components/shared/Title";
+import Ads from "../components/homepage/Ads";
 
 const Home = () => {
-    const [activeTab, setActiveTab] = useState("new"); // Default tab: "new"
+    const [activeTab, setActiveTab] = useState("new");
 
     const handleTabClick = (tab) => {
-        setActiveTab(tab); // Update current tab state
+        setActiveTab(tab);
     };
 
     return (
@@ -17,8 +18,7 @@ const Home = () => {
             <div>
                 <Carousel />
                 <OurPolicy />
-                <hr/>
-                {/* Tab Menu */}
+                <hr />
                 <ul className="hnt-tab flex justify-center space-x-4 text-center py-4">
                     <li className={`item cursor-pointer transition-transform duration-300 ease-in-out ${activeTab === "new" ? "text-blue-600 font-bold border-b-2 border-blue-600" : "text-gray-600"} hover:scale-105`}>
                         <a onClick={() => handleTabClick("new")}>SÁCH MỚI</a>
@@ -31,7 +31,6 @@ const Home = () => {
                     </li>
                 </ul>
 
-                {/* Content based on current tab */}
                 {activeTab === "new" && (
                     <ListProduct query="sorted-and-paged?sortBy=Id&page=0&size=10&sortOrder=desc" />
                 )}
@@ -39,13 +38,14 @@ const Home = () => {
                     <ListProduct query="sorted-and-paged?sortBy=Sold&page=0&size=10&sortOrder=desc" />
                 )}
                 {activeTab === "hotdeals" && (
-                    <ListProduct query="sorted-and-paged?sortBy=Discount&page=0&size=10&sortOrder=desc"/>
+                    <ListProduct query="sorted-and-paged?sortBy=Discount&page=0&size=10&sortOrder=desc" />
                 )}
-                {/* <h1 className="text-lg flex justify-center font-semibold">BÀI VIẾT MỚI</h1> */}
             </div>
             <h1 className='text-center text-xl'>
-                <Title text1={'BÀI VIẾT'} text2={'MỚI NHẤT'}/></h1>
-            <ListPost/>
+                <Title text1={'BÀI VIẾT'} text2={'MỚI NHẤT'} />
+            </h1>
+            <ListPost />
+            <Ads /> {/* Render the Ads component here */}
         </>
     );
 }

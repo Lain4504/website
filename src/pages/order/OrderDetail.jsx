@@ -5,7 +5,7 @@ import { getOrderDetailByOrderId, getOrderById } from '../../services/OrderServi
 import { getBookById } from '../../services/BookService';
 import Breadcrumb from '../../components/shared/Breadcrumb';
 import { getDistrictById, getProvinceById, getWardById } from '../../services/AddressService';
-import Title from '../../components/shared/Title'
+import Title from '../../components/shared/Title';
 const { Text } = Typography;
 
 const OrderDetail = () => {
@@ -13,6 +13,7 @@ const OrderDetail = () => {
   const [orderDetails, setOrderDetails] = useState([]);
   const [orderInfo, setOrderInfo] = useState(null);
   const [addressName, setAddressName] = useState('');
+  const [customerNote, setCustomerNote] = useState(''); // State for customer note
   const navigate = useNavigate();
   const componentRef = useRef();
 
@@ -22,6 +23,7 @@ const OrderDetail = () => {
         // Fetch order info
         const orderResponse = await getOrderById(id);
         setOrderInfo(orderResponse?.data || null); 
+        setCustomerNote(orderResponse?.data?.customerNote || ''); // Set customer note
 
         const detailsResponse = await getOrderDetailByOrderId(id);
         const details = detailsResponse?.data || [];
@@ -116,7 +118,7 @@ const OrderDetail = () => {
     <>
       <Breadcrumb items={breadcrumbs} />
       <a className="mb-6 text-2xl flex items-center justify-start">
-      <Title text1={'Chi tiết'} text2={'đơn hàng'}/>
+        <Title text1={'Chi tiết'} text2={'đơn hàng'}/>
       </a>
       <div style={{ padding: '20px' }}>
         <div ref={componentRef}>
@@ -133,6 +135,19 @@ const OrderDetail = () => {
                 <Col span={12}>
                   <Text strong>Địa chỉ: </Text>
                   {addressName}
+                </Col>
+              </Row>
+              <Row style={{ margin: '10px 0' }}>
+                <Col span={12}>
+                  <label htmlFor="CartSpecialInstructions" className="font-medium">
+                    Ghi chú
+                  </label>
+                  <textarea
+                    id="CartSpecialInstructions"
+                    value={customerNote}
+                    className="input-full form-control w-full border rounded p-2"
+                    readOnly // Make the textarea read-only
+                  ></textarea>
                 </Col>
               </Row>
               <Divider />
