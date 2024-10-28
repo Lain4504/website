@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Dropdown, Menu, Pagination } from 'antd';
+import { Row, Col, Dropdown, Menu, Pagination, Divider } from 'antd';
 import Breadcrumb from '../../components/shared/Breadcrumb';
 import { ArrowRightOutlined, DownOutlined } from '@ant-design/icons';
 import { getAllPostCategories, getPostByCategoryId } from '../../services/PostService';
@@ -84,6 +84,7 @@ const PostList = () => {
     );
     
     return (
+        <>
         <div>
             <Breadcrumb items={[{ title: 'Trang chủ', href: '/' }, { title: 'Tin tức' }]} />
             {(isMobile || isMedium) && (
@@ -178,6 +179,8 @@ const PostList = () => {
                 )}
             </Row>
         </div>
+        <Divider style={{ border: 'none' }} />
+       </>
     );
 }
 

@@ -94,7 +94,7 @@ const Navbar = () => {
             <div className='flex items-center justify-between py-5 font-medium sm:mt-32 xs:mt-32 xxs:mt-32 lg:mt-10 mt-16'>
                 <Link to='/'><img src={assets.logo} className="w-36" alt="Logo" /></Link>
 
-                <div className='flex items-center gap-6 ml-auto'>
+                <div className='flex items-center max-sm:gap-3 gap-6 ml-auto'>
                     <SearchOutlined
                         style={{ fontSize: '24px' }}
                         onClick={() => setShowSearch(prev => !prev)}
