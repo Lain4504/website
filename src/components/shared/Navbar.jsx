@@ -8,8 +8,7 @@ import { HeartOutlined, SearchOutlined, ShoppingCartOutlined, UserOutlined } fro
 import { Dropdown, Menu } from 'antd';
 import { AuthContext } from '../../context/AuthContext';
 import MiniCart from '../modal/MiniCart';
-import axios from 'axios';
-
+import { logout } from '../../services/UserService';
 const Navbar = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
@@ -38,7 +37,7 @@ const Navbar = () => {
         }
     }, [location.pathname]);
 
-    const logout = async () => {
+    const handleLogout = async () => {
 
         const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin người dùng từ localStorage
 
@@ -46,7 +45,7 @@ const Navbar = () => {
           try {
             // Gọi API logout và gửi refresh token
 
-            await axios.post('https://localhost:3001/api/user/logout', { RefreshToken: user.refreshToken });
+            await logout(user.refreshToken);
             console.log("Đăng xuất thành công");
           } catch (error) {
             console.error("Lỗi khi gọi API logout:", error);
@@ -71,7 +70,7 @@ const Navbar = () => {
                     <Menu.Item key="2">
                         <Link to='/orderlist'>Đơn hàng</Link>
                     </Menu.Item>
-                    <Menu.Item key="3" onClick={logout}>
+                    <Menu.Item key="3" onClick={handleLogout}>
                         Đăng xuất
                     </Menu.Item>
                 </>
@@ -94,7 +93,7 @@ const Navbar = () => {
             <div className='flex items-center justify-between py-5 font-medium sm:mt-32 xs:mt-32 xxs:mt-32 lg:mt-10 mt-16'>
                 <Link to='/'><img src={assets.logo} className="w-36" alt="Logo" /></Link>
 
-                <div className='flex items-center gap-6 ml-auto'>
+                <div className='flex items-center max-sm:gap-3 gap-6 ml-auto'>
                     <SearchOutlined
                         style={{ fontSize: '24px' }}
                         onClick={() => setShowSearch(prev => !prev)}

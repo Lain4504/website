@@ -167,14 +167,16 @@ const OrderList = () => {
             <div className="flex h-a my-10">
                 <div className="flex-1 p-1 bg-white shadow-md rounded-lg ml-4 overflow-x-auto">
                     <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
-                        <Table
-                            dataSource={loading ? [] : orders.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
-                            columns={columns}
-                            rowKey="id"
-                            pagination={false}
-                            className="w-full bg-white shadow-md rounded-lg"
-                            loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
-                        />
+                        <div className="overflow-x-auto">
+                            <Table
+                                dataSource={loading ? [] : orders.slice((currentPage - 1) * pageSize, currentPage * pageSize)}
+                                columns={columns}
+                                rowKey="id"
+                                pagination={false}
+                                className="w-full bg-white shadow-md rounded-lg"
+                                loading={loading && { spinning: true, tip: 'Đang tải danh sách đơn hàng...' }}
+                            />
+                        </div>
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
                             <Pagination
                                 current={currentPage}

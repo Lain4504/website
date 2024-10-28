@@ -150,7 +150,7 @@ const ProductDetail = () => {
             <div className="relative">
               {book.discount && (
                 <div className="absolute top-0 right-0 bg-red-500 text-white px-1 py-1 text-sm rounded-bl-lg z-10">
-                  -{book.discount * 100}%
+                    -{(book.discount * 100).toFixed(0)}%
                 </div>
               )}
               <Carousel ref={carouselRef} autoplay autoplaySpeed={10000} speed={1000} dots effect="fade">
@@ -206,8 +206,8 @@ const ProductDetail = () => {
                 <Button type="default" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)} icon={<MinusOutlined style={{ color: 'white' }} />} style={{ backgroundColor: 'black', color: 'white' }} />
                 <Input value={quantity} readOnly className="border border-black rounded-md w-16 text-center mx-2" />
                 <Button type="default" onClick={() => setQuantity(quantity + 1)} icon={<PlusOutlined style={{ color: 'white' }} />} style={{ backgroundColor: 'black', color: 'white' }} />
-                <Button className="ml-4 bg-black text-white hover:bg-gray-800" onClick={handleAddToCart}><ShoppingCartOutlined /> Thêm vào giỏ hàng</Button>
               </Form.Item>
+              <Button className=" bg-black text-white hover:bg-gray-800" onClick={handleAddToCart}><ShoppingCartOutlined /> Thêm vào giỏ hàng</Button>
             </Form>
              <div className="mt-4">
               <p>

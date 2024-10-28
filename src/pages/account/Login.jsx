@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { login } from '../../services/UserService';
+import { googleLogin, login } from '../../services/UserService';
 import { notification } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EyeInvisibleOutlined, EyeTwoTone, GoogleOutlined } from '@ant-design/icons';
@@ -61,17 +61,10 @@ const Login = () => {
         console.log("Credential response:", credentialResponse); // Log the entire credential response
     
         try {
-            const res = await fetch('https://localhost:3001/api/user/google-login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token: credentialResponse.credential }),
-            });
-    
+            const res = await googleLogin(credentialResponse.credential);
             // Log the response status and body
             console.log("Response Status:", res.status);
-            const data = await res.json();
+            const data = res.data;
             console.log("API Response Data:", data); // Log the entire API response
     
             // Destructure relevant fields from the response

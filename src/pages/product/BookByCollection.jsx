@@ -26,6 +26,9 @@ const BooksByCollection = () => {
     }, []);
 
     const fetchData = (id) => {
+        // Thiết lập lại currentPage khi fetch data
+        setCurrentPage(1); // Reset current page
+    
         if (id === 'all') {
             setCurCollection(null);
             setCurCollectionId(null); // Reset current collection ID
@@ -37,25 +40,26 @@ const BooksByCollection = () => {
                 })
                 .catch(error => console.error(error));
         }
-
+    
         getBooksByQuery(id)
             .then(res => {
                 setBooks(res.data.content);
                 book_length.current = res.data.totalElements;
             })
             .catch(error => console.error(error));
+        
         getCollections()
-        .then((response) => {
-            if (Array.isArray(response.data)){
-                setCollections(response.data);
-            } else {
-                setCollections([]);
-            }
-        })
-        .catch((error) => {
-            console.error("Error fetching collections data: ", error);
-            setCollections([]);  
-          });
+            .then((response) => {
+                if (Array.isArray(response.data)){
+                    setCollections(response.data);
+                } else {
+                    setCollections([]);
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching collections data: ", error);
+                setCollections([]);  
+            });
     };
 
     const indexOfLastBook = currentPage * booksPerPage;
@@ -67,6 +71,7 @@ const BooksByCollection = () => {
         let collectionQuery = curCollection ? `collection=${curCollection.id}` : '';
         let query = '';
         setCurrentPage(1); // Reset to first page on sort change
+    
         switch (value) {
             case 'manual':
                 break;
@@ -91,13 +96,15 @@ const BooksByCollection = () => {
             default:
                 break;
         }
-
+    
         if (query) {
             getBookByQuery(query)
-                .then(res => setBooks(res.data.content));
+                .then(res => {
+                    setBooks(res.data.content);
+                    book_length.current = res.data.totalElements; // Cập nhật số lượng sách
+                });
         }
     };
-
     useEffect(() => {
         setSortBy('manual');
         fetchData(id);
@@ -190,7 +197,7 @@ const BooksByCollection = () => {
                                                     />
                                                 </Link>
                                                 <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
-                                                    -{book.discount * 100}%
+                                                 -{(book.discount * 100).toFixed(0)}%
                                                 </div>
                                             </div>
                                             <div className="p-2 transition-opacity duration-300 ease-in-out">
