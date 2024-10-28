@@ -58,40 +58,6 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
             setAddressName('Không tìm thấy địa chỉ');
         }
     };
-
-    const handleToPayment = () => {
-        if (!cart.fullName || !cart.phone || !cart.address) {
-            setError({ emptyError: true, phoneError: false });
-            return;
-        }
-
-        const phoneRegex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-        if (!phoneRegex.test(cart.phone)) {
-            setError({ emptyError: false, phoneError: true });
-            return;
-        }
-
-        if (provinceName && districtName && wardName) {
-            const newAddress = `${wardName}, ${districtName}, ${provinceName}`;
-            setCart((prevCart) => ({
-                ...prevCart,
-                address: newAddress,
-                province: provinceName,
-                district: districtName,
-                ward: wardName,
-            }));
-        }
-
-        updateCartItem(cart)
-            .then(() => {
-                setCartChange(!cartChange);
-                navigate('/payment');
-            })
-            .catch((err) => {
-                console.error('Error updating cart item:', err);
-            });
-    };
-
     useEffect(() => {
         const fetchProvince = async () => {
             try {
@@ -142,28 +108,36 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
         fetchAddressNames(); // Call to fetch address names if address exists
     }, [cart.address]);
 
+    const handlePayment = (e) => {
+        setPaymentMethod(e.target.value);
+
+    };
     const handleOrder = async () => {
+        // Log ra nội dung của cart
+        console.log("Cart data before saving:", cart);
+    
         if (paymentMethod === 'bank') {
             navigate('/payment/bank');
+            
         } else if (paymentMethod === 'cod') {
-            // Kiểm tra nếu địa chỉ đã có
             const newAddress = cart.address || `${ward}, ${district}, ${province}`;
-            
+            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + +cart.shippingPrice;
             console.log("Selected address data:", { newAddress });
-            
+    
             const orderUpdateData = {
                 id: cart.id,
                 name: cart.fullName,
                 phone: cart.phone,
-                address: newAddress
+                address: newAddress,
+                totalPrice: totalPay
             };
-            
+    
             try {
                 const updateResponse = await updateOrder(cart.id, orderUpdateData);
-                
+    
                 // Kiểm tra mã trạng thái từ phản hồi
                 if (updateResponse.status === 200) {
-                    await addOrder(cart);
+                    await addOrder({ ...cart });
                     navigate('/orderlist');
                 } else {
                     message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
@@ -175,11 +149,6 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
         }
     };
     
-    
-    const handlePayment = (e) => {
-        setPaymentMethod(e.target.value);
-    };
-
     return (
         <div className="p-6">
             <div className="main-content">
