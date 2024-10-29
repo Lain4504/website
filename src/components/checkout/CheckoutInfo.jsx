@@ -113,13 +113,10 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
 
     };
     const handleOrder = async () => {
-        // Log ra nội dung của cart
+
         console.log("Cart data before saving:", cart);
     
         if (paymentMethod === 'bank') {
-            navigate('/payment/bank');
-            
-        } else if (paymentMethod === 'cod') {
             const newAddress = cart.address || `${ward}, ${district}, ${province}`;
             const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + +cart.shippingPrice;
             console.log("Selected address data:", { newAddress });
@@ -134,8 +131,35 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     
             try {
                 const updateResponse = await updateOrder(cart.id, orderUpdateData);
+                if (updateResponse.status === 200) {
+                    await addOrder({ ...cart }); // Await addOrder to complete
+                    const response = await fetch(`http://localhost:3001/api/vnpay/url/${cart.id}`);
+                    const paymentUrl = await response.text();
+                    console.log("Payment URL:", paymentUrl);
+                    navigate(paymentUrl);
+                } else {
+                    message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
+                }
+            } catch (err) {
+                console.error("Error updating order or adding order:", err);
+                message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
+            }
+        } 
+        else if (paymentMethod === 'cod') {
+            const newAddress = cart.address || `${ward}, ${district}, ${province}`;
+            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + +cart.shippingPrice;
+            console.log("Selected address data:", { newAddress });
     
-                // Kiểm tra mã trạng thái từ phản hồi
+            const orderUpdateData = {
+                id: cart.id,
+                name: cart.fullName,
+                phone: cart.phone,
+                address: newAddress,
+                totalPrice: totalPay
+            };
+    
+            try {
+                const updateResponse = await updateOrder(cart.id, orderUpdateData);
                 if (updateResponse.status === 200) {
                     await addOrder({ ...cart });
                     navigate('/orderlist');
