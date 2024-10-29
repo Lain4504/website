@@ -144,7 +144,29 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
 
     const handleOrder = async () => {
         if (paymentMethod === 'bank') {
-            navigate('/payment/bank');
+            // navigate('/payment/bank');
+
+            try {
+                // Call the backend to get the payment URL
+                const response = await fetch(`/api/payment/url/${cart.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+    
+                if (!response.ok) {
+                    throw new Error("Failed to retrieve payment URL");
+                }
+    
+                const paymentUrl = await response.text(); // Assuming the URL is returned as plain text
+    
+                // Navigate to the VNPAY payment page
+                window.location.href = paymentUrl;
+            } catch (error) {
+                console.error("Error retrieving payment URL:", error);
+                message.error("Có lỗi xảy ra khi truy cập trang thanh toán.");
+            }
         } else if (paymentMethod === 'cod') {
             // Kiểm tra nếu địa chỉ đã có
             const newAddress = cart.address || `${ward}, ${district}, ${province}`;
