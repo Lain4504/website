@@ -85,6 +85,7 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) =
                 ? handleAddressChange()
                 : initialValues.address,
         };
+
         onSubmit(updatedValues);
     };
 
@@ -100,6 +101,7 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) =
             <div className="space-y-4">
                 <div>
                     <label className="font-bold">Họ và Tên</label>
+
                     <Input
                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                         value={fullName}
@@ -128,6 +130,7 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) =
                             <label className="font-bold">Ngày sinh</label>
                             <Input
                                 type="date"
+
                                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 value={dob}
                                 onChange={(e) => setDob(e.target.value)}
@@ -160,6 +163,7 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) =
                                     setSelectedDistrict('');
                                     setSelectedWard('');
                                 }}
+
                                 initialValue={selectedProvince}
                             />
                         </Col>
@@ -172,6 +176,7 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) =
                                     setSelectedDistrict(value);
                                     setSelectedWard('');
                                 }}
+
                                 initialValue={selectedDistrict}
                             />
                         </Col>
@@ -181,6 +186,7 @@ const EditProfileModal = ({ visible, onCancel, onSubmit, initialValues = {} }) =
                                 options={wards} 
                                 name="ward" 
                                 setValue={setSelectedWard}
+
                                 initialValue={selectedWard}
                             />
                         </Col>

@@ -73,7 +73,7 @@ const RelevantByAuthors = ({ authors }) => {
                     <div
                     key={book.id}
                     className="flex-shrink-0 bg-white shadow-lg rounded-lg overflow-hidden relative group
-                               w-52 h-88" // Set fixed width and height for the card
+                               w-52 h-88 border border-gray-300" // Set fixed width and height for the card
                     onMouseEnter={() => setHoveredBookTitle(book.title)}
                     onMouseLeave={() => setHoveredBookTitle("")}
                     onMouseMove={handleMouseMove}
@@ -89,7 +89,7 @@ const RelevantByAuthors = ({ authors }) => {
                       </Link>
                       {book.discount > 0 && (
                         <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
-                          -{book.discount * 100}%
+                          -{(book.discount * 100).toFixed(0)}%
                         </div>
                       )}
                     </div>

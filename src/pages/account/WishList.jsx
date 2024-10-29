@@ -128,7 +128,7 @@ const paginatedWishlist = wishlist.slice((currentPage - 1) * itemsPerPage, curre
                   <DeleteOutlined className="mr-0" />
                 </button>
                 <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
-                  -{item.book.discount * 100}%
+                 -{(item.book.discount * 100).toFixed(0)}%
                 </div>
               </div>
               <div className="p-2 transition-opacity duration-300 ease-in-out">

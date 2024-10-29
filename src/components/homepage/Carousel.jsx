@@ -12,12 +12,19 @@ const CarouselComponent = () => {
   const fetchData = () => {
     getSlider()
       .then(response => {
-        setSliders(response.data);  // Set the fetched data to state
+        if (Array.isArray(response.data)) {
+          setSliders(response.data);
+        } else {
+          console.warn("Fetched data is not an array:", response.data);
+          setSliders([]); // Hoặc có thể để null tùy ý
+        }
       })
       .catch(error => {
         console.error("Error fetching sliders data:", error);
+        setSliders([]); // Hoặc có thể để null tùy ý
       });
   };
+  
 
   // Fetch data when component mounts
   useEffect(() => {

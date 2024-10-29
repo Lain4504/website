@@ -41,7 +41,7 @@ const ListProduct = (props) => {
                                     onMouseLeave={() => setHoveredBookTitle("")}
                                     onMouseMove={handleMouseMove}
                                 >
-                                    <div className="relative h-48 xxs:h-60 xs:h-80 sm:h-80 md:h-96 lg:h-72 xl:h-80 2xl:h-96 transition-all duration-300 ease-in-out"> {/* Chiều cao dynamic và có hiệu ứng */}
+                                    <div className="relative h-48 xxs:h-60 xs:h-80 sm:h-80 md:h-96 lg:h-72 xl:h-80 2xl:h-80 transition-all duration-300 ease-in-out"> {/* Chiều cao dynamic và có hiệu ứng */}
                                         <Link to={`/products/${book.id}`}>
                                             <img
                                                 src={book.images[0]?.link}
@@ -50,7 +50,7 @@ const ListProduct = (props) => {
                                             />
                                         </Link>
                                         <div className="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg">
-                                            -{book.discount * 100}%
+                                         -{(book.discount * 100).toFixed(0)}%
                                         </div>
                                     </div>
                                     <div className="p-2 transition-opacity duration-300 ease-in-out">
@@ -65,12 +65,13 @@ const ListProduct = (props) => {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center">Không có sản phẩm nào phù hợp.</p>
-                        )
+                            <div className="flex flex-col items-center justify-center h-full">
+                            </div>
+                            )
                     }
                     <div className="col-span-full text-right mt-4">
                         <Button className="text-blue-500 hover:underline">
-                           <Link to={`collections/all`}> Xem thêm &gt;&gt;</Link> 
+                            <Link to={`collections/all`}> Xem thêm &gt;&gt;</Link>
                         </Button>
                     </div>
                 </div>

@@ -1,13 +1,18 @@
-# Dockerfile cho App2
-FROM node:14
+# Dockerfile cho Project2
+FROM node:18-alpine as build
 
+# Thư mục làm việc
 WORKDIR /app
 
-COPY app2/package.json ./
-COPY app2/package-lock.json ./
-
+# Sao chép package.json và cài đặt dependencies
+COPY package*.json ./
 RUN npm install
 
-COPY app2/ ./
+# Sao chép toàn bộ mã nguồn
+COPY . .
 
-CMD ["npm", "start"]
+# Expose port 
+EXPOSE 5001
+
+# Khởi chạy Vite ở chế độ phát triển
+CMD ["npm", "run", "dev", "--", "--host"]
