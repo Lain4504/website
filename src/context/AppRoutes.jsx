@@ -41,22 +41,26 @@ const AppRoutes = () => {
       '/', '/about', '/collections/:id', '/contact', '/postcategory/:id', 
       '/login', '/register', '/search/:name', '/activation/:token', 
       '/forgot-password', '/reset-password/:token', '/products/:id', 
-      '/posts/:id', '/wishlist', '/orderlist', '/cart','/profile',
-      '/change-password', '/checkout','/privacypolicy',
-      '/paymentpolicy','/shippingpolicy', '/termsofservice', 
-      '/faq', '/order-detail/:id','/returnpolicy','/payment/bank'
+      '/posts/:id', '/wishlist', '/orderlist', '/cart', '/profile',
+      '/change-password', '/checkout', '/privacypolicy',
+      '/paymentpolicy', '/shippingpolicy', '/termsofservice', 
+      '/faq', '/order-detail/:id', '/returnpolicy', '/payment/bank'
     ];
-
-    const pathExists = validRoutes.some(route => {
-      const regexPattern = route.replace(/:[^/]+/, '[^/]+').replace(/\/$/, '\\/?');
-      const regex = new RegExp(`^${regexPattern}$`);
-      return regex.test(location.pathname);
-    });
-
-    if (!pathExists && location.pathname !== '/404') {
-      navigate('/404');
+  
+    // Skip validation if URL contains vnpayment parameters
+    if (!location.search.includes("vnp_Amount=")) {
+      const pathExists = validRoutes.some(route => {
+        const regexPattern = route.replace(/:[^/]+/, '[^/]+').replace(/\/$/, '\\/?');
+        const regex = new RegExp(`^${regexPattern}$`);
+        return regex.test(location.pathname);
+      });
+  
+      if (!pathExists && location.pathname !== '/404') {
+        navigate('/404');
+      }
     }
   }, [location, navigate]);
+  
 
   return (
     <Routes>

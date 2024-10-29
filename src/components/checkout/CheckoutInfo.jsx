@@ -118,7 +118,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     
         if (paymentMethod === 'bank') {
             const newAddress = cart.address || `${ward}, ${district}, ${province}`;
-            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + +cart.shippingPrice;
+            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
             console.log("Selected address data:", { newAddress });
     
             const orderUpdateData = {
@@ -133,10 +133,10 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
                 const updateResponse = await updateOrder(cart.id, orderUpdateData);
                 if (updateResponse.status === 200) {
                     await addOrder({ ...cart }); // Await addOrder to complete
-                    const response = await fetch(`http://localhost:3001/api/vnpay/url/${cart.id}`);
+                    const response = await fetch(`http://localhost:3000/api/vnpay/url/${cart.id}`);
                     const paymentUrl = await response.text();
                     console.log("Payment URL:", paymentUrl);
-                    navigate(paymentUrl);
+                    window.location.href = paymentUrl;
                 } else {
                     message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
                 }
@@ -147,7 +147,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
         } 
         else if (paymentMethod === 'cod') {
             const newAddress = cart.address || `${ward}, ${district}, ${province}`;
-            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + +cart.shippingPrice;
+            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
             console.log("Selected address data:", { newAddress });
     
             const orderUpdateData = {
