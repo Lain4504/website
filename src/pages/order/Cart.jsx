@@ -8,6 +8,7 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 
 const Cart = () => {
   const [tempCart, setTempCart] = useState({ orderDetails: [] });
+  const [tempOrder, setTempOrder] = useState({ orderDetails: [] });
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const userId = currentUser?.userId || null;
@@ -51,16 +52,46 @@ const Cart = () => {
     });
   };
 
+  // const updateCart = () => {
+  //   // Log tempCart before sending the update request
+    
+  //   console.log("Updating cart with data:", tempCart);
+    
+  //   updateCartItem(tempOrder).then(res => {
+  //     console.log("Cart updated successfully:", res);
+  //   }).catch(error => {
+  //     console.error("Error updating cart:", error);
+  //   }); 
+  // }; 
   const updateCart = () => {
-    // Log tempCart before sending the update request
-    console.log("Updating cart with data:", tempCart);
+    // Extract necessary fields from tempCart
+    const { id: orderId, orderDetails } = tempCart;
+    
+    // Prepare data for each item in orderDetails
+    const updatedDetails = orderDetails.map(({ id: orderDetailId, amount: quantity, salePrice }) => ({
+        orderId,
+        orderDetailId,
+        quantity,
+        salePrice
+    }));
 
-    updateCartItem(tempCart).then(res => {
-      console.log("Cart updated successfully:", res);
-    }).catch(error => {
-      console.error("Error updating cart:", error);
-    });
-  };
+    console.log("Updating cart with data:", updatedDetails);
+
+    // Send update request for each order detail
+    // updatedDetails.forEach(detail => {
+    //     updateCartItem(detail).then(res => {
+    //         console.log("Cart updated successfully:", res);
+    //     }).catch(error => {
+    //         console.error("Error updating cart:", error);
+    //     });
+    // });
+
+    updateCartItem(updatedDetails);
+    
+};
+
+
+
   const [visible, setVisible] = useState(false);
 
   const checkout = () => {
