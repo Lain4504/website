@@ -51,18 +51,6 @@ const Cart = () => {
       console.error("Error deleting cart item:", error);
     });
   };
-
-  // const updateCart = () => {
-  //   // Log tempCart before sending the update request
-    
-  //   console.log("Updating cart with data:", tempCart);
-    
-  //   updateCartItem(tempOrder).then(res => {
-  //     console.log("Cart updated successfully:", res);
-  //   }).catch(error => {
-  //     console.error("Error updating cart:", error);
-  //   }); 
-  // }; 
   const updateCart = () => {
     // Extract necessary fields from tempCart
     const { id: orderId, orderDetails } = tempCart;
@@ -76,22 +64,9 @@ const Cart = () => {
     }));
 
     console.log("Updating cart with data:", updatedDetails);
-
-    // Send update request for each order detail
-    // updatedDetails.forEach(detail => {
-    //     updateCartItem(detail).then(res => {
-    //         console.log("Cart updated successfully:", res);
-    //     }).catch(error => {
-    //         console.error("Error updating cart:", error);
-    //     });
-    // });
-
     updateCartItem(updatedDetails);
     
 };
-
-
-
   const [visible, setVisible] = useState(false);
 
   const checkout = () => {

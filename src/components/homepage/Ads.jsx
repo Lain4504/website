@@ -44,7 +44,7 @@ const Ads = () => {
     };
 
     if (loading) {
-        return <div>Loading ads...</div>;
+        return <div></div>;
     }
 
     if (error) {
