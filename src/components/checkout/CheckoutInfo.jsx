@@ -125,17 +125,65 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
       src / components / Checkout / CheckoutInfo.jsx;
       // navigate('/payment/bank');
 
-      try {
-        // Call the backend to get the payment URL
-        const response = await fetch(`/api/payment/url/${cart.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+    };
+    const handleOrder = async () => {
 
-        if (!response.ok) {
-          throw new Error("Failed to retrieve payment URL");
+        console.log("Cart data before saving:", cart);
+    
+        if (paymentMethod === 'bank') {
+            const newAddress = cart.address || `${ward}, ${district}, ${province}`;
+            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
+            console.log("Selected address data:", { newAddress });
+    
+            const orderUpdateData = {
+                id: cart.id,
+                name: cart.fullName,
+                phone: cart.phone,
+                address: newAddress,
+                totalPrice: totalPay
+            };
+    
+            try {
+                const updateResponse = await updateOrder(cart.id, orderUpdateData);
+                if (updateResponse.status === 200) {
+                    await addOrder({ ...cart }); // Await addOrder to complete
+                    const response = await fetch(`http://localhost:3000/api/vnpay/url/${cart.id}`);
+                    const paymentUrl = await response.text();
+                    console.log("Payment URL:", paymentUrl);
+                    window.location.href = paymentUrl;
+                } else {
+                    message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
+                }
+            } catch (err) {
+                console.error("Error updating order or adding order:", err);
+                message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
+            }
+        } 
+        else if (paymentMethod === 'cod') {
+            const newAddress = cart.address || `${ward}, ${district}, ${province}`;
+            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
+            console.log("Selected address data:", { newAddress });
+    
+            const orderUpdateData = {
+                id: cart.id,
+                name: cart.fullName,
+                phone: cart.phone,
+                address: newAddress,
+                totalPrice: totalPay
+            };
+    
+            try {
+                const updateResponse = await updateOrder(cart.id, orderUpdateData);
+                if (updateResponse.status === 200) {
+                    await addOrder({ ...cart });
+                    navigate('/orderlist');
+                } else {
+                    message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
+                }
+            } catch (err) {
+                console.error("Error updating order or adding order:", err);
+                message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
+            }
         }
 
         const paymentUrl = await response.text(); // Assuming the URL is returned as plain text
