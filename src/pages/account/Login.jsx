@@ -119,14 +119,14 @@ const Login = () => {
     return (
         <>
             <Breadcrumb items={breadcrumbs} />
-            <section className="bg-white dark:bg-gray-900">
+            <section className="bg-white">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto my-8 lg:py-0">
                     <a className="mb-6 text-2xl font-semibold">
                         <Title text1={'Forever'} text2={'Book Store'} />
                     </a>
-                    <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
+                    <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg  md:mt-0 sm:max-w-md xl:p-0 ">
                         <div className="p-6 space-y-4 lg:space-y-6 sm:p-8">
-                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                                 Đăng nhập vào tài khoản của bạn
                             </h1>
                             <form onSubmit={onSubmitHandler} className="space-y-4">
@@ -138,7 +138,7 @@ const Login = () => {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         placeholder="Nhập địa chỉ email"
-                                        className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
+                                        className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 "
                                     />
                                 </div>
 
@@ -151,7 +151,7 @@ const Login = () => {
                                             onChange={(e) => setPassword(e.target.value)}
                                             required
                                             placeholder="Nhập mật khẩu"
-                                            className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
+                                            className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 "
                                         />
                                         <span
                                             onClick={() => setShowPassword(!showPassword)}
@@ -168,16 +168,16 @@ const Login = () => {
                                             <input
                                                 id="remember"
                                                 type="checkbox"
-                                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300 dark:bg-gray-700 dark:border-gray-600"
+                                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-indigo-300 "
                                             />
                                         </div>
                                         <div className="ml-3 text-sm">
-                                            <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
+                                            <label htmlFor="remember" className="text-gray-500 ">
                                                 Ghi nhớ tài khoản
                                             </label>
                                         </div>
                                     </div>
-                                    <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-500">
+                                    <Link to="/forgot-password" className="text-sm font-medium text-indigo-600 hover:underline ">
                                         Quên mật khẩu?
                                     </Link>
                                 </div>

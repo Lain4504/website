@@ -110,6 +110,13 @@ const BooksByCollection = () => {
         fetchData(id);
     }, [id]);
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, [currentPage]);
+
     const breadcrumbs = [
         { title: 'Trang chủ', href: '/' },
         { title: curCollection ? curCollection.name : 'All' }

@@ -97,14 +97,14 @@ const Register = () => {
     return (
         <>
             <Breadcrumb items={breadcrumbs} />
-            <section className="bg-white dark:bg-gray-900">
+            <section className="bg-white ">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto my-8 lg:py-0">
                     <a className="mb-6 text-2xl font-semibold">
                         <Title text1={'Forever'} text2={'Book Store'} />
                     </a>
-                    <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg dark:border-2 dark:border-gray-600 md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800">
+                    <div className="w-full bg-white rounded-lg border border-gray-300 shadow-lg  md:mt-0 sm:max-w-md xl:p-0 ">
                         <div className="p-6 space-y-4 lg:space-y-6 sm:p-8">
-                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                                 Tạo tài khoản
                             </h1>
                             {existingAccountError && (
@@ -122,7 +122,7 @@ const Register = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="name@company.com"
-                                        className="mt-1 block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
+                                        className="mt-1 block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 "
                                     />
                                 </div>
                                 <div>
@@ -132,7 +132,7 @@ const Register = () => {
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
                                         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                        className="mt-1 w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
+                                        className="mt-1 w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 "
                                     />
                                 </div>
                                 <div>
@@ -142,7 +142,7 @@ const Register = () => {
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder="••••••••"
                                         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                                        className="mt-1 w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-200"
+                                        className="mt-1 w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-600 "
                                     />
                                 </div>
                                 <div className="flex items-start">
@@ -151,12 +151,12 @@ const Register = () => {
                                             id="terms"
                                             type="checkbox"
                                             required
-                                            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600"
+                                            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 "
                                         />
                                     </div>
                                     <div className="ml-3 text-sm">
-                                        <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">
-                                            Tôi chấp nhận <a className="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Điều khoản và Điều kiện</a>
+                                        <label htmlFor="terms" className="font-light text-gray-500 ">
+                                            Tôi chấp nhận <a className="font-medium text-primary-600 hover:underline " href="#">Điều khoản và Điều kiện</a>
                                         </label>
                                     </div>
                                 </div>
@@ -189,8 +189,8 @@ const Register = () => {
                                     />
                                 </GoogleOAuthProvider>
                             </form>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Đã có tài khoản? <Link to="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Đăng nhập tại đây</Link>
+                            <p className="text-sm font-light text-gray-500 ">
+                                Đã có tài khoản? <Link to="/login" className="font-medium text-primary-600 hover:underline ">Đăng nhập tại đây</Link>
                             </p>
                         </div>
                     </div>
