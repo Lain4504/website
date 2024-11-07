@@ -1,7 +1,8 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
-import { Button, Input, List } from "antd";
+import { Button, Input, List, Dropdown, Menu, message } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons"; // Import the ellipsis icon
 
 const FeedBack = ({ bookId, userId }) => {
   const [comments, setComments] = useState([]);
@@ -12,6 +13,7 @@ const FeedBack = ({ bookId, userId }) => {
 
   useEffect(() => {
     // Hàm lấy bình luận từ API
+    console.log("User current in comment: ", userId);
     const fetchComments = async () => {
       try {
         const response = await axios.get(
@@ -22,6 +24,7 @@ const FeedBack = ({ bookId, userId }) => {
         setError("Error loading comments: " + err.message);
       }
     };
+
 
     // Hàm kết nối tới SignalR
     const connectToSignalR = async () => {
@@ -59,6 +62,19 @@ const FeedBack = ({ bookId, userId }) => {
       }
     };
   }, [bookId]); // Chỉ gọi lại khi bookId thay đổi
+  const deleteComment = async (feedBackId) => {
+    console.log("Deleting comment with ID:", feedBackId, "UserID:", userId);
+    try {
+      await axios.delete(`http://localhost:3000/api/feedback/${feedBackId}?userId=${userId}`);
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== feedBackId)
+      );
+      message.success("Comment deleted successfully");
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      setError("Error deleting comment.");
+    }
+  };
 
   // Hàm gửi bình luận mới
   const sendComment = async () => {
@@ -69,7 +85,7 @@ const FeedBack = ({ bookId, userId }) => {
           userId,
           comment: newComment,
         });
-        
+
         if (response.status === 200) {
           if (connection) {
             console.log(bookId, userId, newComment)
@@ -86,16 +102,26 @@ const FeedBack = ({ bookId, userId }) => {
       setError("Comment cannot be empty.");
     }
   };
-  
 
   const handleViewMore = () => {
     setVisibleComments((prev) => prev + 2);
   };
 
+  // Dropdown Menu with Delete Option
+  const renderMenu = (feedBackId) => (
+    <Menu>
+      <Menu.Item
+        onClick={() => deleteComment(feedBackId)}
+        icon={<EllipsisOutlined />}
+      >
+        Xóa bình luận
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div className="p-4 border rounded-lg shadow-md bg-white">
       <h2 className="text-xl font-semibold mb-4">Bình luận</h2>
-      {error && <p className="text-red-500">{error}</p>}
 
       <Button type="link" className="mb-2">
         {comments.length} Bình luận
@@ -127,10 +153,20 @@ const FeedBack = ({ bookId, userId }) => {
         dataSource={comments.slice(0, visibleComments)}
         renderItem={(comment, index) => (
           <List.Item key={index}>
-            <strong>{comment.userId}:</strong> {comment.comment}
+            <div className="flex justify-between w-full">
+              <span>
+                <strong>{comment.userId}:</strong> {comment.comment}
+              </span>
+              {(String(comment.userId) === String(userId)) && ( 
+                <Dropdown overlay={renderMenu(comment.id)} trigger={['click']}>
+                  <Button icon={<EllipsisOutlined />} />
+                </Dropdown>
+              )}
+            </div>
           </List.Item>
         )}
       />
+
       {visibleComments < comments.length && (
         <Button type="link" onClick={handleViewMore}>
           Xem thêm
