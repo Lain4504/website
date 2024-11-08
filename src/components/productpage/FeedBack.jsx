@@ -2,30 +2,24 @@ import React, { useEffect, useState } from "react";
 import * as signalR from "@microsoft/signalr";
 import axios from "axios";
 import { Button, Input, List, Dropdown, Menu, message } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons"; // Import the ellipsis icon
+import { EllipsisOutlined } from "@ant-design/icons"; 
 
 const FeedBack = ({ bookId, userId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [connection, setConnection] = useState(null);
   const [error, setError] = useState("");
-  const [visibleComments, setVisibleComments] = useState(2);
+  const [visibleComments, setVisibleComments] = useState(5);
 
   useEffect(() => {
-    // Hàm lấy bình luận từ API
-    console.log("User current in comment: ", userId);
     const fetchComments = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/feedback/${bookId}`
-        );
+        const response = await axios.get(`http://localhost:3000/api/feedback/${bookId}`);
         setComments(response.data);
       } catch (err) {
         setError("Error loading comments: " + err.message);
       }
     };
-
-
     // Hàm kết nối tới SignalR
     const connectToSignalR = async () => {
       const connect = new signalR.HubConnectionBuilder()
@@ -37,31 +31,34 @@ const FeedBack = ({ bookId, userId }) => {
         await connect.start();
         console.log("Kết nối SignalR thành công");
 
-        // Lắng nghe sự kiện ReceiveComment từ server
         connect.on("ReceiveComment", (userId, comment) => {
           setComments((prevComments) => [...prevComments, { userId, comment }]);
           fetchComments();
         });
 
-        // Lưu kết nối vào state
+        connect.on("DeletedComment", (deletedFeedbackId) => {
+          setComments((prevComments) =>
+            prevComments.filter((comment) => comment.id !== deletedFeedbackId)
+          );
+        });
+
         setConnection(connect);
       } catch (err) {
         console.error("Error connecting to SignalR", err);
         setError(`Error connecting to chat server: ${err.message}`);
       }
     };
-
     // Gọi hàm kết nối và lấy dữ liệu bình luận ban đầu
     connectToSignalR();
     fetchComments();
-
     // Hủy kết nối SignalR khi component bị tháo
     return () => {
       if (connection) {
         connection.stop().then(() => console.log("Đã ngắt kết nối SignalR"));
       }
     };
-  }, [bookId]); // Chỉ gọi lại khi bookId thay đổi
+  }, [bookId]);
+
   const deleteComment = async (feedBackId) => {
     console.log("Deleting comment with ID:", feedBackId, "UserID:", userId);
     try {
@@ -76,7 +73,6 @@ const FeedBack = ({ bookId, userId }) => {
     }
   };
 
-  // Hàm gửi bình luận mới
   const sendComment = async () => {
     if (newComment.trim()) {
       try {
@@ -88,11 +84,11 @@ const FeedBack = ({ bookId, userId }) => {
 
         if (response.status === 200) {
           if (connection) {
-            console.log(bookId, userId, newComment)
+            console.log(bookId, userId, newComment);
             await connection.invoke("SendComment", bookId, userId, newComment);
             console.log("Comment sent via SignalR");
           }
-          setNewComment(""); // Clear the input
+          setNewComment("");
         }
       } catch (err) {
         console.error("Error sending comment:", err);
@@ -107,13 +103,9 @@ const FeedBack = ({ bookId, userId }) => {
     setVisibleComments((prev) => prev + 2);
   };
 
-  // Dropdown Menu with Delete Option
   const renderMenu = (feedBackId) => (
     <Menu>
-      <Menu.Item
-        onClick={() => deleteComment(feedBackId)}
-        icon={<EllipsisOutlined />}
-      >
+      <Menu.Item onClick={() => deleteComment(feedBackId)} icon={<EllipsisOutlined />}>
         Xóa bình luận
       </Menu.Item>
     </Menu>
@@ -157,7 +149,7 @@ const FeedBack = ({ bookId, userId }) => {
               <span>
                 <strong>{comment.userId}:</strong> {comment.comment}
               </span>
-              {(String(comment.userId) === String(userId)) && ( 
+              {String(comment.userId) === String(userId) && (
                 <Dropdown overlay={renderMenu(comment.id)} trigger={['click']}>
                   <Button icon={<EllipsisOutlined />} />
                 </Dropdown>

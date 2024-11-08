@@ -52,23 +52,39 @@ const Cart = () => {
         message.error("Failed to delete item from cart.");
       });
   };
-  
+
   const updateCart = () => {
     // Extract necessary fields from tempCart
     const { id: orderId, orderDetails } = tempCart;
-    
+  
     // Prepare data for each item in orderDetails
     const updatedDetails = orderDetails.map(({ id: orderDetailId, amount: quantity, salePrice }) => ({
-        orderId,
-        orderDetailId,
-        quantity,
-        salePrice
+      orderId,
+      orderDetailId,
+      quantity,
+      salePrice
     }));
-
+  
     console.log("Updating cart with data:", updatedDetails);
-    updateCartItem(updatedDetails);
-    
-};
+  
+    // Call updateCartItem API to update the cart on the server
+    updateCartItem(updatedDetails)
+      .then(() => {
+        // After updating, re-fetch the updated cart
+        getAllCartByUserId(userId).then(response => {
+          setTempCart(response.data); // Update local state with the fetched cart data
+          message.success("Cart updated successfully!");
+        }).catch(error => {
+          console.error("Error fetching updated cart:", error);
+          message.error("Failed to update the cart.");
+        });
+      })
+      .catch(error => {
+        console.error("Error updating cart:", error);
+        message.error("Failed to update cart on server.");
+      });
+  };
+  
   const [visible, setVisible] = useState(false);
 
   const checkout = () => {
@@ -153,25 +169,15 @@ const Cart = () => {
               className="mb-8"
             />
           )}
-          <Row className="flex justify-between">
-            <Col span={16}>
-              <label htmlFor="CartSpecialInstructions" className="font-medium">
-                Ghi chú
-              </label>
-              <textarea
-                name="note"
-                id="CartSpecialInstructions"
-                className="input-full form-control w-full border rounded p-2"
-              ></textarea>
-            </Col>
-            <Col span={8} className="text-right">
+          <Row className="flex justify-end">
+            <Col className="text-right">
               <p className="mb-4">
                 <span className="font-medium">Tạm tính: </span>
                 <span className="h5 text-xl font-semibold">
                   {tempCart.orderDetails.reduce((total, item) => total + item.amount * item.salePrice, 0)?.toLocaleString()}₫
                 </span>
               </p>
-              <div className="flex justify-end gap-4"> {/* Flex container with space between buttons */}
+              <div className="flex justify-end gap-4">
                 <Button
                   type="default"
                   className="bg-gray-300 hover:bg-gray-600 text-black hover:text-white"
@@ -198,6 +204,7 @@ const Cart = () => {
               </div>
             </Col>
           </Row>
+          <h1 className='my-2'></h1>
         </div>
       </div>
     </>

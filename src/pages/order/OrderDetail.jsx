@@ -22,8 +22,9 @@ const OrderDetail = () => {
       try {
         // Fetch order info
         const orderResponse = await getOrderById(id);
+        console.log(orderResponse);
         setOrderInfo(orderResponse?.data || null); 
-        setCustomerNote(orderResponse?.data?.customerNote || ''); // Set customer note
+        setCustomerNote(orderResponse?.data?.shopNote || ''); // Set customer note
 
         const detailsResponse = await getOrderDetailByOrderId(id);
         const details = detailsResponse?.data || [];

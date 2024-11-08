@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, message, Radio } from 'antd'; // Imported Radio and Button from Ant Design
-import { Link, useNavigate } from 'react-router-dom'; // Added missing useNavigate and Link imports
+import { Button, message, Radio } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 import { getProvince, getDistrict, getWard, getWardById, getDistrictById, getProvinceById } from '../../services/AddressService';
 import SelectAddress from '../shared/SelectAddress';
 import { addOrder, updateOrder } from '../../services/OrderService';
@@ -22,6 +22,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     });
     const [addressName, setAddressName] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('cod');
+    const [note, setNote] = useState(''); // New state to handle the note input
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
@@ -57,6 +58,7 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
             setAddressName('Không tìm thấy địa chỉ');
         }
     };
+
     useEffect(() => {
         const fetchProvince = async () => {
             try {
@@ -104,74 +106,51 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
     }, [district]);
 
     useEffect(() => {
-        fetchAddressNames(); // Call to fetch address names if address exists
+        fetchAddressNames();
     }, [cart.address]);
 
     const handlePayment = (e) => {
         setPaymentMethod(e.target.value);
-
     };
-    const handleOrder = async () => {
 
+    const handleOrder = async () => {
         console.log("Cart data before saving:", cart);
-    
-        if (paymentMethod === 'bank') {
-            const newAddress = cart.address || `${ward}, ${district}, ${province}`;
-            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
-            console.log("Selected address data:", { newAddress });
-    
-            const orderUpdateData = {
-                id: cart.id,
-                name: cart.fullName,
-                phone: cart.phone,
-                address: newAddress,
-                totalPrice: totalPay
-            };
-    
-            try {
-                const updateResponse = await updateOrder(cart.id, orderUpdateData);
-                if (updateResponse.status === 200) {
-                    await addOrder({ ...cart }); // Await addOrder to complete
+
+        const newAddress = cart.address || `${ward}, ${district}, ${province}`;
+        const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
+        console.log("Selected address data:", { newAddress });
+
+        const orderUpdateData = {
+            id: cart.id,
+            name: cart.fullName,
+            phone: cart.phone,
+            address: newAddress,
+            totalPrice: totalPay,
+            note: note, // Add the note to the update data
+        };
+
+        try {
+            const updateResponse = await updateOrder(cart.id, orderUpdateData);
+            console.log("Update order response:", orderUpdateData);
+            if (updateResponse.status === 200) {
+                await addOrder({ ...cart });
+                if (paymentMethod === 'bank') {
                     const response = await fetch(`http://localhost:3000/api/vnpay/url/${cart.id}`);
                     const paymentUrl = await response.text();
                     console.log("Payment URL:", paymentUrl);
                     window.location.href = paymentUrl;
                 } else {
-                    message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
-                }
-            } catch (err) {
-                console.error("Error updating order or adding order:", err);
-                message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
-            }
-        } 
-        else if (paymentMethod === 'cod') {
-            const newAddress = cart.address || `${ward}, ${district}, ${province}`;
-            const totalPay = cart.orderDetails?.reduce((total, item) => total + item.book.salePrice * item.amount, 0) + cart.shippingPrice;
-            console.log("Selected address data:", { newAddress });
-    
-            const orderUpdateData = {
-                id: cart.id,
-                name: cart.fullName,
-                phone: cart.phone,
-                address: newAddress,
-                totalPrice: totalPay
-            };
-    
-            try {
-                const updateResponse = await updateOrder(cart.id, orderUpdateData);
-                if (updateResponse.status === 200) {
-                    await addOrder({ ...cart });
                     navigate('/orderlist');
-                } else {
-                    message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
                 }
-            } catch (err) {
-                console.error("Error updating order or adding order:", err);
-                message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
+            } else {
+                message.error("Cập nhật đơn hàng không thành công. Vui lòng thử lại.");
             }
+        } catch (err) {
+            console.error("Error updating order or adding order:", err);
+            message.error("Có lỗi xảy ra khi cập nhật đơn hàng hoặc thêm đơn hàng. Vui lòng thử lại.");
         }
     };
-    
+
     return (
         <div className="p-6">
             <div className="main-content">
@@ -266,30 +245,34 @@ const CheckoutInfo = ({ cart, setCart, cartChange, setCartChange }) => {
                         </div>
                     )}
 
-                </div>
+                    {/* Note field added */}
+                    <div>
+                        <label className="block mb-1 font-semibold">Ghi chú</label>
+                        <textarea
+                            name="note"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            placeholder="Điền ghi chú nếu có"
+                            className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                        />
+                    </div>
 
-                <div className="p-6">
-                    <h5 className="text-lg font-semibold">Phương thức thanh toán</h5>
-                    <div className="mt-4">
-                        <Radio.Group onChange={handlePayment} value={paymentMethod} className="flex flex-col">
-                            <Radio value="cod" className="py-2">
-                                Thanh toán khi nhận hàng (COD)
-                            </Radio>
-                            <Radio value="bank" className="py-2">
-                                Chuyển khoản ngân hàng
-                            </Radio>
+                    <div>
+                        <label className="block mb-1 font-semibold">Phương thức thanh toán</label>
+                        <Radio.Group onChange={handlePayment} value={paymentMethod}>
+                            <Radio value="cod">Thanh toán khi nhận hàng</Radio>
+                            <Radio value="bank">Thanh toán qua ngân hàng</Radio>
                         </Radio.Group>
                     </div>
-                </div>
 
-                <div className="mt-6 flex justify-between items-center">
+                    <div className="mt-6 flex justify-between items-center">
                     <Link to="/cart" className="text-blue-500 underline">
                         Quay lại giỏ hàng
                     </Link>
                     <Button onClick={handleOrder} className="bg-blue-500 text-white px-4 py-2 rounded-md">
                         Tiến hành thanh toán
                     </Button>
-
+                </div>
                 </div>
             </div>
         </div>
