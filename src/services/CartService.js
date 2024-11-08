@@ -10,11 +10,6 @@ const addToCart = (cart) => {
     return axios.post(`${CART_API}/add`, cart);
 }
 
-// const updateCartItem = (order) => {
-//     return axios.put(`${ORDER_API}/update-quantity/${orderId}`, order);
-// }
-
-
 const updateCartItem = (order) => {
     console.log("Sending update for orderId:", order);
     // console.log("Request body:", { orderDetailId, quantity, salePrice });
@@ -30,10 +25,14 @@ const getCartDetails = (userId) => {
     return axios.get(`${CART_API}/details/${userId}`);
 }
 
+const deleteCartItem = (cartItemId) => {
+    return axios.delete(`${ORDER_API}/delete/${cartItemId}`);
+}
 export { 
     getAllCartByUserId, 
     addToCart, 
     updateCartItem, 
     removeFromCart, 
-    getCartDetails 
+    getCartDetails,
+    deleteCartItem
 }

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Table, InputNumber, Button, Row, Col, message, Popover } from 'antd';
-import { updateCartItem, getAllCartByUserId } from '../../services/CartService';
+import { updateCartItem, getAllCartByUserId, deleteCartItem } from '../../services/CartService';
 import Breadcrumb from '../../components/shared/Breadcrumb';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -36,21 +36,23 @@ const Cart = () => {
   };
 
   const deleteCartItemHandler = (order_id) => {
-    setTempCart(cart => {
-      const newCart = { ...cart };
-      newCart.orderDetails = newCart.orderDetails.filter(item => item.id !== order_id);
-      return newCart;
-    });
-
-    // Log tempCart before sending the delete request
-    console.log("Deleting cart item. Updated cart data:", tempCart);
-
-    updateCartItem(tempCart).then(res => {
-      console.log("Cart item deleted:", res);
-    }).catch(error => {
-      console.error("Error deleting cart item:", error);
-    });
+    // Call API to delete item from the server
+    deleteCartItem(order_id)
+      .then(() => {
+        // Remove the item from local state after successful deletion
+        setTempCart(cart => {
+          const newCart = { ...cart };
+          newCart.orderDetails = newCart.orderDetails.filter(item => item.id !== order_id);
+          return newCart;
+        });
+        message.success("Item deleted successfully from cart.");
+      })
+      .catch(error => {
+        console.error("Error deleting cart item:", error);
+        message.error("Failed to delete item from cart.");
+      });
   };
+  
   const updateCart = () => {
     // Extract necessary fields from tempCart
     const { id: orderId, orderDetails } = tempCart;
