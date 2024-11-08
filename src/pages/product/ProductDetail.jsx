@@ -28,9 +28,9 @@ const ProductDetail = () => {
   const [collections, setCollections] = useState([]);
   const [publisher, setPublisher] = useState(null);
   const [authors, setAuthors] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false); 
-  const [cartItems, setCartItems] = useState(0); 
-  const [totalPrice, setTotalPrice] = useState(0); 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [cartItems, setCartItems] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const ProductDetail = () => {
         setBook(response.data);
         if (response.data.images && response.data.images.length > 0) {
           setSelectedImage(response.data.images[0].link);
-      }
+        }
         if (response.data.publisherId) {
           const publisherResponse = await getPublisherById(response.data.publisherId);
           setPublisher(publisherResponse.data);
@@ -95,14 +95,14 @@ const ProductDetail = () => {
       quantity: quantity,
       price: book.salePrice * quantity,
     };
-  
+
     // Log ra từng dòng dữ liệu
     console.log("User ID:", userId);
     console.log("Book ID:", book.id);
     console.log("Quantity:", quantity);
     console.log("Calculated Price:", cartItem.price);
     console.log("Cart Item:", cartItem);
-  
+
     try {
       await addToCart(cartItem);
       setIsModalVisible(true);
@@ -113,7 +113,7 @@ const ProductDetail = () => {
       console.error("Error adding to cart", error);
     }
   };
-  
+
 
   const handleModalOk = () => {
     console.log("Proceeding to checkout");
@@ -125,15 +125,15 @@ const ProductDetail = () => {
   };
   useEffect(() => {
     const fetchCartItems = async () => {
-      try{
+      try {
         const response = await getAllCartByUserId(userId);
         setCartItems(response.data.length);
-      } catch (error){
+      } catch (error) {
         console.error("Error fetching cart items", error);
       }
     };
     fetchCartItems();
-  },[userId])
+  }, [userId])
   const bookImages = book.images || [];
   const publicationYear = new Date(book.publicationDate).getFullYear();
   const breadcrumbs = [{ title: 'Trang chủ', href: '/' }, { title: book.title }];
@@ -150,7 +150,7 @@ const ProductDetail = () => {
             <div className="relative">
               {book.discount && (
                 <div className="absolute top-0 right-0 bg-red-500 text-white px-1 py-1 text-sm rounded-bl-lg z-10">
-                    -{(book.discount * 100).toFixed(0)}%
+                  -{(book.discount * 100).toFixed(0)}%
                 </div>
               )}
               <Carousel ref={carouselRef} autoplay autoplaySpeed={10000} speed={1000} dots effect="fade">
@@ -202,14 +202,37 @@ const ProductDetail = () => {
               </Paragraph>
             </div>
             <Form className="mt-4">
-              <Form.Item label="Số lượng:" className="flex items-center">
-                <Button type="default" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)} icon={<MinusOutlined style={{ color: 'white' }} />} style={{ backgroundColor: 'black', color: 'white' }} />
-                <Input value={quantity} readOnly className="border border-black rounded-md w-16 text-center mx-2" />
-                <Button type="default" onClick={() => setQuantity(quantity + 1)} icon={<PlusOutlined style={{ color: 'white' }} />} style={{ backgroundColor: 'black', color: 'white' }} />
-              </Form.Item>
-              <Button className=" bg-black text-white hover:bg-gray-800" onClick={handleAddToCart}><ShoppingCartOutlined /> Thêm vào giỏ hàng</Button>
+              {book.stock > 0 ? (
+                <>
+                  <div className="flex items-center space-x-2">
+                    <label className="font-semibold">Số lượng:</label>
+                    <Button
+                      type="button"
+                      onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                      className="bg-black text-white px-2 py-1 rounded"
+                    >
+                      <MinusOutlined />
+                    </Button>
+                    <input
+                      value={quantity}
+                      readOnly
+                      className="border border-black rounded-md w-16 h-8 text-center"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="bg-black text-white px-2 py-1 rounded"
+                    >
+                      <PlusOutlined />
+                    </Button>
+                  </div>
+                  <Button className="mt-5 bg-black text-white hover:bg-gray-800" onClick={handleAddToCart}><ShoppingCartOutlined /> Thêm vào giỏ hàng</Button>
+                </>
+              ) : (
+                <p className="text-red-500 font-semibold">Sản phẩm hiện tại đã hết hàng</p>
+              )}
             </Form>
-             <div className="mt-4">
+            <div className="mt-4">
               <p>
                 Danh mục:
                 {collections.length > 0 ? collections.map((collectionItem, index) => (
